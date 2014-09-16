@@ -1,0 +1,25 @@
+// DMX Lighting Maps and Palettes
+// ==============================
+// RGB Value for Each Color (hex)
+// ------------------------------
+// This assumes the first channel is for red, the second for green, and the third for blue.
+// If the channels are not in this order, rearrange the values to match the channels from first to last.
+// The first color is always 000000 (black/off), and the last palette is always FFFFFF (white/full power).
+// List only the values between the first and last.
+// Jukebox version 2.00 will process up to 14 values.
+// 000000 // Black
+FF0000 // Red
+FF1900 // Orange
+FFC800 // Yellow
+00F000 // Green
+0000FF // Blue
+3B11FF // Violet
+FF0037 // Light Red (Pink)
+FF3205 // Light Orange (Peach)
+FFFF08 // Light Yellow
+3BFF00 // Light Green
+00FFFF // Light Blue
+9646FF // Light Violet
+D100C5 // Magenta
+0096EF // Cyan
+FFFFFF // White
