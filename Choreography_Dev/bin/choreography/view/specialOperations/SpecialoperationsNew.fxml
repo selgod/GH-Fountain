@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?scenebuilder-stylesheet ../application.css?>
+
+<Accordion prefHeight="157.0" prefWidth="233.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="choreography.view.specialOperations.SpecialoperationsController">
+  <panes>
+    <TitledPane fx:id="sweepControlsPane" animated="true" text="Sweep Controls">
+      <content>
+        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+          <children><AnchorPane fx:id="aSweepsPane" layoutX="33.0" prefHeight="12.0" prefWidth="200.0" /><Label layoutX="35.0" layoutY="18.0" text="LL          LS         C          RS         RL">
+<font>
+<Font size="9.0" />
+</font></Label>
+<AnchorPane fx:id="bSweepsPane" layoutX="32.0" layoutY="30.0" prefHeight="19.0" prefWidth="202.0" />
+<Label layoutX="35.0" layoutY="47.0" text="LL          LS         C          RS         RL">
+<font>
+<Font size="9.0" />
+</font>
+</Label>
+<Label layoutX="10.0" text="A:" />
+<Label layoutX="10.0" layoutY="35.0" text="B:" />
+<Group>
+<children>
+<ToggleButton fx:id="independentSweeps" layoutX="135.0" layoutY="64.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="31.0" text="...">
+<font>
+<Font size="10.0" />
+</font>
+<toggleGroup>
+<ToggleGroup fx:id="sweepGroup" />
+</toggleGroup>
+</ToggleButton>
+<ToggleButton fx:id="opposedSweeps" layoutX="100.0" layoutY="64.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="31.0" text="/ \" toggleGroup="$sweepGroup">
+<font>
+<Font size="10.0" />
+</font>
+</ToggleButton><ToggleButton fx:id="parallelSweeps" layoutX="65.0" layoutY="64.0" mnemonicParsing="false" prefWidth="31.0" text="//" toggleGroup="$sweepGroup">
+<font>
+<Font size="10.0" />
+</font></ToggleButton>
+</children>
+<effect>
+<DropShadow />
+</effect>
+</Group><ChoiceBox fx:id="bSpeedSelector" layoutX="174.0" layoutY="62.0" prefHeight="26.0" prefWidth="50.0" /><ChoiceBox fx:id="aSpeedSelector" layoutX="5.0" layoutY="62.0" prefHeight="26.0" prefWidth="50.0" />
+          </children>
+        </AnchorPane>
+      </content>
+    </TitledPane><TitledPane animated="false" text="Special Operations">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+<children>
+<Group>
+<effect>
+<DropShadow />
+</effect>
+</Group>
+<Group>
+<effect>
+<Lighting>
+<bumpInput>
+<Shadow />
+</bumpInput>
+</Lighting>
+</effect>
+</Group><Button fx:id="fadeUpButton" layoutX="10.0" layoutY="40.0" mnemonicParsing="false" text="Fade ↑" /><Button fx:id="fadeDownButton" layoutX="78.33837890625" layoutY="40.0" mnemonicParsing="false" text="Fade ↓" /><Button fx:id="strobeButton" layoutX="11.0" layoutY="73.0" mnemonicParsing="false" text="Strobe" /><Button fx:id="resetButton" layoutX="10.83837890625" layoutY="8.5" mnemonicParsing="false" text="Reset All" /><Button fx:id="deleteButton" layoutX="88.83837890625" layoutY="8.5" mnemonicParsing="false" text="Delete" /><CheckBox fx:id="voiceCheckbox" layoutX="154.0" layoutY="13.0" mnemonicParsing="false" text="Voice" /><ComboBox fx:id="strobeFrequency" layoutX="79.0" layoutY="73.0" prefHeight="26.0" prefWidth="65.0" /><Label layoutX="149.353271484375" layoutY="81.0" text="Hz" />
+</children></AnchorPane>
+  </content>
+</TitledPane>
+  </panes>
+</Accordion>

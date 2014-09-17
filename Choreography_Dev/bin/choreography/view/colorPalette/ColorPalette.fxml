@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.*?>
+<?scenebuilder-stylesheet ../application.css?>
+
+<HBox fx:id="colorPalette" alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-1.0" minHeight="-Infinity" prefHeight="29.0" prefWidth="-1.0" spacing="2.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="choreography.view.colorPalette.ColorPaletteController">
+  <children>
+    <ColorPicker fx:id="colorPicker" editable="true" minWidth="-Infinity" HBox.hgrow="ALWAYS" />
+    <Button fx:id="addRec" mnemonicParsing="false" text="+" textAlignment="CENTER" />
+    <Button fx:id="changeButton" mnemonicParsing="false" text="Change" />
+  </children>
+  <padding>
+    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+  </padding>
+</HBox>

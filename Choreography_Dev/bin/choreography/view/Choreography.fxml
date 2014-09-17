@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?scenebuilder-stylesheet application.css?>
+
+<VBox fx:id="csGUI" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="780.0" prefWidth="1329.0" spacing="0.0" style="" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="choreography.view.ChoreographyController">
+  <children>
+    <MenuBar maxHeight="-Infinity" minHeight="-Infinity" prefHeight="24.0" VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File" fx:id="fileMenu">
+          <items>
+            <MenuItem mnemonicParsing="false" text="New" fx:id="newItemMenuItem">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#openGhmfFile" text="Open GHMF" fx:id="openGhmfMenuItem" />
+            <MenuItem mnemonicParsing="false" onAction="#openMapFileMenuItemHandler" text="Open Color Map" fx:id="OpenColorMapMenuItem" />
+            <MenuItem mnemonicParsing="false" text="Open Music..." fx:id="openMusicMenuItem">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" text="(L) Open CTL..." fx:id="openCTLMenuItem" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Save GHMF" fx:id="saveMenuItem">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" text="Save GHMF As…" fx:id="saveAsMenuItem">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Quit" fx:id="quitMenuItem">
+              <accelerator>
+                <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+              </accelerator>
+            </MenuItem>
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Edit" fx:id="editMenu">
+          <items>
+            <CheckMenuItem mnemonicParsing="false" text="Advanced Function" fx:id="advancedCheckMenuItem" />
+            <MenuItem id="addChannelsMenuItem" mnemonicParsing="false" onAction="#addChannels" text="Add Channels" visible="true" fx:id="addChannelsMenuItem" />
+            <MenuItem mnemonicParsing="false" onAction="#openLagTimeDialog" text="Set Lag Times" visible="false" fx:id="setLagTimesMenuItem" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help" fx:id="helpMenu">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#aboutDialogueBox" text="About" fx:id="aboutMenuItem" />
+            <MenuItem mnemonicParsing="false" onAction="#userManual" text="Help" />
+          </items>
+        </Menu>
+      </menus>
+      <stylesheets>
+        <URL value="@application.css" />
+      </stylesheets>
+    </MenuBar>
+    <Pane fx:id="simPane" maxHeight="-1.0" minHeight="-Infinity" prefHeight="250.0" prefWidth="1190.0" style="-fx-background-color: black" VBox.vgrow="NEVER">
+      <children>
+        <fx:include source="sim/fountainSim.fxml" />
+      </children>
+    </Pane>
+    <VBox maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="100.0" spacing="10.0" VBox.vgrow="NEVER">
+      <children>
+        <fx:include source="sliders/Sliders.fxml" fillHeight="true" maxHeight="-Infinity" maxWidth="-1.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" VBox.vgrow="NEVER">
+          <padding>
+            <Insets left="10.0" right="10.0" top="10.0" />
+          </padding>
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </fx:include>
+        <fx:include source="music/MusicPane.fxml" maxHeight="-Infinity" maxWidth="-1.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="88.0" VBox.vgrow="NEVER">
+          <padding>
+            <Insets right="2.0" />
+          </padding>
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </fx:include>
+        <HBox maxHeight="-Infinity" minHeight="-Infinity" minWidth="-1.0" prefHeight="15.0" prefWidth="1329.0" visible="true">
+          <children>
+            <Label maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" text="Beat Marks:">
+              <font>
+                <Font name="System Bold Italic" size="10.0" />
+              </font>
+              <HBox.margin>
+                <Insets left="35.0" />
+              </HBox.margin>
+            </Label>
+            <ScrollPane fx:id="beatMarkScrollPane" content="$null" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" hmax="100.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-1.0" prefHeight="15.0" prefViewportHeight="15.0" prefViewportWidth="1229.0" prefWidth="1229.0" vbarPolicy="NEVER">
+              <HBox.margin>
+                <Insets left="10.0" />
+              </HBox.margin>
+            </ScrollPane>
+          </children>
+          <padding>
+            <Insets />
+          </padding>
+          <VBox.margin>
+            <Insets bottom="-10.0" top="-10.0" />
+          </VBox.margin>
+        </HBox>
+        <fx:include source="timeline/Timeline.fxml" alignment="TOP_LEFT" gridLinesVisible="false" maxHeight="-Infinity" maxWidth="-1.0" minWidth="-Infinity" prefHeight="200.0" prefWidth="1190.0" VBox.vgrow="NEVER">
+          <padding>
+            <Insets left="5.0" right="5.0" top="-1.0" />
+          </padding>
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+        </fx:include>
+        <GridPane id="GridPane" fx:id="progressIndicator" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" VBox.vgrow="NEVER">
+          <children>
+            <Label fx:id="fcwOutput" alignment="CENTER_LEFT" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="18.0" text="FCW Output" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.vgrow="NEVER">
+              <GridPane.margin>
+                <Insets left="4.0" />
+              </GridPane.margin>
+            </Label>
+            <ToggleButton fx:id="selectionButton" mnemonicParsing="false" prefWidth="53.0" text="Select" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="0">
+              <GridPane.margin>
+                <Insets />
+              </GridPane.margin>
+            </ToggleButton>
+            <fx:include source="colorPalette/ColorPalette.fxml" prefHeight="30.0" prefWidth="1000.0" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.vgrow="NEVER" />
+          </children>
+          <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="181.0" minWidth="10.0" prefWidth="181.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.0" minWidth="10.0" prefWidth="77.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1113.0" minWidth="10.0" prefWidth="1071.0" />
+          </columnConstraints>
+          <rowConstraints>
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+          </rowConstraints>
+        </GridPane>
+      </children>
+      <stylesheets>
+        <URL value="@application.css" />
+      </stylesheets>
+    </VBox>
+  </children>
+  <stylesheets>
+    <URL value="@application.css" />
+  </stylesheets>
+</VBox>
