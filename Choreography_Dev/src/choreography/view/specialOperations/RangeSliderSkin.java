@@ -137,7 +137,7 @@ public class RangeSliderSkin extends BehaviorSkinBase<RangeSlider, RangeSliderBe
                     if (lowThumb.isFocused()) {
                         if (event.isShiftDown()) {
                             lowThumb.setFocus(false);
-                            new TraversalEngine(rangeSlider, false).trav(rangeSlider, Direction.PREVIOUS);
+                            //new TraversalEngine(rangeSlider, false).trav(rangeSlider, Direction.PREVIOUS);
                         } else {
                             lowThumb.setFocus(false);
                             highThumb.setFocus(true);
@@ -149,7 +149,7 @@ public class RangeSliderSkin extends BehaviorSkinBase<RangeSlider, RangeSliderBe
                             lowThumb.setFocus(true);
                         } else {
                             highThumb.setFocus(false);
-                            new TraversalEngine(rangeSlider, false).trav(rangeSlider, Direction.NEXT);
+                            //new TraversalEngine(rangeSlider, false).trav(rangeSlider, Direction.NEXT);
                         }
                         event.consume();
                     }
