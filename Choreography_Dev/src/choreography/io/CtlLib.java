@@ -186,8 +186,8 @@ public class CtlLib {
         try (FileWriter fileWriter = new FileWriter(file)){
             StringBuilder commandsOutput = createCtlData(content);
             fileWriter.write(commandsOutput.toString());
-            ChoreographyController.getInstance().setfcwOutput("Finished saving CTL!");
-        return true;    
+            //ChoreographyController.getInstance().setfcwOutput("Finished saving CTL!");
+            return true;    
         } catch (IOException ex) {
             ex.printStackTrace();
             return false;
@@ -203,7 +203,7 @@ public class CtlLib {
      */
     private StringBuilder createCtlData(SortedMap<Integer, ArrayList<FCW>> content) throws IOException {
         StringBuilder commandsOutput = new StringBuilder();
-        if(ColorPaletteModel.getInstance().isClassicColors()) {
+       /* if(ColorPaletteModel.getInstance().isClassicColors()) {
             commandsOutput.append("ct0-382");
             commandsOutput.append(System.lineSeparator());
         }
@@ -214,7 +214,7 @@ public class CtlLib {
         else {
             commandsOutput.append("gvsuCapstone2014B");
             commandsOutput.append(System.lineSeparator());
-        }
+        }*/
         for(Integer timeIndex: content.keySet()) {
             Iterator<FCW> it = content.get(timeIndex).iterator();
             while(it.hasNext()){
@@ -339,5 +339,24 @@ public class CtlLib {
     public FilePayload createFilePayload(SortedMap<Integer, ArrayList<FCW>> timeline) throws IOException {
         StringBuilder sb = createCtlData(timeline);
         return new FilePayload(MusicPaneController.getInstance().getMusicName() + ".ctl", sb.toString().getBytes());
+    }
+    
+    public static void main(String[] args)
+    {
+    	CtlLib testlib = CtlLib.getInstance();
+    	FCW l = new FCW(17, 10);
+    	FCW m = new FCW(17, 0);
+    	System.out.println(l);
+    	System.out.println(m);
+    	ArrayList<FCW> listone = new ArrayList<FCW>();
+    	listone.add(l);
+    	ArrayList<FCW> listtwo = new ArrayList<FCW>();
+    	listtwo.add(m);
+    	
+    	ConcurrentSkipListMap<Integer, ArrayList<FCW>> timeline = new ConcurrentSkipListMap<Integer, ArrayList<FCW>>();
+    	timeline.put(10, listone);
+    	timeline.put(20, listtwo);
+    	testlib.saveFile(new File("savedctlfile"), timeline);
+    	
     }
 }

@@ -12,6 +12,7 @@ import choreography.view.music.MusicPaneController;
 import choreography.view.sim.FountainSimController;
 import choreography.view.sliders.SlidersController;
 import choreography.view.timeline.TimelineController;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -372,6 +373,14 @@ public class Timeline {
                 insertIntoTimeline(timeline, timeIndex, f);
             }
         }
+    }
+    
+    public static void main(String[] args)
+    {
+    	Timeline t = new Timeline();
+    	FCW l = new FCW(17, 10);
+    	System.out.println(l);
+    	t.setLightFcw(l, 1, 2);
     }
     
 }
