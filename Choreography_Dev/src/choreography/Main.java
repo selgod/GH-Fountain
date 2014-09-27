@@ -59,6 +59,7 @@ public class Main extends Application {
 //            primaryStage.setIconified(true);
             this.setPrimaryStage(primaryStage);
             
+            
             Main.primaryStage = primaryStage;
             primaryStage.setTitle("GHMF Choreography Studio");
             fountain = Fountain.getInstance();
