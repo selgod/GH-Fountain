@@ -58,33 +58,16 @@ public class Main extends Application {
             primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/resources/ghmf_cs_logo.png")));
 //            primaryStage.setIconified(true);
             this.setPrimaryStage(primaryStage);
-            Group grp = new Group();
-            ScrollBar sc = new ScrollBar();
+            
             Main.primaryStage = primaryStage;
             primaryStage.setTitle("GHMF Choreography Studio");
             fountain = Fountain.getInstance();
             FXMLLoader fxml = new FXMLLoader(getClass().getResource("view/Choreography.fxml"));
             root = (VBox)fxml.load();
-            grp.getChildren().addAll(root, sc);
-            Scene scene = new Scene(grp, 1330, 780);
-            
-            
+            Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("view/application.css").toExternalForm());
             primaryStage.setScene(scene);
-            primaryStage.setResizable(true);           
-            sc.setLayoutX(scene.getWidth()-sc.getWidth());
-            sc.setMin(0);
-            sc.setOrientation(Orientation.VERTICAL);
-            sc.setPrefHeight(scene.getHeight()-2);
-            sc.setMax(360);
-            
-            sc.valueProperty().addListener(new ChangeListener<Number>() {
-                public void changed(ObservableValue<? extends Number> ov,
-                    Number old_val, Number new_val) {
-                        root.setLayoutY(-new_val.doubleValue());
-                }
-            });
-            
+            //primaryStage.setResizable(false);
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
