@@ -5,6 +5,7 @@ import choreography.view.ChoreographyController;
 import choreography.model.color.ColorPaletteModel;
 import choreography.view.music.MusicPaneController;
 import choreography.view.specialOperations.SpecialoperationsController;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -56,10 +58,12 @@ public class CtlLib {
     public synchronized void openCtl() throws IOException {
         FileChooser fc = new FileChooser();
         fc.setTitle("Open CTL File");
-        fc.setInitialFileName(System.getProperty("user.dir"));
+        fc.setInitialDirectory(new File(System.getProperty("user.dir")));
         fc.getExtensionFilters().add(new ExtensionFilter("CTL Files", "*.ctl"));
         File ctlFile = fc.showOpenDialog(null);
-        openCtl(ctlFile);
+        if (ctlFile != null) {
+        	openCtl(ctlFile);
+        }
     }
     
     /**
@@ -93,17 +97,24 @@ public class CtlLib {
      */
     public synchronized String readFile(BufferedReader reader) throws IOException{
         StringBuilder stringBuffer = new StringBuilder();
-
+        
+        // THe first line is the version of control file being used
         try {
             String version = reader.readLine();
             switch(version) {
+            
+            	// Legacy file
                 case "ct0-382":
                     ColorPaletteModel.getInstance().setClassicColors(true);
                     FCWLib.getInstance().usesClassicColors(true);
                     SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
                     break;
+                    
+                // Advanced Mode???
                 case "gvsuCapstone2014A":
                     ChoreographyController.getInstance().setAdvanced(true);
+                    
+                // Time compensated file
                 case "gvsuCapstone2014B":
                     isTimeCompensated = true;
                     break;
@@ -182,7 +193,7 @@ public class CtlLib {
      * @return 
      */
     public synchronized boolean saveFile(File file, SortedMap<Integer, ArrayList<FCW>> content){
-//
+
         try (FileWriter fileWriter = new FileWriter(file)){
             StringBuilder commandsOutput = createCtlData(content);
             fileWriter.write(commandsOutput.toString());

@@ -177,6 +177,7 @@ public class ColorPaletteModel {
             if(i == 0)
                 return colors[0];
             else
+            	if (i==16) {i--;}
                 return colors[i - 1];
         }
 //        throw new IllegalArgumentException(i + "isn't a valid color reference...");

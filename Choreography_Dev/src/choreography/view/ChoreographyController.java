@@ -384,11 +384,14 @@ public class ChoreographyController implements Initializable {
     private File selectSaveLocation() {
         FileChooser fc = new FileChooser();
         fc.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("GHMF", "*.ghmf"));
-        fc.setInitialDirectory(new File(System.getProperty("user.home")));
+        fc.setInitialDirectory(new File(System.getProperty("user.dir")));
         saveLocation = fc.showSaveDialog(null);
-        saveLocation = new File(saveLocation.getAbsoluteFile() + ".ghmf");
-        isSaved = true;
-        return saveLocation;
+        if (saveLocation != null) {
+        	saveLocation = new File(saveLocation.getAbsoluteFile() + ".ghmf");
+        	isSaved = true;
+            return saveLocation;
+        }
+        return null;
     }
     
     /**

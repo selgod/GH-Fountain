@@ -209,13 +209,17 @@ public class MusicPaneController {
     		mediaPlayer.dispose();    		
     	}
     	FileChooser fc = new FileChooser();
+    	fc.setTitle("Open Music");
     	fc.setInitialDirectory(new File(System.getProperty("user.dir")));
         fc.getExtensionFilters().setAll(new FileChooser.ExtensionFilter(
-                "Music Files", "*.wav", "*.flac"));
+                "Music Files", "*.wav"));
     	File file2 = fc.showOpenDialog(null);
-    	openMusicFile(file2);
-        playButton.setDisable(false);
-        resetButton.setDisable(false);
+    	
+    	if (file2 != null) {
+    		openMusicFile(file2);
+    		playButton.setDisable(false);
+    		resetButton.setDisable(false);
+    	} else System.out.println("No file selected");
     }
     	
     public void loadMusicFile(File file2) {
