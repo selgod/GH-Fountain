@@ -357,12 +357,16 @@ public class CtlLib {
     	CtlLib testlib = CtlLib.getInstance();
     	FCW l = new FCW(17, 10);
     	FCW m = new FCW(17, 0);
+    	FCW n = new FCW(18, 10);
+    	FCW o = new FCW(18, 0);
     	System.out.println(l);
     	System.out.println(m);
     	ArrayList<FCW> listone = new ArrayList<FCW>();
     	listone.add(l);
+    	listone.add(n);
     	ArrayList<FCW> listtwo = new ArrayList<FCW>();
     	listtwo.add(m);
+    	listtwo.add(o);
     	
     	ConcurrentSkipListMap<Integer, ArrayList<FCW>> timeline = new ConcurrentSkipListMap<Integer, ArrayList<FCW>>();
     	timeline.put(10, listone);
