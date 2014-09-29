@@ -30,9 +30,9 @@ public class Timeline {
     * 
     */
     public static final int OFF = -5;
-    private static final long serialVersionUID = 7_242_109_851_591_362_314L;
-    private static final Logger LOG = Logger.getLogger(Timeline.class.getName());
-    private static final int BUFFERBOUNDARY = 200;
+    //private static final long serialVersionUID = 7_242_109_851_591_362_314L;
+   // private static final Logger LOG = Logger.getLogger(Timeline.class.getName());
+    //private static final int BUFFERBOUNDARY = 200;
     /**
      *
      * @return
@@ -43,14 +43,14 @@ public class Timeline {
    private final ConcurrentSkipListMap<Integer, ArrayList<FCW>> waterTimeline;
    private ConcurrentSkipListMap<Integer, ArrayList<FCW>> lightTimeline;
    private ConcurrentSkipListMap<Integer, SortedMap<Integer, Integer>> channelColorMap;
-   private int[] lightChannelAddresses;
+  // private int[] lightChannelAddresses;
 
     public Timeline() {
-        timeline = new ConcurrentSkipListMap<>();
-        waterTimeline = new ConcurrentSkipListMap<>();
-        lightTimeline = new ConcurrentSkipListMap<>();
-        channelColorMap = new ConcurrentSkipListMap<>();
-        waterTimeline.putIfAbsent(0, new ArrayList<>());
+        timeline = new ConcurrentSkipListMap<Integer, ArrayList<FCW>>();
+        waterTimeline = new ConcurrentSkipListMap<Integer, ArrayList<FCW>>();
+        lightTimeline = new ConcurrentSkipListMap<Integer, ArrayList<FCW>>();
+        channelColorMap = new ConcurrentSkipListMap<Integer, SortedMap<Integer, Integer>>();
+        waterTimeline.putIfAbsent(0, new ArrayList<FCW>());
     }
     
     public SortedMap<Integer, SortedMap<Integer, Integer>> getChannelColorMap() {
@@ -93,7 +93,7 @@ public class Timeline {
                     insertIntoTimeline(waterTimeline, i, f);
                 }
                 else {
-                    if(f.getAddr() != 85)
+                    if(f.getAddr() != 85)//??
                         insertIntoTimeline(lightTimeline, i, f);
                 }
             });
@@ -101,7 +101,7 @@ public class Timeline {
         time = (int)(MusicPaneController.SONG_TIME * 10); //tenths of a second
         numChannels = countUChannels(lightTimeline);
 //        lightFCWColorMap = new LinkedHashMap<>(numChannels);
-        channelColorMap = new ConcurrentSkipListMap<>(); //new//new int[time][numChannels];
+        channelColorMap = new ConcurrentSkipListMap<Integer, SortedMap<Integer, Integer>>(); //new//new int[time][numChannels];
         startAndEndPoints(channelColorMap);
         fillTheSpaces(channelColorMap);
 //        populateLightFcwArray();
@@ -217,7 +217,7 @@ public class Timeline {
             srcTimeline.get(i).add(f);
         }
         else {
-            ArrayList<FCW> newFcw = new ArrayList(1);
+            ArrayList<FCW> newFcw = new ArrayList<FCW>();
             newFcw.add(f);
             srcTimeline.put(i, newFcw);
         }
@@ -225,24 +225,23 @@ public class Timeline {
     private void startAndEndPoints(SortedMap<Integer, SortedMap<Integer, Integer>> channelMap) {
         
         for(Integer timeIndex: lightTimeline.keySet()) {
-            SortedMap<Integer, Integer> newMap = new ConcurrentSkipListMap<>();
-            int start = 0;
+            SortedMap<Integer, Integer> newMap = new ConcurrentSkipListMap<>();           
             for(FCW f: lightTimeline.get(timeIndex)) {
+            	int start = 0;
 //                String name = FCWLib.getInstance().reverseLookupAddress(f);
 //                String[] actions = FCWLib.getInstance().reverseLookupData(f);
                 int color = f.getData();
-                int tenthOfSec = timeIndex % 10;
+                double tenths = (double)(timeIndex % 10);
                 int secondsOnly = timeIndex /10; 
-                double tenths = (double) tenthOfSec;
                 double newTime = secondsOnly + (tenths / 10);
-                int colAtTime = (int) (newTime * MusicPaneController.getInstance().getTimeFactor());
+                int colAtTime = (int) (newTime * MusicPaneController.getInstance().getTimeFactor());//??
                 if(colAtTime != 0){
                     colAtTime = colAtTime - 1;
                 }
                 if(color == 0) {
 //                    setLightFcwWithRange(newMap, start, timeIndex, f);
                 }
-                if(channelMap.containsKey(f.getAddr())) {
+                if(channelMap.containsKey(f.getAddr())) { 
                     channelMap.get(f.getAddr()).put(timeIndex, color);
                     start = timeIndex;
                 } else {
