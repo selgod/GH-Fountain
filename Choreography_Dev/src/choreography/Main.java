@@ -2,22 +2,15 @@
 
 package choreography;
 	
-import choreography.model.fountain.Fountain;
-
 import java.io.IOException;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Orientation;
-import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import choreography.model.*;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.image.Image;
+import choreography.model.fountain.Fountain;
 
 /**
  * The Main class calls of the needed methods and classes 
