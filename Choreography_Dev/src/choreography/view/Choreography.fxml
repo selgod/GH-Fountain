@@ -13,50 +13,53 @@
 <?scenebuilder-stylesheet application.css?>
 
 <VBox fx:id="csGUI" maxHeight="-Infinity" maxWidth="-Infinity"
-	minHeight="-Infinity" prefHeight="780.0" prefWidth="1329.0" spacing="0.0"
-	style="" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2"
+	minHeight="-Infinity" prefHeight="800.0" prefWidth="1329.0" spacing="0.0"
+	style="" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="choreography.view.ChoreographyController">
 	<children>
 		<MenuBar maxHeight="-Infinity" minHeight="-Infinity"
 			prefHeight="24.0" VBox.vgrow="NEVER">
 			<menus>
-				<Menu mnemonicParsing="false" text="File" fx:id="fileMenu">
+				<Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
 					<items>
-						<MenuItem mnemonicParsing="false" text="New" fx:id="newItemMenuItem">
+						<MenuItem fx:id="newItemMenuItem" mnemonicParsing="false"
+							text="New">
 							<accelerator>
 								<KeyCodeCombination alt="UP" code="N"
 									control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 							</accelerator>
 						</MenuItem>
-						<MenuItem mnemonicParsing="false" onAction="#openGhmfFile"
-							text="Open GHMF" fx:id="openGhmfMenuItem" />
-						<MenuItem mnemonicParsing="false" onAction="#openMapFileMenuItemHandler"
-							text="Open Color Map" fx:id="OpenColorMapMenuItem" />
-						<MenuItem mnemonicParsing="false" text="Open Music..."
-							fx:id="openMusicMenuItem">
+						<MenuItem fx:id="openGhmfMenuItem" mnemonicParsing="false"
+							onAction="#openGhmfFile" text="Open GHMF" />
+						<MenuItem fx:id="OpenColorMapMenuItem" mnemonicParsing="false"
+							onAction="#openMapFileMenuItemHandler" text="Open Color Map" />
+						<MenuItem fx:id="openMusicMenuItem" mnemonicParsing="false"
+							text="Open Music...">
 							<accelerator>
 								<KeyCodeCombination alt="UP" code="O"
 									control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 							</accelerator>
 						</MenuItem>
-						<MenuItem mnemonicParsing="false" text="(L) Open CTL..."
-							fx:id="openCTLMenuItem" />
+						<MenuItem fx:id="openCTLMenuItem" mnemonicParsing="false"
+							text="(L) Open CTL..." />
 						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" text="Save GHMF" fx:id="saveMenuItem">
+						<MenuItem fx:id="saveMenuItem" mnemonicParsing="false"
+							text="Save GHMF">
 							<accelerator>
 								<KeyCodeCombination alt="UP" code="S"
 									control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 							</accelerator>
 						</MenuItem>
-						<MenuItem mnemonicParsing="false" text="Save GHMF As…"
-							fx:id="saveAsMenuItem">
+						<MenuItem fx:id="saveAsMenuItem" mnemonicParsing="false"
+							text="Save GHMF As…">
 							<accelerator>
 								<KeyCodeCombination alt="UP" code="S"
 									control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
 							</accelerator>
 						</MenuItem>
 						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" text="Quit" fx:id="quitMenuItem">
+						<MenuItem fx:id="quitMenuItem" mnemonicParsing="false"
+							text="Quit">
 							<accelerator>
 								<KeyCodeCombination alt="UP" code="Q"
 									control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -64,21 +67,29 @@
 						</MenuItem>
 					</items>
 				</Menu>
-				<Menu mnemonicParsing="false" text="Edit" fx:id="editMenu">
+				<Menu fx:id="editMenu" mnemonicParsing="false" text="Edit">
 					<items>
-						<CheckMenuItem mnemonicParsing="false" text="Advanced Function"
-							fx:id="advancedCheckMenuItem" />
-						<MenuItem id="addChannelsMenuItem" mnemonicParsing="false"
-							onAction="#addChannels" text="Add Channels" visible="true"
-							fx:id="addChannelsMenuItem" />
-						<MenuItem mnemonicParsing="false" onAction="#openLagTimeDialog"
-							text="Set Lag Times" visible="false" fx:id="setLagTimesMenuItem" />
+						<CheckMenuItem fx:id="advancedCheckMenuItem"
+							mnemonicParsing="false" text="Advanced Function" />
+						<MenuItem id="addChannelsMenuItem" fx:id="addChannelsMenuItem"
+							mnemonicParsing="false" onAction="#addChannels" text="Add Channels"
+							visible="true" />
+						<MenuItem fx:id="setLagTimesMenuItem" mnemonicParsing="false"
+							onAction="#openLagTimeDialog" text="Set Lag Times" visible="false" />
 					</items>
 				</Menu>
-				<Menu mnemonicParsing="false" text="Help" fx:id="helpMenu">
+				<Menu mnemonicParsing="false" text="View">
 					<items>
-						<MenuItem mnemonicParsing="false" onAction="#aboutDialogueBox"
-							text="About" fx:id="aboutMenuItem" />
+						<MenuItem fx:id="showSimulationMenuItem" mnemonicParsing="false"
+							text="Hide Simulation" />
+						<MenuItem fx:id="splitSimulationMenuItem"
+							mnemonicParsing="false" text="Split Simulation" />
+					</items>
+				</Menu>
+				<Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">
+					<items>
+						<MenuItem fx:id="aboutMenuItem" mnemonicParsing="false"
+							onAction="#aboutDialogueBox" text="About" />
 						<MenuItem mnemonicParsing="false" onAction="#userManual"
 							text="Help" />
 					</items>
@@ -93,12 +104,12 @@
 
 
 
-		<ScrollPane fx:id="test" prefHeight="1000" maxHeight="-Infinity"
+		<ScrollPane prefHeight="1000" maxHeight="-Infinity"
 			prefWidth="500" BorderPane.alignment="CENTER">
 			<content>
 
-				<VBox maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-					prefHeight="770.0" prefWidth="1300.0" spacing="10.0">
+				<VBox fx:id="vboxParent" maxHeight="-Infinity" minHeight="-Infinity"
+					minWidth="-Infinity" prefHeight="770.0" prefWidth="1300.0" spacing="10.0">
 					<children>
 
 						<Pane fx:id="simPane" maxHeight="-1.0" minHeight="-Infinity"
