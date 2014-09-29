@@ -106,7 +106,7 @@ public class ColorPaletteController implements Initializable {
                     Color c = colorPicker.getValue();
                     Rectangle rectangle = rectangles[index] = new Rectangle(25, 25,c);														 
                     colorRectanglePane.getChildren().add(rectangle);
-                    ColorPaletteModel.getInstance().setColor(c, index);
+                    ColorPaletteModel.getInstance().setColor(c, index-1);
                     
                     rectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
