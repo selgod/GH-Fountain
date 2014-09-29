@@ -13,7 +13,7 @@
 <?scenebuilder-stylesheet application.css?>
 
 <VBox fx:id="csGUI" maxHeight="-Infinity" maxWidth="-Infinity"
-	minHeight="-Infinity" prefHeight="800.0" prefWidth="1329.0" spacing="0.0"
+	minHeight="-Infinity" prefHeight="780.0" prefWidth="1329.0" spacing="0.0"
 	style="" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2"
 	fx:controller="choreography.view.ChoreographyController">
 	<children>
@@ -29,12 +29,7 @@
 							</accelerator>
 						</MenuItem>
 						<MenuItem mnemonicParsing="false" onAction="#openGhmfFile"
-							text="Open GHMF" fx:id="openGhmfMenuItem">
-							<accelerator>
-								<KeyCodeCombination alt="UP" code="G"
-									control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-							</accelerator>
-							</MenuItem>
+							text="Open GHMF" fx:id="openGhmfMenuItem" />
 						<MenuItem mnemonicParsing="false" onAction="#openMapFileMenuItemHandler"
 							text="Open Color Map" fx:id="OpenColorMapMenuItem" />
 						<MenuItem mnemonicParsing="false" text="Open Music..."
@@ -44,7 +39,7 @@
 									control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 							</accelerator>
 						</MenuItem>
-						<MenuItem mnemonicParsing="false" text="Open CTL..."
+						<MenuItem mnemonicParsing="false" text="(L) Open CTL..."
 							fx:id="openCTLMenuItem" />
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem mnemonicParsing="false" text="Save GHMF" fx:id="saveMenuItem">

@@ -134,7 +134,7 @@ public class ColorPaletteModel {
     
     
     public void setColor(Color newColor, int index){
-        this.colors[index-1] = newColor;
+        this.colors[index] = newColor;
         this.colors[availableColors] = newColor;
         availableColors++;
     }		      
