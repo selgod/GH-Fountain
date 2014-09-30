@@ -64,7 +64,6 @@ public class TimelineController implements Initializable {
             instance = new TimelineController();
         return instance;
     }
-    private final ColorPaletteEnum[] colorEnumArray;
     private Integer[] channelAddresses;
     boolean oldRecHasValue = false;
     Rectangle oldRec = new Rectangle();
@@ -84,8 +83,6 @@ public class TimelineController implements Initializable {
     private ScrollPane timelineScrollPane, labelScrollPane;
     // NonFXML
     private int time;
-    private NumberAxis numLine;
-
     int startRow = 0;
     int rowNumber;
     GridPane gridpaneLight;
@@ -106,7 +103,7 @@ public class TimelineController implements Initializable {
     
     public TimelineController() {
         timeline = new Timeline();
-        this.colorEnumArray = ColorPaletteEnum.values();
+        ColorPaletteEnum.values();
         this.rowAL = new ArrayList<>();
         this.colAL = new ArrayList<>();
         this.copyAL = new ArrayList<>();
@@ -167,7 +164,6 @@ public class TimelineController implements Initializable {
      * @param rb
      */
     @Override
-    @SuppressWarnings("Convert2Lambda")
     public void initialize(URL url, ResourceBundle rb) {
         // setWaterGridPane();
         instance = this;

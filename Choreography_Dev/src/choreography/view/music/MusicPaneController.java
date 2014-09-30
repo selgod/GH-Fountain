@@ -5,27 +5,17 @@
 
 package choreography.view.music;
 
-import SimpleJavaFXPlayer.AudioWaveformCreator;
-import SimpleJavaFXPlayer.Music;
-import choreography.io.FilePayload;
-import choreography.io.MapLib;
-import choreography.view.ChoreographyController;
-import choreography.view.sim.FountainSimController;
-import choreography.view.sliders.SlidersController;
-import choreography.model.timeline.Timeline;
-import static choreography.view.ChoreographyController.WORKINGDIRECTORY;
-import choreography.view.timeline.TimelineController;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
@@ -43,6 +33,13 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import SimpleJavaFXPlayer.AudioWaveformCreator;
+import SimpleJavaFXPlayer.Music;
+import choreography.io.FilePayload;
+import choreography.view.ChoreographyController;
+import choreography.view.sim.FountainSimController;
+import choreography.view.sliders.SlidersController;
+import choreography.view.timeline.TimelineController;
 
 /**
  *

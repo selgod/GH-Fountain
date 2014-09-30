@@ -1,26 +1,21 @@
 package choreography.view.colorPalette;
 
-import choreography.io.MapLib;
-import choreography.model.color.ColorPaletteModel;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-//import javax.swing.JButton;
-
-
-import choreography.view.timeline.TimelineController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
-//import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import choreography.model.color.ColorPaletteModel;
+import choreography.view.timeline.TimelineController;
 
 /**
  * @author Nick Van Kuiken
@@ -84,8 +79,8 @@ public class ColorPaletteController implements Initializable {
         colorRectanglePane = new HBox(0.5);
         
         // Sets the first color to red and creates the event handler
-        for(int index = 0; index < 16 ; index++) {
-            final int index2 = index;   
+        for(int index = 0; index < 32 ; index++) {
+            int index2 = index;   
             rectangles[index] = new Rectangle(25, 25, ColorPaletteModel.getInstance().getColors()[index]);
             rectangles[index].setOnMouseClicked(new EventHandler<MouseEvent> (){
             	
@@ -114,6 +109,7 @@ public class ColorPaletteController implements Initializable {
                         public void handle(MouseEvent event) { 
                                 ColorPaletteModel.getInstance().setSelectedIndex(index);							
                                 setSelectedColor(c);
+                                System.out.println("Over Here");
                         }
                 });
                 } 

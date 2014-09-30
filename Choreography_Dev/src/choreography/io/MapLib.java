@@ -42,9 +42,6 @@
 
 package choreography.io;
 
-import choreography.model.color.ColorPaletteModel;
-import choreography.view.colorPalette.ColorPaletteController;
-import choreography.view.music.MusicPaneController;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -56,8 +53,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import choreography.model.color.ColorPaletteModel;
+import choreography.view.music.MusicPaneController;
 
 /**
  *
@@ -70,10 +70,12 @@ public class MapLib {
     public static void openMap() throws FileNotFoundException {
         FileChooser fc = new FileChooser();
         fc.setTitle("Open MAP File");
-        fc.setInitialFileName(System.getProperty("user.home"));
+        fc.setInitialDirectory(new File(System.getProperty("user.dir")));
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("MAP Files", "*.map"));
         File mapFile = fc.showOpenDialog(null);
-        openMap(mapFile);
+        if(mapFile != null ) {
+        	openMap(mapFile);
+        }
     }
     
     public static void openMap(File file) throws FileNotFoundException {
@@ -125,9 +127,10 @@ public class MapLib {
             }
             
         }
-        colors.trimToSize();
+        //colors.trimToSize();
         
         setMapLoaded(true);
+        sc.close();
         return colors.toArray(new Color[1]);
     }
     
