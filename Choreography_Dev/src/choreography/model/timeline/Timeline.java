@@ -20,7 +20,7 @@ import java.util.ListIterator;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 
 
 
@@ -30,9 +30,9 @@ public class Timeline {
     * 
     */
     public static final int OFF = -5;
-    private static final long serialVersionUID = 7_242_109_851_591_362_314L;
-    private static final Logger LOG = Logger.getLogger(Timeline.class.getName());
-    private static final int BUFFERBOUNDARY = 200;
+    //private static final long serialVersionUID = 7_242_109_851_591_362_314L;
+    //private static final Logger LOG = Logger.getLogger(Timeline.class.getName());
+    //private static final int BUFFERBOUNDARY = 200;
     /**
      *
      * @return
@@ -43,7 +43,7 @@ public class Timeline {
    private final ConcurrentSkipListMap<Integer, ArrayList<FCW>> waterTimeline;
    private ConcurrentSkipListMap<Integer, ArrayList<FCW>> lightTimeline;
    private ConcurrentSkipListMap<Integer, SortedMap<Integer, Integer>> channelColorMap;
-   private int[] lightChannelAddresses;
+   //private int[] lightChannelAddresses;
 
     public Timeline() {
         timeline = new ConcurrentSkipListMap<>();
@@ -173,9 +173,9 @@ public class Timeline {
         }
     }
     
-    public void setLightFcwAtPoint(int point, FCW f) {
+   /* public void setLightFcwAtPoint(int point, FCW f) {
         
-    }
+    }*/
     
     public void fillTheSpaces(SortedMap<Integer, SortedMap<Integer, Integer>> channelMap) {
         for(Integer channel: channelMap.keySet()) {
@@ -217,7 +217,7 @@ public class Timeline {
             srcTimeline.get(i).add(f);
         }
         else {
-            ArrayList<FCW> newFcw = new ArrayList(1);
+            ArrayList<FCW> newFcw = new ArrayList<FCW>();
             newFcw.add(f);
             srcTimeline.put(i, newFcw);
         }
@@ -226,7 +226,7 @@ public class Timeline {
         
         for(Integer timeIndex: lightTimeline.keySet()) {
             SortedMap<Integer, Integer> newMap = new ConcurrentSkipListMap<>();
-            int start = 0;
+            //int start = 0;
             for(FCW f: lightTimeline.get(timeIndex)) {
 //                String name = FCWLib.getInstance().reverseLookupAddress(f);
 //                String[] actions = FCWLib.getInstance().reverseLookupData(f);
@@ -244,11 +244,11 @@ public class Timeline {
                 }
                 if(channelMap.containsKey(f.getAddr())) {
                     channelMap.get(f.getAddr()).put(timeIndex, color);
-                    start = timeIndex;
+                   // start = timeIndex;
                 } else {
                     newMap.put(timeIndex, color);
                     channelMap.putIfAbsent(f.getAddr(), newMap);  
-                    start = timeIndex;
+                   // start = timeIndex;
                 }
             }
             //[f.getAddr()] = data;
@@ -312,14 +312,20 @@ public class Timeline {
         insertIntoTimeline(lightTimeline, start, f);
         insertIntoTimeline(lightTimeline, end, new FCW(f.getAddr(), 0));
         SortedMap<Integer, Integer> channel = channelColorMap.get(f.getAddr());
+        if(channel== null){
+        	channel = new ConcurrentSkipListMap<Integer, Integer>();
+        	channelColorMap.put(f.getAddr(), channel);
+        }
         setLightFcwWithRange(channel, start, end, f.getData());
         TimelineController.getInstance().rePaintLightTimeline();
+        
     }
 
     public void sendSubmapToSim(int tenthsTime) {
 //        FountainSimController.getInstance().acceptSubmapOfFcws(timeline.tailMap(timeline.floorKey(tenthsTime)));
 //        FountainSimController.getInstance().acceptSubmapOfFcws(timeline.subMap(tenthsTime, true, MusicPaneController.getInstance().SONG_TIME, true));
     }
+    
 
     private boolean checkForCollision(SortedMap<Integer, ArrayList<FCW>> timeline, int pointInTime, FCW query) {
         boolean result = false;
