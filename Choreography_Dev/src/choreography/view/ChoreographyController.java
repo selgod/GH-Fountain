@@ -235,7 +235,7 @@ public class ChoreographyController implements Initializable {
                         loadDefaultMap();
                         CtlLib.getInstance().openCtl();
                         cc.setfcwOutput("CTL file has loaded!");
-                        if(ColorPaletteModel.getInstance().isClassicColors()) {
+                        if(ColorPaletteModel.getInstance() != null) {  //TODO old code checked for isClassicColors()
                             Dialogs.create().message("You've loaded a legacy file. "
                                             + "Currently, they are read-only.").showWarning();
                             
@@ -337,7 +337,7 @@ public class ChoreographyController implements Initializable {
                     SlidersController.getInstance().resurrectSlidersPane();
                     SpecialoperationsController.getInstance().resurrectSpecialOpsPane();
                     MapLib.openMap(getClass().getResourceAsStream("/resources/default.map"));
-                    ColorPaletteController.getInstance().resurrectColorPalettePane();
+                    ColorPaletteController.getInstance().rePaint();
                 }
                 
             });
@@ -358,7 +358,7 @@ public class ChoreographyController implements Initializable {
     public void killFeaturesOnLegacy() {
         SpecialoperationsController.getInstance().killSpecialOpsPane();
         SlidersController.getInstance().killSlidersPane();
-        ColorPaletteModel.getInstance().setClassicColors(true);
+        //ColorPaletteModel.getInstance().setClassicColors(true);
         ColorPaletteController.getInstance().rePaint();
     }
 

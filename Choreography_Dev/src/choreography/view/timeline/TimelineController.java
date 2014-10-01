@@ -478,7 +478,7 @@ public class TimelineController implements Initializable {
                     else{
                             startRow = testJ;
                             lightRecArray[testI][testJ]
-                                    .setFill(ColorPaletteController
+                                    .setFill(ColorPaletteModel
                                             .getInstance()
                                             .getSelectedColor());
                             int address = channelAddresses[testJ];
@@ -529,7 +529,7 @@ public class TimelineController implements Initializable {
                     	if (startRow == testJ) {
                         	lightRecArray[testI][testJ].setOpacity(1);
                             lightRecArray[testI][testJ]
-                                    .setFill(ColorPaletteController
+                                    .setFill(ColorPaletteModel
                                             .getInstance()
                                             .getSelectedColor());
                         }
