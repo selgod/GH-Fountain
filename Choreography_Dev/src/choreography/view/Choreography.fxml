@@ -30,18 +30,24 @@
 							</accelerator>
 						</MenuItem>
 						<MenuItem fx:id="openGhmfMenuItem" mnemonicParsing="false"
-							onAction="#openGhmfFile" text="Open GHMF" />
+							onAction="#openGhmfFile" text="Open GHMF">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="G"
+									control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>							
 						<MenuItem fx:id="OpenColorMapMenuItem" mnemonicParsing="false"
 							onAction="#openMapFileMenuItemHandler" text="Open Color Map" />
+							
 						<MenuItem fx:id="openMusicMenuItem" mnemonicParsing="false"
 							text="Open Music...">
 							<accelerator>
 								<KeyCodeCombination alt="UP" code="O"
 									control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 							</accelerator>
-						</MenuItem>
+						</MenuItem>						
 						<MenuItem fx:id="openCTLMenuItem" mnemonicParsing="false"
-							text="(L) Open CTL..." />
+							text="Open CTL" />
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="saveMenuItem" mnemonicParsing="false"
 							text="Save GHMF">
@@ -81,9 +87,17 @@
 				<Menu mnemonicParsing="false" text="View">
 					<items>
 						<MenuItem fx:id="showSimulationMenuItem" mnemonicParsing="false"
-							text="Hide Simulation" />
+							text="Hide Simulation" >
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="F11" control="UP" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
 						<MenuItem fx:id="splitSimulationMenuItem"
-							mnemonicParsing="false" text="Split Simulation" />
+							mnemonicParsing="false" text="Split Simulation">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="F12" control="UP" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
 					</items>
 				</Menu>
 				<Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">
@@ -91,7 +105,11 @@
 						<MenuItem fx:id="aboutMenuItem" mnemonicParsing="false"
 							onAction="#aboutDialogueBox" text="About" />
 						<MenuItem mnemonicParsing="false" onAction="#userManual"
-							text="Help" />
+							text="Help" >
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="F1" control="UP" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
 					</items>
 				</Menu>
 			</menus>
