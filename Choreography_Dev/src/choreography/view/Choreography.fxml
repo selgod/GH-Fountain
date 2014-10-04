@@ -49,6 +49,13 @@
 						<MenuItem fx:id="openCTLMenuItem" mnemonicParsing="false"
 							text="Open CTL" />
 						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem fx:id="saveCTLMenuItem" mnemonicParsing="false"
+							text="Save CTL File">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="C"
+									control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
 						<MenuItem fx:id="saveMenuItem" mnemonicParsing="false"
 							text="Save GHMF">
 							<accelerator>

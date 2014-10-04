@@ -328,7 +328,18 @@ public class ChoreographyController implements Initializable {
 				}
 			}
 		});
-
+		
+		/*saveCTLMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent t) {
+				if (isSaved) {
+					saveGhmfZipFile();
+				} else {
+					saveAsMenuItem.getOnAction().handle(t);
+				}
+			}
+		}
+			);*/
 		saveMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
