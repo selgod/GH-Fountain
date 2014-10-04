@@ -5,6 +5,7 @@ import choreography.view.ChoreographyController;
 import choreography.model.color.ColorPaletteModel;
 import choreography.view.music.MusicPaneController;
 import choreography.view.specialOperations.SpecialoperationsController;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -56,10 +58,12 @@ public class CtlLib {
     public synchronized void openCtl() throws IOException {
         FileChooser fc = new FileChooser();
         fc.setTitle("Open CTL File");
-        fc.setInitialFileName(System.getProperty("user.dir"));
+        fc.setInitialDirectory(new File(System.getProperty("user.dir")));
         fc.getExtensionFilters().add(new ExtensionFilter("CTL Files", "*.ctl"));
         File ctlFile = fc.showOpenDialog(null);
-        openCtl(ctlFile);
+        if (ctlFile != null) {
+        	openCtl(ctlFile);
+        }
     }
     
     /**
@@ -93,17 +97,24 @@ public class CtlLib {
      */
     public synchronized String readFile(BufferedReader reader) throws IOException{
         StringBuilder stringBuffer = new StringBuilder();
-
+        
+        // THe first line is the version of control file being used
         try {
             String version = reader.readLine();
             switch(version) {
+            
+            	// Legacy file
                 case "ct0-382":
                     ColorPaletteModel.getInstance().setClassicColors(true);
                     FCWLib.getInstance().usesClassicColors(true);
                     SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
                     break;
+                    
+                // Advanced Mode???
                 case "gvsuCapstone2014A":
                     ChoreographyController.getInstance().setAdvanced(true);
+                    
+                // Time compensated file
                 case "gvsuCapstone2014B":
                     isTimeCompensated = true;
                     break;
@@ -182,12 +193,12 @@ public class CtlLib {
      * @return 
      */
     public synchronized boolean saveFile(File file, SortedMap<Integer, ArrayList<FCW>> content){
-//
+
         try (FileWriter fileWriter = new FileWriter(file)){
             StringBuilder commandsOutput = createCtlData(content);
             fileWriter.write(commandsOutput.toString());
-            ChoreographyController.getInstance().setfcwOutput("Finished saving CTL!");
-        return true;    
+            //ChoreographyController.getInstance().setfcwOutput("Finished saving CTL!");
+            return true;    
         } catch (IOException ex) {
             ex.printStackTrace();
             return false;
@@ -203,7 +214,7 @@ public class CtlLib {
      */
     private StringBuilder createCtlData(SortedMap<Integer, ArrayList<FCW>> content) throws IOException {
         StringBuilder commandsOutput = new StringBuilder();
-        if(ColorPaletteModel.getInstance().isClassicColors()) {
+       /* if(ColorPaletteModel.getInstance().isClassicColors()) {
             commandsOutput.append("ct0-382");
             commandsOutput.append(System.lineSeparator());
         }
@@ -214,7 +225,7 @@ public class CtlLib {
         else {
             commandsOutput.append("gvsuCapstone2014B");
             commandsOutput.append(System.lineSeparator());
-        }
+        }*/
         for(Integer timeIndex: content.keySet()) {
             Iterator<FCW> it = content.get(timeIndex).iterator();
             while(it.hasNext()){
@@ -339,5 +350,28 @@ public class CtlLib {
     public FilePayload createFilePayload(SortedMap<Integer, ArrayList<FCW>> timeline) throws IOException {
         StringBuilder sb = createCtlData(timeline);
         return new FilePayload(MusicPaneController.getInstance().getMusicName() + ".ctl", sb.toString().getBytes());
+    }
+    
+    public static void main(String[] args)
+    {
+    	CtlLib testlib = CtlLib.getInstance();
+    	FCW l = new FCW(17, 10);
+    	FCW m = new FCW(17, 0);
+    	FCW n = new FCW(18, 10);
+    	FCW o = new FCW(18, 0);
+    	System.out.println(l);
+    	System.out.println(m);
+    	ArrayList<FCW> listone = new ArrayList<FCW>();
+    	listone.add(l);
+    	listone.add(n);
+    	ArrayList<FCW> listtwo = new ArrayList<FCW>();
+    	listtwo.add(m);
+    	listtwo.add(o);
+    	
+    	ConcurrentSkipListMap<Integer, ArrayList<FCW>> timeline = new ConcurrentSkipListMap<Integer, ArrayList<FCW>>();
+    	timeline.put(10, listone);
+    	timeline.put(20, listtwo);
+    	testlib.saveFile(new File("savedctlfile"), timeline);
+    	
     }
 }

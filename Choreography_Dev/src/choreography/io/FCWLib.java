@@ -382,7 +382,11 @@ public final class FCWLib {
     
     public synchronized int reverseGetLevel(FCW f) {
         String[] actions = reverseLookupData(f);
+//        int result;
         for(String s: actions) {
+//        	result = Integer.parseInt(s);
+//        	if(result >= 0 && result <= 6)
+//        		return result;
             switch(s) {
                 case "1":
                     return 1;

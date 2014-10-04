@@ -84,7 +84,6 @@ public class LagTimeLibrary {
             throw new IllegalArgumentException("Your LagTimeDef.txt file "
                     + "may be corrupted. Please see the manual to find "
                     + "directons to fix it");
-            //TODO insert instructions to fix corrupt LagTimeDef into manual
         }
     }
 

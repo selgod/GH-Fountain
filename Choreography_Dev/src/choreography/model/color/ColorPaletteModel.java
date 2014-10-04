@@ -42,13 +42,11 @@
 
 package choreography.model.color;
 
-import choreography.io.MapLib;
-import choreography.view.colorPalette.ColorPaletteController;
-import choreography.view.timeline.TimelineController;
-import java.io.File;
 import java.util.HashMap;
+
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import choreography.view.colorPalette.ColorPaletteController;
 
 /**
  *
@@ -134,6 +132,8 @@ public class ColorPaletteModel {
     
     
     public void setColor(Color newColor, int index){
+    	System.out.println("Array: " + this.colors.length);
+    	System.out.println("Index: " + index);
         this.colors[index] = newColor;
         this.colors[availableColors] = newColor;
         availableColors++;
@@ -179,7 +179,6 @@ public class ColorPaletteModel {
             else
                 return colors[i - 1];
         }
-//        throw new IllegalArgumentException(i + "isn't a valid color reference...");
     }
 
     public void setColors(Color[] parseMap) {

@@ -47,7 +47,7 @@ package choreography.model.color;
  * @author elementsking
  */
 public enum ColorPaletteEnum {
-    
+    BLACK ("000000"),
     RED ("FF0000"), 
     ORANGE ("FF1900"), 
     YELLOW ("FFC800"), 
