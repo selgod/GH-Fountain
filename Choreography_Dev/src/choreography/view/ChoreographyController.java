@@ -63,6 +63,7 @@ import choreography.io.MapLib;
 import choreography.io.MarkLib;
 import choreography.model.color.ColorPaletteModel;
 import choreography.model.fcw.FCW;
+import choreography.model.timeline.Timeline;
 import choreography.view.colorPalette.ColorPaletteController;
 import choreography.view.customChannel.CustomChannel;
 import choreography.view.lagtime.LagTimeGUIController;
@@ -103,6 +104,8 @@ public class ChoreographyController implements Initializable {
 	private Menu openRecentMenuItemItem;
 	@FXML
 	private MenuItem closeMenuItem;
+	@FXML
+	private MenuItem saveCTLMenuItem;
 	@FXML
 	private MenuItem saveMenuItem;
 	@FXML
@@ -329,17 +332,21 @@ public class ChoreographyController implements Initializable {
 			}
 		});
 		
-		/*saveCTLMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+		saveCTLMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent t) {
-				if (isSaved) {
-					saveGhmfZipFile();
-				} else {
-					saveAsMenuItem.getOnAction().handle(t);
+				FileChooser fc = new FileChooser();
+				fc.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("ctl", "*.ctl"));
+				fc.setInitialDirectory(new File(System.getProperty("user.dir")));
+				saveLocation = fc.showSaveDialog(null);
+				if (saveLocation != null) {
+					saveLocation = new File(saveLocation.getAbsoluteFile() + ".ctl");
+					isSaved = true;
 				}
+				CtlLib.getInstance().saveFile(saveLocation, TimelineController.getInstance().getTimeline().getTimeline());
 			}
 		}
-			);*/
+			);
 		saveMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
