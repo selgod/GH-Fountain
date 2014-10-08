@@ -246,10 +246,33 @@ public class ChoreographyController implements Initializable {
 			public void handle(ActionEvent arg0) {
 				// progressIndicator.setProgress(-1);
 				loadDefaultMap();
-				MusicPaneController.getInstance().selectMusic();
+				
+				FileChooser fc = new FileChooser();
+		    	fc.setTitle("Open Music");
+		    	fc.setInitialDirectory(new File(System.getProperty("user.dir")));
+		        fc.getExtensionFilters().setAll(new FileChooser.ExtensionFilter(
+		                "Music Files", "*.wav"));
+		    	File file2 = fc.showOpenDialog(null);
+				
+		    	try{
+	    			FXMLLoader fxml = new FXMLLoader(getClass().getResource("Loading.fxml"));
+	    			Pane loading = new Pane();
+					loading = fxml.load();
+					Scene scene = new Scene(loading);
+					Stage stage = new Stage();
+					stage.setTitle("Loading ... ");
+					stage.setScene(scene);
+					stage.show();
+		    	
+					MusicPaneController.getInstance().selectMusic(file2);
 				// progressIndicator.setProgress(1);
-				TimelineController.getInstance().initializeTimelines();
-				openCTLMenuItem.setDisable(false);
+					TimelineController.getInstance().initializeTimelines();
+					openCTLMenuItem.setDisable(false);
+					stage.close();
+		    	} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 		});

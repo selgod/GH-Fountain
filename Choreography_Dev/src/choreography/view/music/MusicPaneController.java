@@ -201,19 +201,21 @@ public class MusicPaneController {
     /**
      *
      */
-    public void selectMusic() {
+    public void selectMusic(File file) {
     	if (notFirst){
     		mediaPlayer.dispose();    		
     	}
-    	FileChooser fc = new FileChooser();
-    	fc.setTitle("Open Music");
-    	fc.setInitialDirectory(new File(System.getProperty("user.dir")));
-        fc.getExtensionFilters().setAll(new FileChooser.ExtensionFilter(
-                "Music Files", "*.wav"));
-    	File file2 = fc.showOpenDialog(null);
+    	//TODO This code moved to ChoreographyController.java. Commmented here for reference
     	
-    	if (file2 != null) {
-    		openMusicFile(file2);
+//    	FileChooser fc = new FileChooser();
+//    	fc.setTitle("Open Music");
+//    	fc.setInitialDirectory(new File(System.getProperty("user.dir")));
+//        fc.getExtensionFilters().setAll(new FileChooser.ExtensionFilter(
+//                "Music Files", "*.wav"));
+//    	File file2 = fc.showOpenDialog(null);
+    	
+    	if (file != null) {
+    		openMusicFile(file);
     		playButton.setDisable(false);
     		resetButton.setDisable(false);
     	} else System.out.println("No file selected");
