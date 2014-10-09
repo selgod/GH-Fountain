@@ -11,7 +11,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="choreography.view.colorPalette.ColorPaletteController">
    <children>
-      <HBox fx:id="defaultColorsBox" layoutX="7.0" layoutY="5.0" spacing="2.0">
+      <HBox fx:id="defaultColors" layoutX="7.0" layoutY="5.0" spacing="2.0">
          <children>
             <Rectangle fx:id="rectangle_OFF" arcHeight="5.0" arcWidth="5.0" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
             <Rectangle fx:id="rectangle_WHITE" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
@@ -34,7 +34,7 @@
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
          </padding>
       </HBox>
-      <HBox fx:id="customColorsBox" layoutX="7.0" layoutY="30.0" spacing="2.0">
+      <HBox fx:id="customColors" layoutX="7.0" layoutY="30.0" spacing="2.0">
          <children>
             <Rectangle fx:id="custom1" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
             <Rectangle fx:id="custom2" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />

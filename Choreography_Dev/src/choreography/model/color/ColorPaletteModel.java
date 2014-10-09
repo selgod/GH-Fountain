@@ -1,29 +1,36 @@
 package choreography.model.color;
 
-import choreography.io.MapLib;
 import choreography.view.colorPalette.ColorPaletteController;
-import choreography.view.timeline.TimelineController;
-import java.io.File;
-import java.util.HashMap;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 /**
+ * Represents the collection of colors that the developer is able to use. 
+ * Takes input from choreography.view.colorPalette.ColorPaletteController and alters the collection of colors.
  *
- * @author elementsking
+ * @author Danny Selgo
  */
 public class ColorPaletteModel{
     
     private static ColorPaletteModel instance;
     private Color[] colors;
     private int selectedIndex;
-    private Paint selectedColor;
     
+    /**
+     * Constructor class for ColorPaletteModel. 
+     * Initializes the array of colors and sets the first 16 colors to the default colors.
+     */
     public ColorPaletteModel() {
         colors = new Color[32];
         setDefaultColors();
     }
     
+    /**
+     * Checks to see if an instance of ColorPaletteModel exists. 
+     * If so, return it. If not, instantiate an instance of ColorPaletteModel and return it.
+     * 
+     * @return the instance of ColorPaletteModel
+     */
     public static ColorPaletteModel getInstance() {
         if(instance == null)
             instance = new ColorPaletteModel();
@@ -31,7 +38,7 @@ public class ColorPaletteModel{
     }
     
     /**
-     * @param aClassicColors the classicColors to set
+     * Sets colors 1-16 to the fountains default colors. Then sets colors 17-32 to white by default.
      */
     public void setDefaultColors() {
         colors[0]=Color.web(ColorPaletteEnum.OFF.getColor());
@@ -68,34 +75,66 @@ public class ColorPaletteModel{
         colors[31]=Color.web(ColorPaletteEnum.WHITE.getColor());
     }    
     
+    /**
+     * Returns the array of colors.
+     * 
+     * @return the array of colors
+     */
     public Color[] getColors(){
     	return colors;
     }
     
+    /**
+     * Returns the color specified by the given index.
+     * 
+     * @param i - index of color to get
+     * @return the color specified by the given index
+     */
     public Color getColor(int i){
         return colors[i];
     }
 
+    /**
+     * Returns what index is currently selected.
+     * 
+     * @return the selected index
+     */
     public int getSelectedIndex(){
         return selectedIndex;
     }
     
+    /**
+     * Returns what color is currently selected.
+     * 
+     * @return the selected color
+     */
     public Paint getSelectedColor(){
-    	return selectedColor;
+    	return colors[getSelectedIndex()];
     }
     
-    public void setColor(Color newColor, int index){
-        this.colors[index] = newColor;
-    }		      
-
+    /**
+     * Sets the selected index.
+     * 
+     * @param selectedIndex - new selected index
+     */
     public void setSelectedIndex(int selectedIndex){
         this.selectedIndex = selectedIndex;
     }
     
-    public void setSelectedColor(Paint selectedColor){
-        this.selectedColor = selectedColor;
-    }
+    /**
+     * Adds a new color to the array by replacing the color associated by the given index with the given color.
+     * 
+     * @param newColor - the new color to be added
+     * @param index - the index in the array to put the new color
+     */
+    public void setColor(Color newColor, int index){
+        this.colors[index] = newColor;
+        ColorPaletteController.getInstance().rePaint();
+    }		      
     
+    /**
+     * Resets the model to its default colors and then signals the GUI to repaint.
+     */
     public void resetModel(){
         instance = new ColorPaletteModel();
         ColorPaletteController.getInstance().rePaint();

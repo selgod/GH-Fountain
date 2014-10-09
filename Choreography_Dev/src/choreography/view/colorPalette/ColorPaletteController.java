@@ -4,182 +4,185 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import choreography.model.color.ColorPaletteModel;
-import choreography.view.timeline.TimelineController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tooltip;
 import javafx.geometry.Side;
 
-
-//TODO get rid of ColorPaletteModel?
+/**
+ * UI for selecting which colors to use for the fountain's lights. Communicates with 
+ * choreography.model.color.ColorPaletteModel by displaying the colors set in the model. 
+ * Colors 1-16 are the fountain's default color and cannot be changed. Colors 17-32 are 
+ * set to white by default but can be changed by the developer to fit their personal needs. 
+ * 
+ * @author Danny Selgo
+ */
 public class ColorPaletteController implements Initializable {
 	
 	@FXML private static ColorPaletteController cpc;
-    @FXML private HBox defaultColorsBox;
-    @FXML private HBox customColorsBox;
+    @FXML private HBox defaultColors;
+    @FXML private HBox customColors;
     
-    @FXML private Rectangle rectangle_OFF;
-    @FXML private Rectangle rectangle_WHITE;
-    @FXML private Rectangle rectangle_LIGHT_RED;
-    @FXML private Rectangle rectangle_RED;
-    @FXML private Rectangle rectangle_LIGHT_ORANGE;
-    @FXML private Rectangle rectangle_ORANGE;
-    @FXML private Rectangle rectangle_LIGHT_YELLOW;
-    @FXML private Rectangle rectangle_YELLOW;
-    @FXML private Rectangle rectangle_LIGHT_GREEN;
-    @FXML private Rectangle rectangle_GREEN;
-    @FXML private Rectangle rectangle_LIGHT_BLUE;
-    @FXML private Rectangle rectangle_CYAN;
-    @FXML private Rectangle rectangle_BLUE;
-    @FXML private Rectangle rectangle_VIOLET;
-    @FXML private Rectangle rectangle_LIGHT_VIOLET;
-    @FXML private Rectangle rectangle_MAGENTA;
-    
-    @FXML private Rectangle custom1;
-    @FXML private Rectangle custom2;
-    @FXML private Rectangle custom3;
-    @FXML private Rectangle custom4;
-    @FXML private Rectangle custom5;
-    @FXML private Rectangle custom6;
-    @FXML private Rectangle custom7;
-    @FXML private Rectangle custom8;
-    @FXML private Rectangle custom9;
-    @FXML private Rectangle custom10;
-    @FXML private Rectangle custom11;
-    @FXML private Rectangle custom12;
-    @FXML private Rectangle custom13;
-    @FXML private Rectangle custom14;
-    @FXML private Rectangle custom15;
-    @FXML private Rectangle custom16;
-    
-    private Rectangle[] rectangles;
-    private Color[] colors;
-    
-    private Rectangle changingRectangle;
+    private Tooltip[] defaultTooltips;
+    private Tooltip[] customTooltips;
+    private Rectangle selectedRectangle;
     private ContextMenu contextMenu = new ContextMenu();
     private MenuItem changeColor = new MenuItem();
     private ColorPicker colorPicker = new ColorPicker();
     
-    public ColorPaletteController(){
-    	rectangles = new Rectangle[]{rectangle_OFF,rectangle_WHITE,rectangle_LIGHT_RED,rectangle_RED,
-				  	  rectangle_LIGHT_ORANGE,rectangle_ORANGE,rectangle_LIGHT_YELLOW,rectangle_YELLOW,
-				  	  rectangle_LIGHT_GREEN,rectangle_GREEN,rectangle_LIGHT_BLUE,rectangle_CYAN,
-				  	  rectangle_BLUE,rectangle_VIOLET,rectangle_LIGHT_VIOLET,rectangle_MAGENTA,
-				  	  custom1,custom2,custom3,custom4,custom5,custom6,custom7,custom8,
-				  	  custom9,custom10,custom11,custom12,custom13,custom14,custom15,custom16};
-    	
-    	colors = ColorPaletteModel.getInstance().getColors();
-
-    	changingRectangle = null;
+    /**
+     * Constructor class ColorPaletteController. Initializes the UI elements that were not defined in ColorPalette.fxml.
+     */
+    public ColorPaletteController(){    	
+    	defaultTooltips = new Tooltip[]{new Tooltip("Black"),new Tooltip("White"),new Tooltip("Light Red"),new Tooltip("Red"),
+    					  new Tooltip("Light Orange"),new Tooltip("Orange"),new Tooltip("Light Yellow"),new Tooltip("Yellow"),
+    					  new Tooltip("Light Green"),new Tooltip("Green"),new Tooltip("Light Blue"),new Tooltip("Cyan"),
+    					  new Tooltip("Blue"),new Tooltip("Violet"),new Tooltip("Light Violet"),new Tooltip("Magenta")};
+    	customTooltips = new Tooltip[16];
     	contextMenu = new ContextMenu();
     	changeColor = new MenuItem();
     	colorPicker = new ColorPicker();
     }
     
     /**
-     * @return cpc the current colorPalette
-     * Returns the colorPalette that has been fully built. 
+     * Checks to see if an instance of ColorPaletteController exists. 
+     * If so, return it. If not, instantiate an instance of ColorPaletteController and return it.
+     * 
+     * @return the instance of ColorPaletteController
      */
     public static ColorPaletteController getInstance() {
     	if(cpc == null)
     		cpc = new ColorPaletteController();
         return cpc;
     }
-   
-   public void setSelectedColorIndex(int c) {
-        ColorPaletteModel.getInstance().setSelectedIndex(c);
-   }
-
-   public void rePaint(){
-        Color[] colors = ColorPaletteModel.getInstance().getColors();
-        for(int i = 0; i < colors.length; i++) {
-        	rectangles[i].setFill(colors[i]);
-        }
-   } 
-   
-   public void resetStrokeWidths(){
-	   for(int i = 0; i < rectangles.length; i++){
-		   rectangles[i].setStrokeWidth(1);
-	   }
-   }
 
     /**
-    * @param arg0
-    * @param arg1
+     * Repaints the ColorPalette.
+     */
+    public void rePaint(){
+        Color[] colors = ColorPaletteModel.getInstance().getColors();
+        for(int i = 0; i < customColors.getChildren().size(); i++) {
+        	((Rectangle)customColors.getChildren().get(i)).setFill(colors[i + 16]);
+        	Color c = (Color) ((Rectangle)customColors.getChildren().get(i)).getFill();
+       		String hex = String.format( "R:%d G:%d B:%d",
+       		            (int)( c.getRed() * 255 ),
+       		            (int)( c.getGreen() * 255 ),
+       		            (int)( c.getBlue() * 255 ));
+       		customTooltips[i] = new Tooltip(hex);
+       		Tooltip.install(customColors.getChildren().get(i), customTooltips[i]);
+       	}
+   } 
+
+    /**
+     * Initializes the ColorPalette according to the given FXML file. Also sets up the Event Handlers for the ColorPalette.
+     * 
+     * @param arg0 - the filename of the controlling .fxml file
+     * @param arg1 - the resources used to localize the root object
      * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
-     * Initializes the colorPalette. 
      */
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+    	rePaint();
+    	selectedRectangle = (Rectangle)defaultColors.getChildren().get(0);
+    	ColorPaletteModel.getInstance().setSelectedIndex(0);
+    	((Rectangle)defaultColors.getChildren().get(0)).setStroke(Color.GREY);
+    	((Rectangle)defaultColors.getChildren().get(0)).setStrokeWidth(4);
     	ColorPaletteModel.getInstance().setDefaultColors();
     	contextMenu.getItems().add(changeColor);
     	changeColor.setGraphic(colorPicker);
     	
-    	for(int i = 0; i < 16; i++) {
-        	rectangles[i].setFill(colors[i]);
-        	rectangles[i].setOnMouseClicked(new EventHandler<MouseEvent>(){
+    	for(int i = 0; i < defaultColors.getChildren().size(); i++) {
+    		Tooltip.install(defaultColors.getChildren().get(i), defaultTooltips[i]);
+        	defaultColors.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>(){
+        		@Override
         		public void handle(MouseEvent e){
             		if(e.getButton() != MouseButton.SECONDARY){
-            			resetStrokeWidths();
-            			if(e.getSource() == rectangles[1]){
-            				((Rectangle)e.getSource()).setStroke(Color.WHITE);
+            			selectedRectangle.setStrokeWidth(1);
+            			selectedRectangle = (Rectangle)e.getSource();
+            			if(e.getSource() == defaultColors.getChildren().get(0)){
+            				((Rectangle)e.getSource()).setStroke(Color.GREY);
             				((Rectangle)e.getSource()).setStrokeWidth(4);
-            				ColorPaletteModel.getInstance().setSelectedColor(((Rectangle)e.getSource()).getFill());
+                    		ColorPaletteModel.getInstance().setSelectedIndex(defaultColors.getChildren().indexOf(e.getSource()));
             			}else{
+                			((Rectangle)e.getSource()).setStroke(Color.BLACK);
             				((Rectangle)e.getSource()).setStrokeWidth(4);
-            				ColorPaletteModel.getInstance().setSelectedColor(((Rectangle)e.getSource()).getFill());
+                    		ColorPaletteModel.getInstance().setSelectedIndex(defaultColors.getChildren().indexOf(e.getSource()));
             			}
             		}
             	}
             });
-        }
-        
-        for(int i = 16; i < colors.length; i++) {
-            rectangles[i].setFill(colors[i]);
-            rectangles[i].setOnMouseClicked(new EventHandler<MouseEvent>(){
-            	public void handle(MouseEvent e){
-            		if(e.getButton() == MouseButton.SECONDARY){
-            			changingRectangle = (Rectangle)e.getSource();
-            			contextMenu.show((Rectangle)e.getSource(),Side.TOP,0,0);
-            		}else{
-            			resetStrokeWidths();
-            			((Rectangle)e.getSource()).setStrokeWidth(4);
-            			ColorPaletteModel.getInstance().setSelectedColor(((Rectangle)e.getSource()).getFill());
-            		}
-            	}
-            });
-        }
-        
-        for(int i = 0; i < rectangles.length; i++){
-        	rectangles[i].setOnMouseEntered(new EventHandler<MouseEvent>(){
+        	
+        	defaultColors.getChildren().get(i).setOnMouseEntered(new EventHandler<MouseEvent>(){
+        		@Override
         		public void handle(MouseEvent e){
-        			((Rectangle)e.getSource()).setStroke(Color.GREY);
-        			((Rectangle)e.getSource()).setStrokeWidth(2);
+        			if(e.getSource() != selectedRectangle){
+        				((Rectangle)e.getSource()).setStroke(Color.GREY);
+            			((Rectangle)e.getSource()).setStrokeWidth(3);
+        			}
         		}
         	});
         	
-        	rectangles[i].setOnMouseExited(new EventHandler<MouseEvent>(){
+        	defaultColors.getChildren().get(i).setOnMouseExited(new EventHandler<MouseEvent>(){
+        		@Override
         		public void handle(MouseEvent e){
-        			((Rectangle)e.getSource()).setStroke(Color.BLACK);
-        			((Rectangle)e.getSource()).setStrokeWidth(1);
+        			if(e.getSource() != selectedRectangle){
+        				((Rectangle)e.getSource()).setStroke(Color.BLACK);
+            			((Rectangle)e.getSource()).setStrokeWidth(1);
+        			}
+        		}
+        	});
+        }
+        
+        for(int i = 0; i < customColors.getChildren().size(); i++) {
+        	customColors.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>(){
+            	@Override
+            	public void handle(MouseEvent e){
+            		selectedRectangle.setStrokeWidth(1);
+        			selectedRectangle = (Rectangle)e.getSource();
+            		((Rectangle)e.getSource()).setStroke(Color.BLACK);
+            		((Rectangle)e.getSource()).setStrokeWidth(4);
+            		ColorPaletteModel.getInstance().setSelectedIndex(customColors.getChildren().indexOf(e.getSource()));
+            		if(e.getButton() == MouseButton.SECONDARY){
+            			contextMenu.show((Rectangle)e.getSource(),Side.TOP,0,0);
+            		}
+            	}
+            });
+        	
+        	customColors.getChildren().get(i).setOnMouseEntered(new EventHandler<MouseEvent>(){
+        		@Override
+        		public void handle(MouseEvent e){
+        			if(e.getSource() != selectedRectangle){
+        				((Rectangle)e.getSource()).setStroke(Color.GREY);
+            			((Rectangle)e.getSource()).setStrokeWidth(3);
+        			}
+        		}
+        	});
+        	
+        	customColors.getChildren().get(i).setOnMouseExited(new EventHandler<MouseEvent>(){
+        		@Override
+        		public void handle(MouseEvent e){
+        			if(e.getSource() != selectedRectangle){
+        				((Rectangle)e.getSource()).setStroke(Color.BLACK);
+            			((Rectangle)e.getSource()).setStrokeWidth(1);
+        			}
         		}
         	});
         }
         
         colorPicker.setOnAction(new EventHandler<ActionEvent>(){
+        	@Override
         	public void handle(ActionEvent e){
-        		changingRectangle.setFill(((ColorPicker)e.getSource()).getValue());
+        		ColorPaletteModel.getInstance().setColor(((ColorPicker)e.getSource()).getValue(), 16 + customColors.getChildren().indexOf(selectedRectangle));
         	}
         });
         
