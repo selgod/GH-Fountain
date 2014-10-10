@@ -1,19 +1,9 @@
 package choreography.view.sim;
 
-import choreography.io.FCWLib;
-import choreography.io.LagTimeLibrary;
-import choreography.model.fcw.FCW;
-import choreography.model.lagtime.LagTimeTable;
-import choreography.view.music.MusicPaneController;
-import choreography.view.timeline.TimelineController;
-
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.SortedMap;
 import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -21,10 +11,6 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -36,9 +22,13 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.QuadCurve;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import choreography.io.FCWLib;
+import choreography.io.LagTimeLibrary;
+import choreography.model.fcw.FCW;
+import choreography.view.music.MusicPaneController;
+import choreography.view.timeline.TimelineController;
 
 
 public class FountainSimController implements Initializable {
@@ -506,7 +496,6 @@ public class FountainSimController implements Initializable {
     private int sweepType=1;
     private double leftSweepSpeed = 1;
     private double rightSweepSpeed = 1;
-    private double sweepSpeed;
     Timeline timelineRing1;
     
     private ConcurrentNavigableMap<Integer, ArrayList<FCW>> 
@@ -690,10 +679,10 @@ public class FountainSimController implements Initializable {
                 		leftSweepTimeline.setRate(0.8);
                 		leftSweepSpeed = 2.5;
                     }
-//                    if(actionsList.contains("MODERATO")) {
-//                		leftSweepTimeline.setRate(1.0);
-//                		leftSweepSpeed = 1.0;
-//                    }
+                    if(actionsList.contains("MODERATO")) {
+                		leftSweepTimeline.setRate(1.0);
+                		leftSweepSpeed = 1.0;
+                    }
                     if(actionsList.contains("ALLEGRETO")) {
                 		leftSweepTimeline.setRate(1.3);
                 		leftSweepSpeed = 1.8;
@@ -747,10 +736,10 @@ public class FountainSimController implements Initializable {
                 		rightSweepTimeline.setRate(0.8);
                 		rightSweepSpeed = 2.5;
                     }
-//                	if(actionsList.contains("MODERATO")) {
-//                		rightSweepTimeline.setRate(1.0);
-//                		rightSweepSpeed = 1.0;
-//                    }
+                	if(actionsList.contains("MODERATO")) {
+                		rightSweepTimeline.setRate(1.0);
+                		rightSweepSpeed = 1.0;
+                    }
                 	if(actionsList.contains("ALLEGRETO")) {
                 		rightSweepTimeline.setRate(1.3);
                 		rightSweepSpeed = 1.8;
@@ -803,44 +792,28 @@ public class FountainSimController implements Initializable {
                         }
                     }
                     if(actionsList.contains("HOLDRIGHTLONG")) {
-                    	if (sweepType == 1){
+                    	if (sweepType == 1 || sweepType == 2){
                     		moveLeftSweeps(30, 30);
                             moveRightSweeps(30, 30);
-                        }
-                        if (sweepType == 2){
-                        	moveLeftSweeps(30, 30);
-                            moveRightSweeps(30, 30);
-                        }                        
+                        }              
                     }
                     if(actionsList.contains("HOLDRIGHTSHORT")) {
-                    	if (sweepType == 1){
+                    	if (sweepType == 1 || sweepType == 2){
                     		moveLeftSweeps(15, 15);
                             moveRightSweeps(15, 15);
-                        }
-                        if (sweepType == 2){
-                        	moveLeftSweeps(15, 15);
-                            moveRightSweeps(15, 15);
-                        }                        
+                        }                  
                     }
                     if(actionsList.contains("HOLDLEFTLONG")) {
-                    	if (sweepType == 1){
+                    	if (sweepType == 1 || sweepType == 2){
                     		moveLeftSweeps(-30, -30);
                             moveRightSweeps(-30, -30);
-                        }
-                        if (sweepType == 2){
-                        	moveLeftSweeps(-30, -30);
-                            moveRightSweeps(-30, -30);
-                        }                        
+                        }                       
                     }
                     if(actionsList.contains("HOLDLEFTSHORT")) {
-                    	if (sweepType == 1){
+                    	if (sweepType == 1 || sweepType == 2){
                     		moveLeftSweeps(-15, -15);
                             moveRightSweeps(-15, -15);
-                        }
-                        if (sweepType == 2){
-                        	moveLeftSweeps(-15, -15);
-                            moveRightSweeps(-15, -15);
-                        }                        
+                        }                    
                     }
                     if(actionsList.contains("RIGHTLONGRIGHTSHORT")) {
                     	if (sweepType == 1){
@@ -883,14 +856,10 @@ public class FountainSimController implements Initializable {
                         }                    	
                     }
                     if(actionsList.contains("HOLDCENTER")) {
-                    	if (sweepType == 1){
+                    	if (sweepType == 1 || sweepType == 2){
                     		moveLeftSweeps(0, 0);
                             moveRightSweeps(0, 0);
-                        }
-                        if (sweepType == 2){
-                        	moveLeftSweeps(0, 0);
-                            moveRightSweeps(0, 0);
-                        }                    	
+                        }               	
                     }
                     if(actionsList.contains("CENTERLEFTSHORT")) {
                     	if (sweepType == 1){
@@ -1630,20 +1599,18 @@ public class FountainSimController implements Initializable {
 			timeline.getKeyFrames().add(kf);
 			timeline.play();
     }
-    
     public void moveLeftSweeps(double leftLimit, double rightLimit){
-		//final Timeline timeline = new Timeline();
     	leftSweepTimeline = new Timeline();
-    	leftSweepTimeline.setDelay(Duration.seconds(.5));
-		if(MusicPaneController.getInstance().getMediaPlayer().statusProperty().getValue()== Status.PLAYING){
-			leftSweepTimeline.setCycleCount(leftSweepTimeline.INDEFINITE);
-		}
-		else{
-			leftSweepTimeline.setCycleCount(1);
-		}
-		leftSweepTimeline.setAutoReverse(true);
-		
-		KeyValue kv25 = null;
+    	if(MusicPaneController.getInstance().getMediaPlayer().statusProperty().getValue()== Status.PLAYING){
+    		leftSweepTimeline.setCycleCount(Animation.INDEFINITE);
+    	}
+    	else{
+    		leftSweepTimeline.setCycleCount(1);
+    	}
+    	leftSweepTimeline.setAutoReverse(true);
+    	
+    	//These are for the animations and hold time values
+    	KeyValue kv25 = null;
 		KeyValue kv26 = null;
 		KeyValue kv27 = null;
 		KeyValue kv28 = null;
@@ -1659,113 +1626,66 @@ public class FountainSimController implements Initializable {
 		KeyValue kv14 = null;
 		KeyValue kv19 = null;
 		KeyValue kv20 = null;
-	
-		mod1sweep1.setVisible(true);
-		mod2sweep1.setVisible(true);
-		mod3sweep1.setVisible(true);
-		mod4sweep1.setVisible(true);
-		mod5sweep1.setVisible(true);
-		mod6sweep1.setVisible(true);
-		mod7sweep1.setVisible(true);
-	
-//	if (level==0){
-//		kv25 = new KeyValue(mod1sweep1.visibleProperty(), false);
-//		kv26 = new KeyValue(mod1sweep2.visibleProperty(), false);
-//		
-//		kv27 = new KeyValue(mod3sweep1.visibleProperty(), false);
-//		kv28 = new KeyValue(mod3sweep2.visibleProperty(), false);
-//		
-//		kv29 = new KeyValue(mod5sweep1.visibleProperty(), false);
-//		kv30 = new KeyValue(mod5sweep2.visibleProperty(), false);
-//		
-//		kv31 = new KeyValue(mod7sweep1.visibleProperty(), false);
-//		kv32 = new KeyValue(mod7sweep2.visibleProperty(), false);
-//	}
-		
-	mod1sweep1.getTransforms().clear();
-	mod2sweep1.getTransforms().clear();
-	mod3sweep1.getTransforms().clear();
-	mod4sweep1.getTransforms().clear();
-	mod5sweep1.getTransforms().clear();
-	mod6sweep1.getTransforms().clear();
-	mod7sweep1.getTransforms().clear();
+    		
+    		mod1sweep1.setVisible(true);
+    		mod2sweep1.setVisible(true);
+    		mod3sweep1.setVisible(true);
+    		mod4sweep1.setVisible(true);
+    		mod5sweep1.setVisible(true);
+    		mod6sweep1.setVisible(true);
+    		mod7sweep1.setVisible(true);
+    		
+    		// Makes sure that there are no current animations happening to the object
+    		mod1sweep1.getTransforms().clear();
+    		mod2sweep1.getTransforms().clear();
+    		mod3sweep1.getTransforms().clear();
+    		mod4sweep1.getTransforms().clear();
+    		mod5sweep1.getTransforms().clear();
+    		mod6sweep1.getTransforms().clear();
+    		mod7sweep1.getTransforms().clear();
+    		
+    		//Creates a rotate object Rotate (X,Y,Z)
+    		Rotate rotate1 = new Rotate(leftLimit,mod1sweep1.getStartX(),mod1sweep1.getStartY());
+    		Rotate rotate2 = new Rotate(leftLimit,mod2sweep1.getStartX(),mod2sweep1.getStartY());
+    		Rotate rotate3 = new Rotate(leftLimit,mod3sweep1.getStartX(),mod3sweep1.getStartY());
+    		Rotate rotate4 = new Rotate(leftLimit,mod4sweep1.getStartX(),mod4sweep1.getStartY());
+    		Rotate rotate5 = new Rotate(leftLimit,mod5sweep1.getStartX(),mod5sweep1.getStartY());
+    		Rotate rotate6 = new Rotate(leftLimit,mod6sweep1.getStartX(),mod6sweep1.getStartY());
+    		Rotate rotate7 = new Rotate(leftLimit,mod7sweep1.getStartX(),mod7sweep1.getStartY());
 
-	//if (sweepType == 1){
-	Rotate rotate1 = new Rotate(leftLimit,mod1sweep1.getStartX(),mod1sweep1.getStartY());
-	Rotate rotate2 = new Rotate(leftLimit,mod2sweep1.getStartX(),mod2sweep1.getStartY());
-	Rotate rotate3 = new Rotate(leftLimit,mod3sweep1.getStartX(),mod3sweep1.getStartY());
-	Rotate rotate4 = new Rotate(leftLimit,mod4sweep1.getStartX(),mod4sweep1.getStartY());
-	Rotate rotate5 = new Rotate(leftLimit,mod5sweep1.getStartX(),mod5sweep1.getStartY());
-	Rotate rotate6 = new Rotate(leftLimit,mod6sweep1.getStartX(),mod6sweep1.getStartY());
-	Rotate rotate7 = new Rotate(leftLimit,mod7sweep1.getStartX(),mod7sweep1.getStartY());
-
-	mod1sweep1.getTransforms().add(rotate1);
-	mod2sweep1.getTransforms().add(rotate2);
-	mod3sweep1.getTransforms().add(rotate3);
-	mod4sweep1.getTransforms().add(rotate4);
-	mod5sweep1.getTransforms().add(rotate5);
-	mod6sweep1.getTransforms().add(rotate6);
-	mod7sweep1.getTransforms().add(rotate7);
-	
-	kv1 = new KeyValue(rotate1.angleProperty(), rightLimit);
-	kv2 = new KeyValue(rotate2.angleProperty(), rightLimit);
-	
-	kv7 = new KeyValue(rotate3.angleProperty(), rightLimit);
-	kv8 = new KeyValue(rotate4.angleProperty(), rightLimit);
-	
-	kv13 = new KeyValue(rotate5.angleProperty(), rightLimit);
-	kv14 = new KeyValue(rotate6.angleProperty(), rightLimit);
-		
-	kv19 = new KeyValue(rotate7.angleProperty(), rightLimit);
-	//}
-	
-//	else {
-//		Rotate rotate1 = new Rotate(leftLimit,mod1sweep1.getStartX(),mod1sweep1.getStartY());
-//		Rotate rotate2 = new Rotate(rightLimit,mod1sweep2.getStartX(),mod1sweep2.getStartY());
-//		Rotate rotate3 = new Rotate(leftLimit,mod3sweep1.getStartX(),mod3sweep1.getStartY());
-//		Rotate rotate4 = new Rotate(rightLimit,mod3sweep2.getStartX(),mod3sweep2.getStartY());
-//		Rotate rotate5 = new Rotate(leftLimit,mod5sweep1.getStartX(),mod5sweep1.getStartY());
-//		Rotate rotate6 = new Rotate(rightLimit,mod5sweep2.getStartX(),mod5sweep2.getStartY());
-//		Rotate rotate7 = new Rotate(leftLimit,mod7sweep1.getStartX(),mod7sweep1.getStartY());
-//		Rotate rotate8 = new Rotate(rightLimit,mod7sweep2.getStartX(),mod7sweep2.getStartY());
-//
-//		mod1sweep1.getTransforms().add(rotate1);
-//		mod1sweep2.getTransforms().add(rotate2);
-//		mod3sweep1.getTransforms().add(rotate3);
-//		mod3sweep2.getTransforms().add(rotate4);
-//		mod5sweep1.getTransforms().add(rotate5);
-//		mod5sweep2.getTransforms().add(rotate6);
-//		mod7sweep1.getTransforms().add(rotate7);
-//		mod7sweep2.getTransforms().add(rotate8);
-//		
-//		kv1 = new KeyValue(rotate1.angleProperty(), rightLimit);
-//		kv2 = new KeyValue(rotate2.angleProperty(), leftLimit);
-//		
-//		kv7 = new KeyValue(rotate3.angleProperty(), rightLimit);
-//		kv8 = new KeyValue(rotate4.angleProperty(), leftLimit);
-//		
-//		kv13 = new KeyValue(rotate5.angleProperty(), rightLimit);
-//		kv14 = new KeyValue(rotate6.angleProperty(), leftLimit);
-//			
-//		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit);
-//		kv20 = new KeyValue(rotate8.angleProperty(), leftLimit);
-//	}
-	
-		final KeyFrame kf = new KeyFrame(Duration.seconds(leftSweepSpeed), kv1, kv2, kv7, kv8, kv13, 
-																kv14, kv14, kv19, kv20,
-																kv25, kv26, kv27, kv28,
-																kv29, kv30, kv31, kv32);
-		leftSweepTimeline.getKeyFrames().add(kf);
-		//leftSweepTimeline = timeline;
-		leftSweepTimeline.play();     				
-}
-
+    		//Tells the sweep that it needs to rotate
+    		mod1sweep1.getTransforms().add(rotate1);
+    		mod2sweep1.getTransforms().add(rotate2);
+    		mod3sweep1.getTransforms().add(rotate3);
+    		mod4sweep1.getTransforms().add(rotate4);
+    		mod5sweep1.getTransforms().add(rotate5);
+    		mod6sweep1.getTransforms().add(rotate6);
+    		mod7sweep1.getTransforms().add(rotate7);
+    		
+    		
+    		kv1 = new KeyValue(rotate1.angleProperty(), rightLimit);
+    		kv2 = new KeyValue(rotate2.angleProperty(), rightLimit);
+    		
+    		kv7 = new KeyValue(rotate3.angleProperty(), rightLimit);
+    		kv8 = new KeyValue(rotate4.angleProperty(), rightLimit);
+    		
+    		kv13 = new KeyValue(rotate5.angleProperty(), rightLimit);
+    		kv14 = new KeyValue(rotate6.angleProperty(), rightLimit);
+    			
+    		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit);
+  		
+    		final KeyFrame kf = new KeyFrame(Duration.seconds(leftSweepSpeed), kv1, kv2, kv7, kv8, kv13, kv14, kv14, kv19, kv20, kv25, kv26, kv27, kv28, kv29, kv30, kv31, kv32);
+    		leftSweepTimeline.getKeyFrames().add(kf);
+    		leftSweepTimeline.play();
+    }
+    
+ 
 public void moveRightSweeps(double leftLimit, double rightLimit){
 //	final Timeline timeline = new Timeline();
 	rightSweepTimeline = new Timeline();
 	//rightSweepTimeline.setDelay(Duration.seconds(.5));
 	if(MusicPaneController.getInstance().getMediaPlayer().statusProperty().getValue()== Status.PLAYING){
-		rightSweepTimeline.setCycleCount(rightSweepTimeline.INDEFINITE);
+		rightSweepTimeline.setCycleCount(Animation.INDEFINITE);
 	}
 	else{
 		rightSweepTimeline.setCycleCount(1);
