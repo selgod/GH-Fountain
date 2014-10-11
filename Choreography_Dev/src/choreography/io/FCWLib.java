@@ -122,6 +122,7 @@ public final class FCWLib {
         fileIn.findWithinHorizon("|Commands|", 0);
         fileIn.nextLine();
         readTableCommandsFromFile(fileIn);
+        fileIn.close();
     }
 
     /**

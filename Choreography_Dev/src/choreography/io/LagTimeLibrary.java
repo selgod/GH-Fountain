@@ -80,6 +80,7 @@ public class LagTimeLibrary {
                 delayTimes.add(lt);
             }
             LagTimeTable.setLagTimes(delayTimes);
+            fileIn.close();
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Your LagTimeDef.txt file "
                     + "may be corrupted. Please see the manual to find "
