@@ -245,12 +245,12 @@ public class ChoreographyController implements Initializable {
 			@Override
 			public void handle(ActionEvent arg0) {
 				// progressIndicator.setProgress(-1);
+				Stage stage = new Stage();
 				try{
 	    			FXMLLoader fxml = new FXMLLoader(getClass().getResource("Loading.fxml"));
 	    			Pane loading = new Pane();
 					loading = fxml.load();
 					Scene scene = new Scene(loading);
-					Stage stage = new Stage();
 					stage.setTitle("Loading ... ");
 					stage.setScene(scene);
 					stage.show();
@@ -268,10 +268,11 @@ public class ChoreographyController implements Initializable {
 				// progressIndicator.setProgress(1);
 					TimelineController.getInstance().initializeTimelines();
 					openCTLMenuItem.setDisable(false);
-					stage.close();
 		    	} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} finally {
+					stage.close();
 				}
 			}
 
@@ -300,21 +301,36 @@ public class ChoreographyController implements Initializable {
 
 			@Override
 			public void handle(ActionEvent t) {
-				try {
-					loadDefaultMap();
-					CtlLib.getInstance().openCtl();
-					cc.setfcwOutput("CTL file has loaded!");
-					if (ColorPaletteModel.getInstance().isClassicColors()) {
-						Dialogs.create().message("You've loaded a legacy file. " + "Currently, they are read-only.")
-								.showWarning();
-
-						// killFeaturesOnLegacy();
-					}
-					SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
-				} catch (IOException ex) {
-					Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
-				} catch (NullPointerException e) {
-
+				Stage stage = new Stage();
+				try{
+					FXMLLoader fxml = new FXMLLoader(getClass().getResource("Loading.fxml"));
+	    			Pane loading = new Pane();
+					loading = fxml.load();
+					Scene scene = new Scene(loading);
+					stage.setTitle("Loading ... ");
+					stage.setScene(scene);
+					stage.show();
+						try {
+							loadDefaultMap();
+							CtlLib.getInstance().openCtl();
+							cc.setfcwOutput("CTL file has loaded!");
+							if (ColorPaletteModel.getInstance().isClassicColors()) {
+								Dialogs.create().message("You've loaded a legacy file. " + "Currently, they are read-only.")
+										.showWarning();
+		
+								// killFeaturesOnLegacy();
+							}
+							SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
+						} catch (IOException ex) {
+							Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
+						} catch (NullPointerException e) {
+		
+						}
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} finally {
+					stage.close();
 				}
 			}
 		});
