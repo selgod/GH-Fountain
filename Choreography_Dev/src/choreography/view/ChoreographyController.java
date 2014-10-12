@@ -245,16 +245,7 @@ public class ChoreographyController implements Initializable {
 			@Override
 			public void handle(ActionEvent arg0) {
 				// progressIndicator.setProgress(-1);
-				loadDefaultMap();
-				
-				FileChooser fc = new FileChooser();
-		    	fc.setTitle("Open Music");
-		    	fc.setInitialDirectory(new File(System.getProperty("user.dir")));
-		        fc.getExtensionFilters().setAll(new FileChooser.ExtensionFilter(
-		                "Music Files", "*.wav"));
-		    	File file2 = fc.showOpenDialog(null);
-				
-		    	try{
+				try{
 	    			FXMLLoader fxml = new FXMLLoader(getClass().getResource("Loading.fxml"));
 	    			Pane loading = new Pane();
 					loading = fxml.load();
@@ -263,6 +254,15 @@ public class ChoreographyController implements Initializable {
 					stage.setTitle("Loading ... ");
 					stage.setScene(scene);
 					stage.show();
+				
+					loadDefaultMap();
+				
+					FileChooser fc = new FileChooser();
+					fc.setTitle("Open Music");
+					fc.setInitialDirectory(new File(System.getProperty("user.dir")));
+					fc.getExtensionFilters().setAll(new FileChooser.ExtensionFilter(
+		                "Music Files", "*.wav"));
+					File file2 = fc.showOpenDialog(null);
 		    	
 					MusicPaneController.getInstance().selectMusic(file2);
 				// progressIndicator.setProgress(1);
