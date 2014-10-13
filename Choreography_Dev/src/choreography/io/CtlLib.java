@@ -105,7 +105,7 @@ public class CtlLib {
             
             	// Legacy file
                 case "ct0-382":
-                    ColorPaletteModel.getInstance().setClassicColors(true);
+                    //TODO ColorPaletteModel.getInstance().setClassicColors(true);    don't need
                     FCWLib.getInstance().usesClassicColors(true);
                     SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
                     break;
@@ -214,7 +214,11 @@ public class CtlLib {
      */
     private StringBuilder createCtlData(SortedMap<Integer, ArrayList<FCW>> content) throws IOException {
         StringBuilder commandsOutput = new StringBuilder();
+<<<<<<< HEAD
        /* if(ColorPaletteModel.getInstance().isClassicColors()) {
+=======
+        if(ColorPaletteModel.getInstance() != null) {
+>>>>>>> origin/ColorPalette
             commandsOutput.append("ct0-382");
             commandsOutput.append(System.lineSeparator());
         }

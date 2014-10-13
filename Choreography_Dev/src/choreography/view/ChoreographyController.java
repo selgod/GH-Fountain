@@ -191,6 +191,7 @@ public class ChoreographyController implements Initializable {
 			}
 
 		});
+<<<<<<< HEAD
 
 		splitSimulationMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -809,6 +810,468 @@ public class ChoreographyController implements Initializable {
 			getChildren().add(webView);
 		}
 	}
+=======
+    	
+        openCTLMenuItem.setOnAction(new EventHandler<ActionEvent> () {
+
+                @Override
+                public void handle(ActionEvent t) {
+                    try {
+                        loadDefaultMap();
+                        CtlLib.getInstance().openCtl();
+                        cc.setfcwOutput("CTL file has loaded!");
+                        if(ColorPaletteModel.getInstance() != null) {  //TODO old code checked for isClassicColors()
+                            Dialogs.create().message("You've loaded a legacy file. "
+                                            + "Currently, they are read-only.").showWarning();
+                            
+//                            killFeaturesOnLegacy();
+                        }
+                        SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (NullPointerException e) {
+                        
+                    }
+                }
+        });
+        
+        advancedCheckMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent event) {
+
+                    Integer[] advancedOnlyLightNames = FCWLib.getInstance().getAdvancedLightNames();
+                    TimelineController.getInstance().setLabelGridPane(advancedOnlyLightNames);
+                    TimelineController.getInstance().setTimelineGridPane();
+                    TimelineController.getInstance().rePaintLightTimeline();
+                }
+            });
+    	
+    	quitMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                Action result = Dialogs.create()
+                        .title("Quit?")
+                        .masthead("")
+                        .message( "Are you sure you want to quit?")
+                        .showConfirm();
+                if(result != Actions.YES) {
+//                    System.out.println(result);
+                } else {
+                    if(isSaved) {
+                        Platform.exit();
+                    }
+                    else {
+                        Action saveResult = Dialogs.create().title("Save?")
+                                .masthead("You haven't saved before exiting.")
+                                .message("Would you like to save before quiting?")
+                                .showConfirm();
+                        if(saveResult == Actions.YES) {
+                            saveAsMenuItem.getOnAction().handle(t);
+                        }
+                        else if(saveResult == Actions.NO) {
+                            Platform.exit();
+                        }
+                    }
+                }
+            }
+        });
+        
+        saveMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+                
+                @Override
+                public void handle(ActionEvent t) {
+                    if(isSaved) {
+                        saveGhmfZipFile();
+                    } else {
+                        saveAsMenuItem.getOnAction().handle(t);
+                    }
+                }
+            });
+        
+        saveAsMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent t) {
+                    saveLocation  = selectSaveLocation();
+                    saveGhmfZipFile();
+                    
+                }
+            });
+        
+//        setLagTimesMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+//
+//                @Override
+//                public void handle(ActionEvent t) {
+////                    openLagTimeDialog();
+//                }
+//            });
+        
+        newItemMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent event) {
+//                    MusicPaneController.getInstance().disposeMusic();
+                    stopSliderTimer();
+                    MusicPaneController.getInstance().resetAll();
+                    TimelineController.getInstance().disposeTimeline();
+                    FountainSimController.getInstance().clearSweeps();
+                    FountainSimController.getInstance().clearSim();
+                    ColorPaletteModel.getInstance().resetModel();
+                    MapLib.setMapLoaded(false);
+                    
+                    SlidersController.getInstance().resurrectSlidersPane();
+                    SpecialoperationsController.getInstance().resurrectSpecialOpsPane();
+                    MapLib.openMap(getClass().getResourceAsStream("/resources/default.map"));
+                    ColorPaletteController.getInstance().rePaint();
+                }
+                
+            });
+        
+        events = new ConcurrentSkipListMap<>();
+        fcwOutput.setText("Choreographer has loaded!");
+        openCTLMenuItem.setDisable(true);
+        cc = this;
+    }
+    
+    public void loadDefaultMap() {
+        boolean isMap = MapLib.isMapLoaded();
+        if(!isMap) {
+            MapLib.openMap(getClass().getResourceAsStream("/resources/default.map"));
+        }
+    }
+
+    public void killFeaturesOnLegacy() {
+        SpecialoperationsController.getInstance().killSpecialOpsPane();
+        SlidersController.getInstance().killSlidersPane();
+        //ColorPaletteModel.getInstance().setClassicColors(true);
+        ColorPaletteController.getInstance().rePaint();
+    }
+
+    private void saveGhmfZipFile() {
+        try {
+//            if(ColorPaletteModel.getInstance().isClassicColors()) {
+//                Dialogs.create()
+//                        .message("It is currently impossible to save legacy files.")
+//                        .title("Cannot Save Legacy CTL")
+//                        .showError();
+//            }
+            FilePayload ctl = CtlLib.getInstance().createFilePayload(
+                    TimelineController.getInstance().getTimeline().getTimeline());
+            FilePayload map = MapLib.createFilePayload();
+            FilePayload music = MusicPaneController.getInstance().createFilePayload();
+            FilePayload marks = MarkLib.createFilePayload();
+            isSaved = GhmfLibrary.writeGhmfZip(saveLocation, ctl, map, music, marks);
+        } catch (IOException ex) {
+            Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private File selectSaveLocation() {
+        FileChooser fc = new FileChooser();
+        fc.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("GHMF", "*.ghmf"));
+        fc.setInitialDirectory(new File(System.getProperty("user.home")));
+        saveLocation = fc.showSaveDialog(null);
+        saveLocation = new File(saveLocation.getAbsoluteFile() + ".ghmf");
+        isSaved = true;
+        return saveLocation;
+    }
+    
+    /**
+     *
+     * @return
+     */
+    public boolean openLagTimeDialog() {
+        try {
+            // Load the fxml file and create a new stage for the popup
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("view/lagtime/LagTimeGUI.fxml"));
+            GridPane page = (GridPane) loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Edit Lag Times");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(Main.getPrimaryStage());
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Set the lagtimes into the controller
+            LagTimeGUIController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setDelays(LagTimeLibrary.getInstance().getLagTimes());
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+            return true;
+
+            } catch (IOException e) {
+              return false;
+            }
+    }
+    
+    /**
+     *
+     * @param s
+     */
+    public void setfcwOutput(String s) {
+        fcwOutput.setText(s);
+    }
+    
+    public void addChannels(){
+//    	if (isFirst){
+    	Stage primaryStage = new Stage();
+    	CustomChannel.start(primaryStage);
+//    	isFirst = false;
+//    	}
+//    	else{
+//    		CustomChannel.showStage();
+//    	}
+    }
+    
+    /**
+     *
+     * @return
+     */
+    public static ChoreographyController getInstance() {
+        return cc;
+    }
+
+    /**
+     * Sets the 
+     * @param parsedCTL
+     */
+    public void setEventTimeline(ConcurrentSkipListMap<Integer, ArrayList<FCW>> parsedCTL) {
+        events.putAll(parsedCTL);
+        TimelineController.getInstance().setTimeline(parsedCTL);
+        TimelineController.getInstance().setLabelGridPaneWithCtl();
+        TimelineController.getInstance().rePaint();
+    }
+    
+    /**
+     * Returns the event Timeline
+     * @return
+     */
+    public SortedMap<Integer, ArrayList<FCW>> getEventTimeline() {
+        return events;
+    }
+
+    public void setAdvanced(boolean b) {
+        isAdvanced = b;
+    }
+
+    public boolean getAdvanced() {
+        return isAdvanced;
+    }
+    
+    /**
+     * Updates timeSlider in MusicPaneController every 1/8th of a second
+     */
+    public void startPollingTimeSliderAlgorithm() {
+        
+        sliderTimer.scheduleAtFixedRate(new TimerTask() {
+
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    MusicPaneController.getInstance().updateProgress();
+                });
+            }
+        }, 0l, 125l);
+    }
+    
+    /**
+     * Draws SIM and sets sliders every 10th of a second
+     */
+    
+    public void startPollingSlidersAlgorithm() {
+       
+        timelineTimer.scheduleAtFixedRate(new TimerTask() {
+
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+//                	TimelineController.getInstance().fireSubmapToSim();
+//                    TimelineController.getInstance().fireSliderChangeEvent();
+//                    Timeline.getInstance().drawSim(MusicPaneController.getInstance().getTenthsTime());
+                });
+            }
+        }, 0l, 20000l);
+    }
+    
+    public void startPollingSimAlgorithm() {
+        
+        timelineTimer.scheduleAtFixedRate(new TimerTask() {
+
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                	//TimelineController.getInstance().fireSubmapToSim();
+                    TimelineController.getInstance().fireSimChangeEvent();
+                    //FountainSimController.getInstance().drawSim(MusicPaneController.getInstance().getTenthsTime());
+                });
+            }
+        }, 0l, 100l);
+    }
+    
+    public void startPollingColorAlgorithm() {
+        
+        timelineTimer.scheduleAtFixedRate(new TimerTask() {
+
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    TimelineController.getInstance().updateColors(MusicPaneController.getInstance().getTenthsTime());
+                });
+            }
+        }, 0l, 100l);
+    }
+ 
+    public boolean getIsSelected(){
+	return isSelected;
+    }
+
+    public void stopTimelineTimer() {
+       timelineTimer.purge();
+    }
+
+    public void stopSliderTimer() {
+        sliderTimer.purge();
+    }
+    
+    public void openMapFileMenuItemHandler() {
+        try {
+            MapLib.openMap();
+        } catch (FileNotFoundException ex) {
+            Dialogs.create().title("Invalid MAP file")
+                    .message("You've selected an invalid MAP file. "
+                            + "Please try again.").showError();
+            Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void startPlayingSim() {
+        TimelineController.getInstance().fireSubmapToSim();
+        FountainSimController.getInstance().playSim();
+    }
+    public ScrollPane getBeatMarkScrollPane(){
+    	return this.beatMarkScrollPane;
+    }
+    public void setBeatMarkGridPane(){
+    	gridpaneBeatMarks = new GridPane();
+    		
+    	time = MusicPaneController.SONG_TIME;
+    	
+    	gridpaneBeatMarks.setGridLinesVisible(true);
+    	beatMarkRecArray = new Rectangle[time];
+    	
+    	for (int i = 0; i < time; i++) {    		
+    		gridpaneBeatMarks.getColumnConstraints().add(new ColumnConstraints(26));
+            if (i < 1) { // because the array is not square this needs to be
+                                          // here
+            	gridpaneBeatMarks.getRowConstraints().add(new RowConstraints(26));
+            }
+            
+            beatMarkRecArray[i] = new Rectangle(25, 25, Color.LIGHTGREY);
+            gridpaneBeatMarks.add(beatMarkRecArray[i], i, 0);
+            int testI = i;
+            beatMarkRecArray[i]
+                    .setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent me) {
+            	beatMarkRecArray[testI].setFill(Color.LIGHTGRAY);
+            }});
+            
+    	}
+    	
+    	beatMarkScrollPane.setContent(gridpaneBeatMarks);
+    }
+    
+    public Integer[] getBeatmarks() {
+        Integer[] beatMarksArray = new Integer[beatMarkRecArray.length];
+        for(int i = 0; i < beatMarkRecArray.length; i++) {
+            if(beatMarkRecArray[i].getFill() == Color.LIGHTGREY) {
+                beatMarksArray[i] = 0;
+            }
+            else {
+                beatMarksArray[i] = 1;
+            }
+        }
+        return beatMarksArray;
+    }
+    
+    public void setBeatmarks(Integer[] beatmarksArray) {
+        for(int i = 0; i < beatmarksArray.length; i++) {
+            if(beatmarksArray[i] == 0) {
+                beatMarkRecArray[i].setFill(Color.LIGHTGREY);
+            }
+            else {
+                beatMarkRecArray[i].setFill(Color.BLACK);
+            }
+        }
+    }
+    
+//    public void rePaintBeatMarks() {
+//        for()
+//    }
+    
+    @FXML
+    public void openGhmfFile(ActionEvent event) {
+        GhmfLibrary.openGhmfFile();
+    }
+    
+    @FXML
+    public void aboutDialogueBox() {
+    	Dialogs.create().title("About GHMF Choreography Studio")
+        .message("The Grand Valley State University senior project team, Excalibur Solutions, created the GHMF Choreography Studio on April 15, 2014. "
+                + System.lineSeparator() + System.lineSeparator() 
+                + "This software is used to create light shows for the Grand Haven "
+                + "Musical Fountain located in Grand Haven Michigan.  ")
+                .masthead("About").showInformation();
+    }
+    
+    @FXML
+    public void userManual() {
+    	Stage stage = new Stage();
+    	Scene scene;
+////    	scene = new Scene(new Browser(), 750, 500, Color.web("#666970"));
+////        stage.setScene(scene);
+////        stage.setTitle("Web View");
+//////        scene.getStylesheets().add("webviewsample/BrowserToolbar.css");        
+////        stage.show();
+//    	File f = new File("/resources/User_Manual_v10.htm");
+//    	// ..
+//    	final WebView webview = new WebView();
+//    	try {
+//			webview.getEngine().load(f.toURI().toURL().toString());
+//		} catch (MalformedURLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//    }
+    	// Names the browser window
+    	 stage.setTitle("Help - User Manual");
+    	 
+    	    MyBrowser myBrowser = new MyBrowser();
+    	    scene = new Scene(myBrowser, 800, 600);
+    	 
+    	    stage.setScene(scene);
+    	    // Opens the browser 
+    	    stage.show();
+    }
+
+    class MyBrowser extends Region{
+    	 
+        final String userManualHtml = "User_Manual_v10.htm";
+     
+        WebView webView = new WebView();
+        WebEngine webEngine = webView.getEngine();
+             
+        public MyBrowser(){
+        	// Points to the location of the htm file for the manual
+            URL urlHello = getClass().getResource("/resources/User_Manual_v10.htm");
+            webEngine.load(urlHello.toExternalForm());
+            // Adds the browser to the scene
+            getChildren().add(webView);
+        }
+    }
+>>>>>>> origin/ColorPalette
 }
 
 // class Browser extends Region{
