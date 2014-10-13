@@ -63,7 +63,6 @@ import choreography.io.MapLib;
 import choreography.io.MarkLib;
 import choreography.model.color.ColorPaletteModel;
 import choreography.model.fcw.FCW;
-import choreography.model.timeline.Timeline;
 import choreography.view.colorPalette.ColorPaletteController;
 import choreography.view.customChannel.CustomChannel;
 import choreography.view.lagtime.LagTimeGUIController;

@@ -3,11 +3,10 @@
  */
 package choreography.model.lagtime;
 
-import choreography.io.FCWLib;
-import choreography.model.cannon.CannonEnum;
-import choreography.model.fcw.FCW;
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import choreography.io.FCWLib;
+import choreography.model.fcw.FCW;
 
 /**
  * @author elementsking

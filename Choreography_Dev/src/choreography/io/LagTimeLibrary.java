@@ -3,23 +3,22 @@
  */
 package choreography.io;
 
-import choreography.model.fcw.FCW;
-import choreography.model.lagtime.LagTime;
-import choreography.model.lagtime.LagTimeTable;
-import choreography.view.ChoreographyController;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import choreography.model.fcw.FCW;
+import choreography.model.lagtime.LagTime;
+import choreography.model.lagtime.LagTimeTable;
 
 /**
  * @author elementsking

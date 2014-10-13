@@ -6,13 +6,6 @@
 
 package choreography.model.timeline;
 
-import choreography.io.FCWLib;
-import choreography.model.fcw.FCW;
-import choreography.view.music.MusicPaneController;
-import choreography.view.sim.FountainSimController;
-import choreography.view.sliders.SlidersController;
-import choreography.view.timeline.TimelineController;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,6 +14,12 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 //import java.util.logging.Logger;
+
+import choreography.io.FCWLib;
+import choreography.model.fcw.FCW;
+import choreography.view.music.MusicPaneController;
+import choreography.view.sim.FountainSimController;
+import choreography.view.sliders.SlidersController;
 
 
 

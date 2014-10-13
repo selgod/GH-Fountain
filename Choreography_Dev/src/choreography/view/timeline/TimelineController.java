@@ -1,16 +1,6 @@
 
 package choreography.view.timeline;
 
-import choreography.io.FCWLib;
-import choreography.model.fcw.FCW;
-import choreography.view.ChoreographyController;
-import choreography.view.colorPalette.ColorPaletteController;
-import choreography.model.color.ColorPaletteEnum;
-import choreography.model.color.ColorPaletteModel;
-import choreography.view.music.MusicPaneController;
-import choreography.view.sim.FountainSimController;
-import choreography.view.sliders.SlidersController;
-import choreography.model.timeline.Timeline;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,13 +10,13 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -43,6 +33,17 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import javax.swing.JOptionPane;
+
+import choreography.io.FCWLib;
+import choreography.model.color.ColorPaletteEnum;
+import choreography.model.color.ColorPaletteModel;
+import choreography.model.fcw.FCW;
+import choreography.model.timeline.Timeline;
+import choreography.view.ChoreographyController;
+import choreography.view.colorPalette.ColorPaletteController;
+import choreography.view.music.MusicPaneController;
+import choreography.view.sim.FountainSimController;
+import choreography.view.sliders.SlidersController;
 
 /**
  * FXML Controller class

@@ -42,16 +42,15 @@
 
 package choreography.view.sliders;
 
-import choreography.model.fountain.ModuleEnum;
-import choreography.io.FCWLib;
-import choreography.model.cannon.CannonEnum;
-import choreography.model.fcw.FCW;
-import choreography.view.music.MusicPaneController;
-import choreography.model.timeline.Timeline;
-import choreography.view.timeline.TimelineController;
 import javafx.event.EventHandler;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
+import choreography.io.FCWLib;
+import choreography.model.cannon.CannonEnum;
+import choreography.model.fcw.FCW;
+import choreography.model.fountain.ModuleEnum;
+import choreography.view.music.MusicPaneController;
+import choreography.view.timeline.TimelineController;
 
 /**
  *

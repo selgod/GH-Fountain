@@ -36,7 +36,6 @@ import static choreography.view.specialOperations.RangeSliderBehavior.FocusedChi
 import static choreography.view.specialOperations.RangeSliderBehavior.FocusedChild.LOW_THUMB;
 import static choreography.view.specialOperations.RangeSliderBehavior.FocusedChild.NONE;
 import static choreography.view.specialOperations.RangeSliderBehavior.FocusedChild.RANGE_BAR;
-import choreography.view.specialOperations.RangeSliderBehavior.FocusedChild;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -51,10 +50,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Callback;
+import choreography.view.specialOperations.RangeSliderBehavior.FocusedChild;
 
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
-import com.sun.javafx.scene.traversal.Direction;
-import com.sun.javafx.scene.traversal.TraversalEngine;
 
 public class RangeSliderSkin extends BehaviorSkinBase<RangeSlider, RangeSliderBehavior> {
     /** Track if slider is vertical/horizontal and cause re layout */

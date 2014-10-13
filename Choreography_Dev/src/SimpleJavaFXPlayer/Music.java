@@ -1,7 +1,5 @@
 package SimpleJavaFXPlayer;
 
-import java.net.UnknownHostException;
-import java.util.ArrayList;
 
 /**
 *

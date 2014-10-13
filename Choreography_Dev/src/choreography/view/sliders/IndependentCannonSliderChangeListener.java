@@ -3,15 +3,13 @@
  */
 package choreography.view.sliders;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import choreography.io.FCWLib;
 import choreography.model.cannon.IndependentCannon;
 import choreography.model.fcw.FCW;
 import choreography.view.ChoreographyController;
-import choreography.view.music.MusicPaneController;
 import choreography.view.sim.FountainSimController;
-import choreography.view.timeline.TimelineController;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 /**
  * @author madridf

@@ -8,6 +8,14 @@ package choreography.view.sliders;
  * Sample Skeleton for "Sliders.fxml" Controller Class
  * You can copy and paste this code into your favorite IDE
  **/
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ResourceBundle;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Slider;
+import javafx.scene.layout.HBox;
 import choreography.Main;
 import choreography.io.FCWLib;
 import choreography.model.cannon.Candelabra;
@@ -21,22 +29,7 @@ import choreography.model.fcw.FCW;
 import choreography.model.fountain.Fountain;
 import choreography.model.fountain.ModuleEnum;
 import choreography.model.fountain.ModuleGroup;
-import choreography.view.sim.FountainSimController;
 import choreography.view.specialOperations.SpecialoperationsController;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.ResourceBundle;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.fxml.FXML;
-import javafx.scene.control.Slider;
-import javafx.scene.layout.HBox;
-
-import javafx.util.Duration;
 /**
  *
  * @author elementsking
