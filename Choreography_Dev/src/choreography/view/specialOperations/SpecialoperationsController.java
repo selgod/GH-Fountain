@@ -12,7 +12,6 @@ import choreography.view.ChoreographyController;
 import choreography.view.colorPalette.ColorPaletteController;
 import choreography.view.music.MusicPaneController;
 import choreography.model.timeline.Timeline;
-import choreography.model.color.ColorPaletteModel;
 import choreography.view.timeline.TimelineController;
 
 import java.awt.List;
@@ -267,20 +266,20 @@ public class SpecialoperationsController implements Initializable {
                 if(strobeFrequency.getSelectionModel().getSelectedItem() <= 85){
                 	for(int i = 0; i < colAL.size(); i++){
                             if(i % low == 0){
-                                TimelineController.getInstance().setLightRecArrayStrobe(rowAL.get(i), colAL.get(i), ColorPaletteModel.getInstance().getSelectedColor());
+                                TimelineController.getInstance().setLightRecArrayStrobe(rowAL.get(i), colAL.get(i), ColorPaletteController.getInstance().getSelectedColor());
                             }
                         }
                     	
                 } else if (strobeFrequency.getSelectionModel().getSelectedItem() <= 170){
                 	for(int i = 0; i < colAL.size(); i++){
                             if(i % mid == 0){
-                                TimelineController.getInstance().setLightRecArrayStrobe(rowAL.get(i), colAL.get(i), ColorPaletteModel.getInstance().getSelectedColor());
+                                TimelineController.getInstance().setLightRecArrayStrobe(rowAL.get(i), colAL.get(i), ColorPaletteController.getInstance().getSelectedColor());
                             }
                         }
                 } else{
                     for(int i = 0; i < colAL.size(); i++){
                         if(i % high == 0){
-                            TimelineController.getInstance().setLightRecArrayStrobe(rowAL.get(i), colAL.get(i), ColorPaletteModel.getInstance().getSelectedColor());
+                            TimelineController.getInstance().setLightRecArrayStrobe(rowAL.get(i), colAL.get(i), ColorPaletteController.getInstance().getSelectedColor());
                         }
                     }
                 }                 
