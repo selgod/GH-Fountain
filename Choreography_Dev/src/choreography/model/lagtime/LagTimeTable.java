@@ -3,11 +3,10 @@
  */
 package choreography.model.lagtime;
 
-import choreography.io.FCWLib;
-import choreography.model.cannon.CannonEnum;
-import choreography.model.fcw.FCW;
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import choreography.io.FCWLib;
+import choreography.model.fcw.FCW;
 
 /**
  * @author elementsking
@@ -104,6 +103,9 @@ public class LagTimeTable {
     public static synchronized double getLagTime(FCW f) {
         String[] actions = FCWLib.getInstance().reverseLookupData(f);
         String cannon = FCWLib.getInstance().reverseLookupAddress(f.getAddr());
+        if(cannon.contains("OFF")){
+        	return 0;
+        }
         if(cannon.contains("SWEEP")) {
             return 0;
         }

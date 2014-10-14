@@ -9,13 +9,10 @@ package choreography.view.specialOperations;
 import choreography.io.FCWLib;
 import choreography.model.fcw.FCW;
 import choreography.view.ChoreographyController;
-import choreography.view.colorPalette.ColorPaletteController;
 import choreography.view.music.MusicPaneController;
-import choreography.model.timeline.Timeline;
 import choreography.model.color.ColorPaletteModel;
 import choreography.view.timeline.TimelineController;
 
-import java.awt.List;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,15 +37,12 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.LinearGradientBuilder;
-import javafx.scene.paint.Paint;
-import javafx.scene.paint.RadialGradient;
-import javafx.scene.paint.Stop;
-
-import javax.swing.event.ChangeEvent;
+import choreography.io.FCWLib;
+import choreography.model.fcw.FCW;
+import choreography.view.ChoreographyController;
+import choreography.view.colorPalette.ColorPaletteController;
+import choreography.view.music.MusicPaneController;
+import choreography.view.timeline.TimelineController;
 
 /**
  * FXML Controller class
@@ -438,6 +432,7 @@ public class SpecialoperationsController implements Initializable {
                 TimelineController.getInstance().getTimeline().setWaterFcwAtPoint(tenths, f);
                 TimelineController.getInstance().rePaintWaterTimeline();
                 ChoreographyController.getInstance().setfcwOutput(f.toString());
+                System.out.println("Here");
             }
         });
         
