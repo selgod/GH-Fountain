@@ -20,6 +20,7 @@ import choreography.model.fcw.FCW;
 import choreography.view.music.MusicPaneController;
 import choreography.view.sim.FountainSimController;
 import choreography.view.sliders.SlidersController;
+import choreography.view.timeline.*;
 
 
 
@@ -105,7 +106,7 @@ public class Timeline {
     		}
     		
     	}
-    	//make water timeline here
+    	
         return waterTimeline;
     }
     
@@ -160,7 +161,7 @@ public class Timeline {
 //        populateLightFcwArray();
         
         
-        //TimelineController.getInstance().rePaint();
+        TimelineController.getInstance().rePaint();
     }
     
     /**
@@ -182,7 +183,7 @@ public class Timeline {
         setLightFcwWithRange(channel, start, end, f.getData());
         
         
-        //TimelineController.getInstance().rePaintLightTimeline();
+        TimelineController.getInstance().rePaintLightTimeline();
         
     }
     
@@ -231,7 +232,7 @@ public class Timeline {
         insertIntoTimeline(timeline, pointInTime, f);
         
         
-        //TimelineController.getInstance().rePaintWaterTimeline();
+        TimelineController.getInstance().rePaintWaterTimeline();
         
 //        waterTimeline.get(pointInTime).add(f);
     }
