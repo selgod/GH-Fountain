@@ -103,6 +103,9 @@ public class LagTimeTable {
     public static synchronized double getLagTime(FCW f) {
         String[] actions = FCWLib.getInstance().reverseLookupData(f);
         String cannon = FCWLib.getInstance().reverseLookupAddress(f.getAddr());
+        if(cannon.contains("OFF")){
+        	return 0;
+        }
         if(cannon.contains("SWEEP")) {
             return 0;
         }
