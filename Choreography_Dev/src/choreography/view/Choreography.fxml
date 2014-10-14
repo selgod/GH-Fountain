@@ -210,7 +210,7 @@
 						</fx:include>
 
 						<GridPane id="GridPane" fx:id="progressIndicator"
-							maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0"
+							maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0"
 							VBox.vgrow="NEVER">
 
 							<children>
@@ -231,7 +231,7 @@
 									</GridPane.margin>
 								</ToggleButton>
 								<fx:include source="colorPalette/ColorPalette.fxml"
-									prefHeight="30.0" prefWidth="1000.0" GridPane.columnIndex="2"
+								    GridPane.columnIndex="2" GridPane.halignment="RIGHT"
 									GridPane.rowIndex="0" GridPane.vgrow="NEVER" />
 							</children>
 
@@ -245,7 +245,7 @@
 							</columnConstraints>
 							<rowConstraints>
 								<RowConstraints maxHeight="-Infinity" minHeight="10.0"
-									prefHeight="30.0" vgrow="NEVER" />
+									prefHeight="35.0" vgrow="NEVER" />
 							</rowConstraints>
 						</GridPane>
 

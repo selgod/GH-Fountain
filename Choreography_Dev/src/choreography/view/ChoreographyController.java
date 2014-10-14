@@ -314,12 +314,12 @@ public class ChoreographyController implements Initializable {
 							loadDefaultMap();
 							CtlLib.getInstance().openCtl();
 							cc.setfcwOutput("CTL file has loaded!");
-							if (ColorPaletteModel.getInstance().isClassicColors()) {
+							/*TODO if (ColorPaletteModel.getInstance().isClassicColors()) {
 								Dialogs.create().message("You've loaded a legacy file. " + "Currently, they are read-only.")
 										.showWarning();
 		
 								// killFeaturesOnLegacy();
-							}
+							}*/
 							SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
 						} catch (IOException ex) {
 							Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
@@ -431,7 +431,7 @@ public class ChoreographyController implements Initializable {
 				SlidersController.getInstance().resurrectSlidersPane();
 				SpecialoperationsController.getInstance().resurrectSpecialOpsPane();
 				MapLib.openMap(getClass().getResourceAsStream("/resources/default.map"));
-				ColorPaletteController.getInstance().resurrectColorPalettePane();
+				//TODO ColorPaletteController.getInstance().resurrectColorPalettePane();
 			}
 
 		});
@@ -474,7 +474,7 @@ public class ChoreographyController implements Initializable {
 	public void killFeaturesOnLegacy() {
 		SpecialoperationsController.getInstance().killSpecialOpsPane();
 		SlidersController.getInstance().killSlidersPane();
-		ColorPaletteModel.getInstance().setClassicColors(true);
+		//TODO ColorPaletteModel.getInstance().setClassicColors(true);
 		ColorPaletteController.getInstance().rePaint();
 	}
 

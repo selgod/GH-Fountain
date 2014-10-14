@@ -105,7 +105,7 @@ public class CtlLib {
             
             	// Legacy file
                 case "ct0-382":
-                    ColorPaletteModel.getInstance().setClassicColors(true);
+                    //TODO ColorPaletteModel.getInstance().setClassicColors(true);
                     FCWLib.getInstance().usesClassicColors(true);
                     SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
                     break;

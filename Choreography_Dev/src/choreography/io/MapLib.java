@@ -80,12 +80,12 @@ public class MapLib {
     
     public static void openMap(File file) throws FileNotFoundException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
-        ColorPaletteModel.getInstance().setColors(parseMap(readMap(reader)));
+        //TODO ColorPaletteModel.getInstance().setColors(parseMap(readMap(reader)));
     }
     
     public synchronized static void openMap(InputStream stream) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        ColorPaletteModel.getInstance().setColors(parseMap(readMap(reader)));
+        //TODO ColorPaletteModel.getInstance().setColors(parseMap(readMap(reader)));
     }
     
     public static String readMap(BufferedReader reader) {

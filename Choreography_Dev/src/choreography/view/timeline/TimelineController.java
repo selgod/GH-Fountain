@@ -531,7 +531,7 @@ public class TimelineController implements Initializable {
 						else{
 							startRow = labelIndexConst;
 							lightRecArray[timeIndexConst][labelIndexConst]
-									.setFill(ColorPaletteController
+									.setFill(ColorPaletteModel
 											.getInstance()
 											.getSelectedColor());
 							int address = channelAddresses[labelIndexConst];
@@ -582,7 +582,7 @@ public class TimelineController implements Initializable {
 						if (startRow == labelIndexConst) {
 							lightRecArray[timeIndexConst][labelIndexConst].setOpacity(1);
 							lightRecArray[timeIndexConst][labelIndexConst]
-									.setFill(ColorPaletteController
+									.setFill(ColorPaletteModel
 											.getInstance()
 											.getSelectedColor());
 						}
@@ -772,8 +772,8 @@ public class TimelineController implements Initializable {
 		SortedMap<Integer, SortedMap<Integer, Integer>> channelColorMap = timeline.getChannelColorMap();
 		for (int channel: channelColorMap.keySet()){
 			for (int timeIndex: channelColorMap.get(channel).keySet()){
-				Integer color = timeline.getChannelColorMap().get(channel).get(timeIndex);
-				Paint paintColor = ColorPaletteModel.getInstance().getColor(color);
+				//Integer color = timeline.getChannelColorMap().get(channel).get(timeIndex);   what's the point of this?
+				Paint paintColor = ColorPaletteModel.getInstance().getSelectedColor();
 				if(paintColor == null || paintColor.equals(Color.BLACK)){
 					paintColor = Color.LIGHTGRAY;
 				}
