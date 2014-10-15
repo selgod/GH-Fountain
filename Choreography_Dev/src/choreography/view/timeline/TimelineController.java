@@ -773,8 +773,8 @@ public class TimelineController implements Initializable {
 		SortedMap<Integer, SortedMap<Integer, Integer>> channelColorMap = timeline.getChannelColorMap();
 		for (int channel: channelColorMap.keySet()){
 			for (int timeIndex: channelColorMap.get(channel).keySet()){
-				//Integer color = timeline.getChannelColorMap().get(channel).get(timeIndex);   what's the point of this?
-				Paint paintColor = ColorPaletteModel.getInstance().getSelectedColor();
+				Integer color = timeline.getChannelColorMap().get(channel).get(timeIndex);
+				Paint paintColor = ColorPaletteModel.getInstance().getColor(color);
 				if(paintColor == null || paintColor.equals(Color.BLACK)){
 					paintColor = Color.LIGHTGRAY;
 				}
