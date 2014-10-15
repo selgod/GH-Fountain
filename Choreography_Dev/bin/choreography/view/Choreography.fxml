@@ -13,7 +13,7 @@
 <?scenebuilder-stylesheet application.css?>
 
 <VBox fx:id="csGUI" maxHeight="-Infinity" maxWidth="-Infinity"
-	minHeight="-Infinity" prefHeight="800.0" prefWidth="1329.0" spacing="0.0"
+	minHeight="-Infinity" prefHeight="810.0" prefWidth="1329.0" spacing="0.0"
 	style="" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="choreography.view.ChoreographyController">
 	<children>
