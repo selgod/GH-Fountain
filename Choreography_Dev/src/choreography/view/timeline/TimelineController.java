@@ -40,7 +40,6 @@ import choreography.model.color.ColorPaletteModel;
 import choreography.model.fcw.FCW;
 import choreography.model.timeline.Timeline;
 import choreography.view.ChoreographyController;
-import choreography.view.colorPalette.ColorPaletteController;
 import choreography.view.music.MusicPaneController;
 import choreography.view.sim.FountainSimController;
 import choreography.view.sliders.SlidersController;
@@ -346,7 +345,7 @@ public class TimelineController implements Initializable {
 
 
 	/*
-	 * todo yay magic numbers :(
+	 * TODO yay magic numbers :(
 	 */
 	public Integer[] getSpecialChannels(){
 		//all of the strobe, fades, and the initial 10
@@ -420,7 +419,7 @@ public class TimelineController implements Initializable {
 	 */
 	public void setChannelAddresses(Set<Integer> channelAddressesSet) {
 
-		//todo is okChannels even used for useful things?
+		// TODO is okChannels even used for useful things?
 		ArrayList<Integer> okChannels = new ArrayList<>();
 		for(Integer query : channelAddressesSet) {
 			if(!checkForCollisions(query)) {
@@ -441,7 +440,7 @@ public class TimelineController implements Initializable {
 		Label[] labelArray = new Label[addresses.length];
 
 		//26 is also used in the setTimelineGridPane function as the size of square
-		//todo take care of magic numbers
+		// todo take care of magic numbers
 		int LABEL_HEIGHT = 26;
 		int LABEL_WIDTH = 98;
 
@@ -535,10 +534,7 @@ public class TimelineController implements Initializable {
 									.setFill(ColorPaletteModel
 											.getInstance()
 											.getSelectedColor());
-							int address = channelAddresses[labelIndexConst];
-							//                            timeline.setLightFcw(new FCW(address, 
-									//                                ColorPaletteModel.getInstance().getSelectedIndex() + 1), testI, testJ);
-							start = timeIndexConst;
+											start = timeIndexConst;
 						}
 
 					}

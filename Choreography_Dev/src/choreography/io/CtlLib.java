@@ -302,7 +302,7 @@ public class CtlLib {
                     content.get(timeIndex - lag).add(f);
                 }
                 else {
-                    content.put(timeIndex - lag, new ArrayList(10));
+                    content.put(timeIndex - lag, new ArrayList<FCW>(10));
                     content.get(timeIndex - lag).add(f);
                 }
                 return true;
@@ -329,7 +329,7 @@ public class CtlLib {
                             content.get(timeIndex + lag).add(f);
                         }
                         else {
-                            content.put(timeIndex + lag, new ArrayList(10));
+                            content.put(timeIndex + lag, new ArrayList<FCW>(10));
                             content.get(timeIndex + lag).add(f);
                         }
                         return true;

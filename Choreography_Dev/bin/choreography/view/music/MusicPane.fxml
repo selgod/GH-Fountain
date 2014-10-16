@@ -23,7 +23,7 @@
                 <Insets left="1.0" top="2.0" />
               </HBox.margin>
             </Button>
-            <Button fx:id="resetButton" cancelButton="true" disable="true" font="$x3" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopSong" prefWidth="45.0" style="" text="Reset">
+            <Button fx:id="resetButton" cancelButton="true" disable="true" font="$x3" minWidth="-Infinity" mnemonicParsing="false" onAction="#resetSong" prefWidth="45.0" style="" text="Reset">
               <HBox.margin>
                 <Insets left="2.0" right="3.0" top="2.0" />
               </HBox.margin>

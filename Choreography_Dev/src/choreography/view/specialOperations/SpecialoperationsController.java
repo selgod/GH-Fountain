@@ -6,13 +6,6 @@
 
 package choreography.view.specialOperations;
 
-import choreography.io.FCWLib;
-import choreography.model.fcw.FCW;
-import choreography.view.ChoreographyController;
-import choreography.view.music.MusicPaneController;
-import choreography.model.color.ColorPaletteModel;
-import choreography.view.timeline.TimelineController;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,9 +31,9 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import choreography.io.FCWLib;
+import choreography.model.color.ColorPaletteModel;
 import choreography.model.fcw.FCW;
 import choreography.view.ChoreographyController;
-import choreography.view.colorPalette.ColorPaletteController;
 import choreography.view.music.MusicPaneController;
 import choreography.view.timeline.TimelineController;
 
@@ -574,7 +567,7 @@ public class SpecialoperationsController implements Initializable {
         }
     }
 
-    private void sweepsSpeedSwitch(ChoiceBox c, String s) {
+    private void sweepsSpeedSwitch(ChoiceBox<String> c, String s) {
         if(s.equals("SHORT")) {
             setSweeps(aSweeps, 1, 3);
         }

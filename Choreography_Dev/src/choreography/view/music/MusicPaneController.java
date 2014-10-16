@@ -124,9 +124,14 @@ public class MusicPaneController {
 	}
 
 	public MusicPaneController() {
-		this.timeFactor = 10;
+		this.timeFactor = 100;
 	}
 
+	@FXML
+	void resetSong(ActionEvent event) {
+		resetAll();
+	}
+	
 	// Handler for Button[Button[id=null, styleClass=button]] onAction
 	@FXML
 	void pauseSong(ActionEvent event) {
@@ -170,6 +175,10 @@ public class MusicPaneController {
 	// Handler for Button[Button[id=null, styleClass=button]] onAction
 	@FXML
 	private void stopSong(ActionEvent event) {
+		stopMusic();
+	}
+
+	private void stopMusic() {
 		mediaPlayer.stop();
 		mediaPlayer.seek(Duration.ZERO);
 		timeSlider.setValue(0.0);
@@ -177,7 +186,7 @@ public class MusicPaneController {
 		// FountainSimController.getInstance().disposeBuffer();
 		SlidersController.getInstance().resetAllSliders();
 		FountainSimController.getInstance().clearSweeps();
-		playButton.setText("Play");
+		playButton.setText("Play");		
 	}
 
 	private void getAllMusic(File fileChosen) {
@@ -410,15 +419,11 @@ public class MusicPaneController {
 	}
 
 	public void resetAll() {
-		disposeMusic();
-		songName.setText("");
-		songProgress.setText("");
-		waterTimeline.setContent(null);
+		stopMusic();
 		timeSlider.setValue(0);
 
 		// Clears the simulation screen
 		FountainSimController.getInstance().clearSweeps();
-		FountainSimController.getInstance().clearSim();
 		FountainSimController.getInstance().resetAll();
 	}
 }

@@ -45,10 +45,8 @@ package choreography.io;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -79,12 +77,12 @@ public class MapLib {
     }
     
     public static void openMap(File file) throws FileNotFoundException {
-        BufferedReader reader = new BufferedReader(new FileReader(file));
+        //BufferedReader reader = new BufferedReader(new FileReader(file));
         //TODO ColorPaletteModel.getInstance().setColors(parseMap(readMap(reader)));
     }
     
     public synchronized static void openMap(InputStream stream) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        //BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         //TODO ColorPaletteModel.getInstance().setColors(parseMap(readMap(reader)));
     }
     

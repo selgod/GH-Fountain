@@ -492,33 +492,13 @@ public class FountainSimController implements Initializable {
     @FXML
     private Rectangle spoutRec;
     
-    private static Stage principalStage;
     private int sweepType=1;
     private double leftSweepSpeed = 1;
     private double rightSweepSpeed = 1;
     Timeline timelineRing1;
     
     private ConcurrentNavigableMap<Integer, ArrayList<FCW>> 
-            bufferedFcws = new ConcurrentSkipListMap();
-
-	
-//	@Override
-//	public void start(Stage primaryStage) throws Exception {
-//		
-//		
-//		Parent root = FXMLLoader.load(getClass().getResource("fountainSim.fxml"));		
-//        
-//        Scene scene = new Scene(root);
-//        principalStage = primaryStage;
-//        principalStage.setScene(scene);
-//        principalStage.setTitle("Sim");
-//        principalStage.show();
-//
-//	}
-	
-//    public static void main(String[] args) {
-//        Application.launch(args);
-//    }
+            bufferedFcws = new ConcurrentSkipListMap<Integer, ArrayList<FCW>>();
 	
     public static FountainSimController getInstance() {
         if (instance == null)
