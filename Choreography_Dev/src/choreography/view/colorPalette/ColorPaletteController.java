@@ -116,7 +116,55 @@ public class ColorPaletteController implements Initializable {
             			}else{
                 			((Rectangle)e.getSource()).setStroke(Color.BLACK);
             				((Rectangle)e.getSource()).setStrokeWidth(4);
-                    		ColorPaletteModel.getInstance().setSelectedIndex(defaultColors.getChildren().indexOf(e.getSource()));
+            				switch((defaultColors.getChildren().indexOf(e.getSource()))){
+            					case 1:
+            						ColorPaletteModel.getInstance().setSelectedIndex(8);
+            						break;
+            					case 2:
+            						ColorPaletteModel.getInstance().setSelectedIndex(9);
+            						break;
+            					case 3:
+            						ColorPaletteModel.getInstance().setSelectedIndex(1);
+            						break;
+            					case 4:
+            						ColorPaletteModel.getInstance().setSelectedIndex(13);
+            						break;
+            					case 5:
+            						ColorPaletteModel.getInstance().setSelectedIndex(5);
+            						break;
+            					case 6:
+            						ColorPaletteModel.getInstance().setSelectedIndex(12);
+            						break;
+            					case 7:
+            						ColorPaletteModel.getInstance().setSelectedIndex(4);
+            						break;
+            					case 8:
+            						ColorPaletteModel.getInstance().setSelectedIndex(14);
+            						break;
+            					case 9:
+            						ColorPaletteModel.getInstance().setSelectedIndex(6);
+            						break;
+            					case 10:
+            						ColorPaletteModel.getInstance().setSelectedIndex(10);
+            						break;
+            					case 11:
+            						ColorPaletteModel.getInstance().setSelectedIndex(15);
+            						break;
+            					case 12:
+            						ColorPaletteModel.getInstance().setSelectedIndex(2);
+            						break;
+            					case 13:
+            						ColorPaletteModel.getInstance().setSelectedIndex(3);
+            						break;
+            					case 14:
+            						ColorPaletteModel.getInstance().setSelectedIndex(11);
+            						break;
+            					case 15:
+            						ColorPaletteModel.getInstance().setSelectedIndex(7);
+            						break;
+            					default:
+            						throw new IllegalArgumentException("Invalid color selection");
+            				}
             			}
             		}
             	}

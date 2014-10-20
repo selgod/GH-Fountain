@@ -13,22 +13,22 @@
    <children>
       <HBox fx:id="defaultColors" spacing="2.0">
          <children>
-            <Rectangle fx:id="rectangle_OFF" arcHeight="5.0" arcWidth="5.0" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_WHITE" arcHeight="5.0" arcWidth="5.0" fill="RED" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_LIGHT_RED" arcHeight="5.0" arcWidth="5.0" fill="BLUE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_RED" arcHeight="5.0" arcWidth="5.0" fill="#3b11ff" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_LIGHT_ORANGE" arcHeight="5.0" arcWidth="5.0" fill="#ffc800" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_ORANGE" arcHeight="5.0" arcWidth="5.0" fill="#ff1900" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_LIGHT_YELLOW" arcHeight="5.0" arcWidth="5.0" fill="#00f000" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_YELLOW" arcHeight="5.0" arcWidth="5.0" fill="#d100c5" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_LIGHT_GREEN" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_GREEN" arcHeight="5.0" arcWidth="5.0" fill="#ff0037" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_LIGHT_BLUE" arcHeight="5.0" arcWidth="5.0" fill="AQUA" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_CYAN" arcHeight="5.0" arcWidth="5.0" fill="#9646ff" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_BLUE" arcHeight="5.0" arcWidth="5.0" fill="#ffff08" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_VIOLET" arcHeight="5.0" arcWidth="5.0" fill="#ff3205" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_LIGHT_VIOLET" arcHeight="5.0" arcWidth="5.0" fill="#3bff00" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="rectangle_MAGENTA" arcHeight="5.0" arcWidth="5.0" fill="#0096ef" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff0037" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="RED" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff3205" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1900" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffff08" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffc800" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#3bff00" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00f000" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="AQUA" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#0096ef" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="BLUE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#3b11ff" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9646ff" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d100c5" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
          </children>
          <padding>
             <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
@@ -36,22 +36,22 @@
       </HBox>
       <HBox fx:id="customColors" spacing="2.0">
          <children>
-            <Rectangle fx:id="custom1" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom2" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom3" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom4" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom5" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom6" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom7" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom8" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom9" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom10" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom11" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom12" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom13" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom14" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom15" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
-            <Rectangle fx:id="custom16" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="25.0" stroke="BLACK" strokeType="INSIDE" width="25.0" />
          </children>
          <padding>
             <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
