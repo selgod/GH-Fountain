@@ -183,8 +183,7 @@ public class ChoreographyController implements Initializable {
 			public void handle(KeyEvent ke) {
 
 				if (ke.getCode() == KeyCode.SPACE) {
-					beatMarkRecArray[MusicPaneController.getInstance()
-							.getTenthsTime()].setFill(Color.BLACK);
+					beatMarkRecArray[MusicPaneController.getInstance().getTenthsTime()].setFill(Color.BLACK);
 					ke.consume();
 				}
 
@@ -244,44 +243,34 @@ public class ChoreographyController implements Initializable {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				// progressIndicator.setProgress(-1);
 				Stage stage = new Stage();
-				//stage.close();
-					Thread t1 = new Thread(new Runnable() {
-						public void run() {
-							
-							FXMLLoader fxml = new FXMLLoader(getClass().getResource(
-									"Loading.fxml"));
-							Pane loading = new Pane();
-							try {
-								loading = fxml.load();
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-							Scene scene = new Scene(loading);
-							stage.setTitle("Loading ... ");
-							stage.setScene(scene);
-							stage.show();				
-							loadDefaultMap();
-						}
-					});
+				try {
+					FXMLLoader fxml = new FXMLLoader(getClass().getResource("Loading.fxml"));
+					Pane loading = new Pane();
+					loading = fxml.load();
+					Scene scene = new Scene(loading);
+					stage.setTitle("Loading ... ");
+					stage.setScene(scene);
+					stage.show();
 
-					t1.start();
+					loadDefaultMap();
+
 					FileChooser fc = new FileChooser();
 					fc.setTitle("Open Music");
-					fc.setInitialDirectory(new File(System
-							.getProperty("user.dir")));
-					fc.getExtensionFilters().setAll(
-							new FileChooser.ExtensionFilter("Music Files",
-									"*.wav"));
+					fc.setInitialDirectory(new File(System.getProperty("user.dir")));
+					fc.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Music Files", "*.wav"));
 					File file2 = fc.showOpenDialog(null);
 
 					MusicPaneController.getInstance().selectMusic(file2);
 					// progressIndicator.setProgress(1);
 					TimelineController.getInstance().initializeTimelines();
 					openCTLMenuItem.setDisable(false);
-					//t1.
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+					stage.close();
+				}
 			}
 
 		});
@@ -311,8 +300,7 @@ public class ChoreographyController implements Initializable {
 			public void handle(ActionEvent t) {
 				Stage stage = new Stage();
 				try {
-					FXMLLoader fxml = new FXMLLoader(getClass().getResource(
-							"Loading.fxml"));
+					FXMLLoader fxml = new FXMLLoader(getClass().getResource("Loading.fxml"));
 					Pane loading = new Pane();
 					loading = fxml.load();
 					Scene scene = new Scene(loading);
@@ -332,11 +320,9 @@ public class ChoreographyController implements Initializable {
 						 * 
 						 * // killFeaturesOnLegacy(); }
 						 */
-						SpecialoperationsController.getInstance()
-								.initializeSweepSpeedSelectors();
+						SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
 					} catch (IOException ex) {
-						Logger.getLogger(ChoreographyController.class.getName())
-								.log(Level.SEVERE, null, ex);
+						Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
 					} catch (NullPointerException e) {
 
 					}
@@ -354,10 +340,8 @@ public class ChoreographyController implements Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 
-				Integer[] advancedOnlyLightNames = FCWLib.getInstance()
-						.getAdvancedLightNames();
-				TimelineController.getInstance().setLabelGridPane(
-						advancedOnlyLightNames);
+				Integer[] advancedOnlyLightNames = FCWLib.getInstance().getAdvancedLightNames();
+				TimelineController.getInstance().setLabelGridPane(advancedOnlyLightNames);
 				TimelineController.getInstance().setTimelineGridPane();
 				TimelineController.getInstance().rePaintLightTimeline();
 			}
@@ -366,22 +350,14 @@ public class ChoreographyController implements Initializable {
 		quitMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent t) {
-				Action result = Dialogs.create().title("Quit?").masthead("")
-						.message("Are you sure you want to quit?")
-						.showConfirm();
+				Action result = Dialogs.create().title("Quit?").masthead("").message("Are you sure you want to quit?").showConfirm();
 				if (result != Actions.YES) {
 					// System.out.println(result);
 				} else {
 					if (isSaved) {
 						Platform.exit();
 					} else {
-						Action saveResult = Dialogs
-								.create()
-								.title("Save?")
-								.masthead("You haven't saved before exiting.")
-								.message(
-										"Would you like to save before quiting?")
-								.showConfirm();
+						Action saveResult = Dialogs.create().title("Save?").masthead("You haven't saved before exiting.").message("Would you like to save before quiting?").showConfirm();
 						if (saveResult == Actions.YES) {
 							saveAsMenuItem.getOnAction().handle(t);
 						} else if (saveResult == Actions.NO) {
@@ -396,19 +372,14 @@ public class ChoreographyController implements Initializable {
 			@Override
 			public void handle(ActionEvent t) {
 				FileChooser fc = new FileChooser();
-				fc.setSelectedExtensionFilter(new FileChooser.ExtensionFilter(
-						"ctl", "*.ctl"));
+				fc.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("ctl", "*.ctl"));
 				fc.setInitialDirectory(new File(System.getProperty("user.dir")));
 				saveLocation = fc.showSaveDialog(null);
 				if (saveLocation != null) {
-					saveLocation = new File(saveLocation.getAbsoluteFile()
-							+ ".ctl");
+					saveLocation = new File(saveLocation.getAbsoluteFile() + ".ctl");
 					isSaved = true;
 				}
-				CtlLib.getInstance().saveFile(
-						saveLocation,
-						TimelineController.getInstance().getTimeline()
-								.getTimeline());
+				CtlLib.getInstance().saveFile(saveLocation, TimelineController.getInstance().getTimeline().getTimeline());
 			}
 		});
 		saveMenuItem.setOnAction(new EventHandler<ActionEvent>() {
@@ -454,10 +425,8 @@ public class ChoreographyController implements Initializable {
 				MapLib.setMapLoaded(false);
 
 				SlidersController.getInstance().resurrectSlidersPane();
-				SpecialoperationsController.getInstance()
-						.resurrectSpecialOpsPane();
-				MapLib.openMap(getClass().getResourceAsStream(
-						"/resources/default.map"));
+				SpecialoperationsController.getInstance().resurrectSpecialOpsPane();
+				MapLib.openMap(getClass().getResourceAsStream("/resources/default.map"));
 				// TODO
 				// ColorPaletteController.getInstance().resurrectColorPalettePane();
 			}
@@ -495,8 +464,7 @@ public class ChoreographyController implements Initializable {
 	public void loadDefaultMap() {
 		boolean isMap = MapLib.isMapLoaded();
 		if (!isMap) {
-			MapLib.openMap(getClass().getResourceAsStream(
-					"/resources/default.map"));
+			MapLib.openMap(getClass().getResourceAsStream("/resources/default.map"));
 		}
 	}
 
@@ -515,25 +483,19 @@ public class ChoreographyController implements Initializable {
 			// .title("Cannot Save Legacy CTL")
 			// .showError();
 			// }
-			FilePayload ctl = CtlLib.getInstance().createFilePayload(
-					TimelineController.getInstance().getTimeline()
-							.getTimeline());
+			FilePayload ctl = CtlLib.getInstance().createFilePayload(TimelineController.getInstance().getTimeline().getTimeline());
 			FilePayload map = MapLib.createFilePayload();
-			FilePayload music = MusicPaneController.getInstance()
-					.createFilePayload();
+			FilePayload music = MusicPaneController.getInstance().createFilePayload();
 			FilePayload marks = MarkLib.createFilePayload();
-			isSaved = GhmfLibrary.writeGhmfZip(saveLocation, ctl, map, music,
-					marks);
+			isSaved = GhmfLibrary.writeGhmfZip(saveLocation, ctl, map, music, marks);
 		} catch (IOException ex) {
-			Logger.getLogger(ChoreographyController.class.getName()).log(
-					Level.SEVERE, null, ex);
+			Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
 	private File selectSaveLocation() {
 		FileChooser fc = new FileChooser();
-		fc.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("GHMF",
-				"*.ghmf"));
+		fc.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("GHMF", "*.ghmf"));
 		fc.setInitialDirectory(new File(System.getProperty("user.dir")));
 		saveLocation = fc.showSaveDialog(null);
 		if (saveLocation != null) {
@@ -551,8 +513,7 @@ public class ChoreographyController implements Initializable {
 	public boolean openLagTimeDialog() {
 		try {
 			// Load the fxml file and create a new stage for the popup
-			FXMLLoader loader = new FXMLLoader(
-					Main.class.getResource("view/lagtime/LagTimeGUI.fxml"));
+			FXMLLoader loader = new FXMLLoader(Main.class.getResource("view/lagtime/LagTimeGUI.fxml"));
 			GridPane page = (GridPane) loader.load();
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Edit Lag Times");
@@ -607,8 +568,7 @@ public class ChoreographyController implements Initializable {
 	 * 
 	 * @param parsedCTL
 	 */
-	public void setEventTimeline(
-			ConcurrentSkipListMap<Integer, ArrayList<FCW>> parsedCTL) {
+	public void setEventTimeline(ConcurrentSkipListMap<Integer, ArrayList<FCW>> parsedCTL) {
 		events.putAll(parsedCTL);
 		TimelineController.getInstance().setTimeline(parsedCTL);
 		TimelineController.getInstance().setLabelGridPaneWithCtl();
@@ -689,8 +649,7 @@ public class ChoreographyController implements Initializable {
 			@Override
 			public void run() {
 				Platform.runLater(() -> {
-					TimelineController.getInstance().updateColors(
-							MusicPaneController.getInstance().getTenthsTime());
+					TimelineController.getInstance().updateColors(MusicPaneController.getInstance().getTenthsTime());
 				});
 			}
 		}, 0l, 100l);
@@ -712,13 +671,8 @@ public class ChoreographyController implements Initializable {
 		try {
 			MapLib.openMap();
 		} catch (FileNotFoundException ex) {
-			Dialogs.create()
-					.title("Invalid MAP file")
-					.message(
-							"You've selected an invalid MAP file. "
-									+ "Please try again.").showError();
-			Logger.getLogger(ChoreographyController.class.getName()).log(
-					Level.SEVERE, null, ex);
+			Dialogs.create().title("Invalid MAP file").message("You've selected an invalid MAP file. " + "Please try again.").showError();
+			Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -740,24 +694,21 @@ public class ChoreographyController implements Initializable {
 		beatMarkRecArray = new Rectangle[time];
 
 		for (int i = 0; i < time; i++) {
-			gridpaneBeatMarks.getColumnConstraints().add(
-					new ColumnConstraints(26));
+			gridpaneBeatMarks.getColumnConstraints().add(new ColumnConstraints(26));
 			if (i < 1) { // because the array is not square this needs to be
 							// here
-				gridpaneBeatMarks.getRowConstraints().add(
-						new RowConstraints(26));
+				gridpaneBeatMarks.getRowConstraints().add(new RowConstraints(26));
 			}
 
 			beatMarkRecArray[i] = new Rectangle(25, 25, Color.LIGHTGREY);
 			gridpaneBeatMarks.add(beatMarkRecArray[i], i, 0);
 			int testI = i;
-			beatMarkRecArray[i]
-					.setOnMousePressed(new EventHandler<MouseEvent>() {
-						@Override
-						public void handle(MouseEvent me) {
-							beatMarkRecArray[testI].setFill(Color.LIGHTGRAY);
-						}
-					});
+			beatMarkRecArray[i].setOnMousePressed(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent me) {
+					beatMarkRecArray[testI].setFill(Color.LIGHTGRAY);
+				}
+			});
 
 		}
 
@@ -800,12 +751,8 @@ public class ChoreographyController implements Initializable {
 		Dialogs.create()
 				.title("About GHMF Choreography Studio")
 				.message(
-						"The Grand Valley State University senior project team, Excalibur Solutions, created the GHMF Choreography Studio on April 15, 2014. "
-								+ System.lineSeparator()
-								+ System.lineSeparator()
-								+ "This software is used to create light shows for the Grand Haven "
-								+ "Musical Fountain located in Grand Haven Michigan.  ")
-				.masthead("About").showInformation();
+						"The Grand Valley State University senior project team, Excalibur Solutions, created the GHMF Choreography Studio on April 15, 2014. " + System.lineSeparator() + System.lineSeparator() + "This software is used to create light shows for the Grand Haven "
+								+ "Musical Fountain located in Grand Haven Michigan.  ").masthead("About").showInformation();
 	}
 
 	@FXML
@@ -847,8 +794,7 @@ public class ChoreographyController implements Initializable {
 
 		public MyBrowser() {
 			// Points to the location of the htm file for the manual
-			URL urlHello = getClass().getResource(
-					"/resources/User_Manual_v10.htm");
+			URL urlHello = getClass().getResource("/resources/User_Manual_v10.htm");
 			webEngine.load(urlHello.toExternalForm());
 			// Adds the browser to the scene
 			getChildren().add(webView);
