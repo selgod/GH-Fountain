@@ -594,12 +594,12 @@ public class TimelineController implements Initializable {
 				lightRecArray[timeIndex][labelIndex].setOnMouseDragReleased((MouseEvent me) -> {
 					if (!ChoreographyController.getInstance().getIsSelected()){
 						if (startRow != labelIndexConst){
-							FCW f = new FCW(channelAddresses[startRow], ColorPaletteModel.getInstance().getSelectedIndex() + 1);
+							FCW f = new FCW(channelAddresses[startRow], ColorPaletteModel.getInstance().getSelectedIndex());
 							timeline.setLightFcw(f, start, timeIndexConst + 1);
 							System.out.println(f + " " + start + " " + timeIndexConst + 1);
 						}
 						else{
-							FCW f = new FCW(channelAddresses[labelIndexConst], ColorPaletteModel.getInstance().getSelectedIndex() + 1);
+							FCW f = new FCW(channelAddresses[labelIndexConst], ColorPaletteModel.getInstance().getSelectedIndex());
 							timeline.setLightFcw(f, start, timeIndexConst + 1);
 							//                    System.out.println(f + " " + start + " " + testI + 1);
 						}

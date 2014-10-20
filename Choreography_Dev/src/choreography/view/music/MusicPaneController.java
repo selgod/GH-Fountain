@@ -295,30 +295,26 @@ public class MusicPaneController {
 			duration = mediaPlayer.getMedia().getDuration();
 			// int currTime = (int)mediaPlayer.getCurrentTime().toSeconds()*10;
 			// FountainSimController.getInstance().updateColors(currTime);
+			
+			double totalTime = mediaPlayer.getTotalDuration().toSeconds();
+			double currentTime = mediaPlayer.getCurrentTime().toSeconds();
+			double percentComplete = currentTime / totalTime * 100;
+			
+			
+			double hValue = (100 * percentComplete) / (100 - 1.51);
+			
+			
 			TimelineController
 					.getInstance()
 					.getScrollPane()
-					.setHvalue(
-							(mediaPlayer.getCurrentTime().toSeconds() / mediaPlayer
-									.getTotalDuration().toSeconds()) * 100);
-			timeSlider
-					.setValue((mediaPlayer.getCurrentTime().toSeconds() / mediaPlayer
-							.getTotalDuration().toSeconds()) * 100);
-			timeSlider
-					.setValue((mediaPlayer.getCurrentTime().toSeconds() / mediaPlayer
-							.getTotalDuration().toSeconds()) * 100);
-			waterTimeline
-					.setHvalue((mediaPlayer.getCurrentTime().toSeconds() / mediaPlayer
-							.getTotalDuration().toSeconds()) * 100);
+					.setHvalue(hValue);
+			timeSlider.setValue(percentComplete);
+			waterTimeline.setHvalue(hValue);
 			ChoreographyController
 					.getInstance()
 					.getBeatMarkScrollPane()
-					.setHvalue(
-							(mediaPlayer.getCurrentTime().toSeconds() / mediaPlayer
-									.getTotalDuration().toSeconds()) * 100);
-			timeLabel
-					.setHvalue((mediaPlayer.getCurrentTime().toSeconds() / mediaPlayer
-							.getTotalDuration().toSeconds()) * 100);
+					.setHvalue(hValue);
+			timeLabel.setHvalue(hValue);
 		} catch (Exception e) {
 			System.out.println("Error updating song progress " + e);
 		}
