@@ -220,6 +220,7 @@ public class TimelineController implements Initializable {
 				lightPaste.setDisable(false);
 				//                System.out.println(copyAL.toString());
 				lightCopy.setDisable(true);
+				lightCM.hide();
 			}
 		});
 
@@ -322,6 +323,8 @@ public class TimelineController implements Initializable {
 					else{
 						start.add(transRowAL.get(i -1));
 					}
+					
+					lightCM.hide();
 				}
 			}    		
 
