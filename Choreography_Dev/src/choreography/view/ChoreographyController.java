@@ -243,34 +243,16 @@ public class ChoreographyController implements Initializable {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				Stage stage = new Stage();
-				try {
-					FXMLLoader fxml = new FXMLLoader(getClass().getResource("Loading.fxml"));
-					Pane loading = new Pane();
-					loading = fxml.load();
-					Scene scene = new Scene(loading);
-					stage.setTitle("Loading ... ");
-					stage.setScene(scene);
-					stage.show();
-
-					loadDefaultMap();
-
-					FileChooser fc = new FileChooser();
-					fc.setTitle("Open Music");
-					fc.setInitialDirectory(new File(System.getProperty("user.dir")));
-					fc.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Music Files", "*.wav"));
-					File file2 = fc.showOpenDialog(null);
-
-					MusicPaneController.getInstance().selectMusic(file2);
-					// progressIndicator.setProgress(1);
-					TimelineController.getInstance().initializeTimelines();
-					openCTLMenuItem.setDisable(false);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} finally {
-					stage.close();
-				}
+				fcwOutput.setText("Loading music file ...");
+				FileChooser fc = new FileChooser();
+				fc.setTitle("Open Music");
+				fc.setInitialDirectory(new File(System.getProperty("user.dir")));
+				fc.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Music Files", "*.wav"));
+				File file2 = fc.showOpenDialog(null);	
+				MusicPaneController.getInstance().selectMusic(file2);
+				TimelineController.getInstance().initializeTimelines();
+				openCTLMenuItem.setDisable(false);
+				fcwOutput.setText("Choreographer has loaded!");
 			}
 
 		});
@@ -298,19 +280,11 @@ public class ChoreographyController implements Initializable {
 
 			@Override
 			public void handle(ActionEvent t) {
-				Stage stage = new Stage();
+				fcwOutput.setText("Loading CTL file ...");
 				try {
-					FXMLLoader fxml = new FXMLLoader(getClass().getResource("Loading.fxml"));
-					Pane loading = new Pane();
-					loading = fxml.load();
-					Scene scene = new Scene(loading);
-					stage.setTitle("Loading ... ");
-					stage.setScene(scene);
-					stage.show();
-					try {
-						loadDefaultMap();
-						CtlLib.getInstance().openCtl();
-						cc.setfcwOutput("CTL file has loaded!");
+					loadDefaultMap();
+					CtlLib.getInstance().openCtl();
+					cc.setfcwOutput("CTL file has loaded!");
 						/*
 						 * TODO if
 						 * (ColorPaletteModel.getInstance().isClassicColors()) {
@@ -320,17 +294,13 @@ public class ChoreographyController implements Initializable {
 						 * 
 						 * // killFeaturesOnLegacy(); }
 						 */
-						SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
-					} catch (IOException ex) {
-						Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
-					} catch (NullPointerException e) {
+					SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
+				} catch (IOException ex) {
+					Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
+				} catch (NullPointerException e) {
 
-					}
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				} finally {
-					stage.close();
+					fcwOutput.setText("Choreographer has loaded!");
 				}
 			}
 		});
