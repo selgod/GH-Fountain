@@ -161,7 +161,7 @@ public class Timeline {
 //        populateLightFcwArray();
         
         
-        TimelineController.getInstance().rePaint();
+        //TimelineController.getInstance().rePaint();
     }
     
     /**

@@ -91,7 +91,13 @@ public class ColorPaletteModel{
      * @return the color specified by the given index
      */
     public Color getColor(int i){
-        return colors[i];
+    	try{
+    		return colors[i];	
+    	}
+    	catch(ArrayIndexOutOfBoundsException e){
+    		return null;
+    	}
+        
     }
 
     /**
