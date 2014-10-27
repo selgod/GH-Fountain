@@ -116,6 +116,8 @@ public class ColorPaletteController implements Initializable {
             			}else{
                 			((Rectangle)e.getSource()).setStroke(Color.BLACK);
             				((Rectangle)e.getSource()).setStrokeWidth(4);
+            				//make sure that we are sending the correct ColorMap index to the model
+            				//this allows us to order the colors in the view how we wish
             				switch((defaultColors.getChildren().indexOf(e.getSource()))){
             					case 1:
             						ColorPaletteModel.getInstance().setSelectedIndex(8);

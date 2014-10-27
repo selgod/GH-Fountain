@@ -92,11 +92,21 @@ public class TimelineController implements Initializable {
 	final ArrayList<Rectangle> copyAL;
 	final ArrayList<Integer> colAL;
 	final ArrayList<Integer> rowAL;
+	Rectangle startRectangle;
+	int startTimeIndex;
+	int startLabelIndex;
+	Rectangle endRectangle;
+	int endTimeIndex;
+	int endLabelIndex;
 
-	MenuItem lightCopy = new MenuItem("copy");
-	MenuItem lightPaste = new MenuItem("paste");
-	MenuItem waterCopy = new MenuItem("copy");
-	MenuItem waterPaste = new MenuItem("paste");
+	MenuItem lightCut = new MenuItem("Cut");
+	MenuItem lightCopy = new MenuItem("Copy");
+	MenuItem lightPaste = new MenuItem("Paste");
+	MenuItem lightSelect = new MenuItem("Select");
+	MenuItem waterCut = new MenuItem("Cut");
+	MenuItem waterCopy = new MenuItem("Copy");
+	MenuItem waterPaste = new MenuItem("Paste");
+	MenuItem waterSelect = new MenuItem("Select");
 
 	final ContextMenu lightCM = new ContextMenu();
 	final ContextMenu waterCM = new ContextMenu();
@@ -185,8 +195,10 @@ public class TimelineController implements Initializable {
 		// setWaterGridPane();
 		instance = this;
 		initializeTimelines();
+		lightCM.getItems().add(lightCut);
 		lightCM.getItems().add(lightCopy);
 		lightCM.getItems().add(lightPaste);
+		lightCM.getItems().add(lightSelect);
 
 		//        waterCM.getItems().add(waterCopy);
 		//        waterCM.getItems().add(waterPaste);
@@ -487,9 +499,6 @@ public class TimelineController implements Initializable {
 		rowNumber =  labelNames.length;
 		lightRecArray = new Rectangle[time][labelNames.length];
 
-
-
-
 		//add constraints to the light array
 		int SIZE_OF_SQUARE = 26;	//yay magic number :(
 
@@ -506,77 +515,89 @@ public class TimelineController implements Initializable {
 		//adds mouse handlers to all of the squares on the light timeline grid
 		for (int timeIndex = 0; timeIndex < time; timeIndex++) {
 			for (int labelIndex = 0; labelIndex < labelNames.length; labelIndex++) {
-				// if (i == 0){
-				// recArray[i][j] = new Rectangle(50,25, Color.RED);
-				// continue;
-				// }
 				lightRecArray[timeIndex][labelIndex] = new Rectangle(25, 25, Color.LIGHTGRAY);
 				gridpaneLight.add(lightRecArray[timeIndex][labelIndex], timeIndex, labelIndex);
 				// these are needed to talk to the mouse pressed events
 				final int timeIndexConst = timeIndex;
 				final int labelIndexConst = labelIndex;
-
-				lightRecArray[timeIndex][labelIndex].setOnMousePressed(new EventHandler<MouseEvent>() {
-
-
+				
+				lightRecArray[timeIndex][labelIndex].setOnMouseEntered(new EventHandler<MouseEvent>() {
 					@Override
-					public void handle(MouseEvent me) {
-						selectedRec = lightRecArray[timeIndexConst][labelIndexConst];
-						selectedTimeIndex = timeIndexConst;
-						selectedLabelIndex = labelIndexConst;
-
-						if(ChoreographyController.getInstance().getIsSelected()){
-							if (me.getButton() == MouseButton.SECONDARY) {
-								lightCM.show(lightRecArray[timeIndexConst][labelIndexConst], me.getScreenX(), me.getScreenY());
-							}
-
-						}
-						else{
-							startRow = labelIndexConst;
-							lightRecArray[timeIndexConst][labelIndexConst]
-									.setFill(ColorPaletteModel
-											.getInstance()
-											.getSelectedColor());
-											start = timeIndexConst;
-						}
-
+					public void handle(MouseEvent e){
+						((Rectangle)e.getSource()).setStroke(Color.BLACK);
+					}
+				});
+				
+				lightRecArray[timeIndex][labelIndex].setOnMouseExited(new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent e){
+						((Rectangle)e.getSource()).setStroke(null);
 					}
 				});
 
-				lightRecArray[timeIndex][labelIndex].setOnDragDetected((MouseEvent me) -> {
-
-					for(Rectangle rec: copyAL){
-						rec.setOpacity(1);
+				lightRecArray[timeIndex][labelIndex].setOnMousePressed(new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent e) {
+						selectedRec = lightRecArray[timeIndexConst][labelIndexConst];
+						selectedTimeIndex = timeIndexConst;
+						selectedLabelIndex = labelIndexConst;
+						if (e.getButton() == MouseButton.SECONDARY) {
+							lightCM.show(lightRecArray[timeIndexConst][labelIndexConst], e.getScreenX(), e.getScreenY());
+						}else if(ChoreographyController.getInstance().getShiftPressed()){
+							for(int i = startTimeIndex; i <= endTimeIndex; i++){
+								for(int j = startLabelIndex; j <= endLabelIndex; j++){
+									lightRecArray[i][j].setOpacity(1);
+								}
+							}
+							lightRecArray[timeIndexConst][labelIndexConst].setStroke(Color.BLACK);
+							lightRecArray[timeIndexConst][labelIndexConst].setStrokeWidth(3);
+							//lightRecArray[timeIndexConst][labelIndexConst].setOpacity(.50);
+							
+							startTimeIndex = timeIndexConst;
+							startLabelIndex = labelIndexConst;
+						}else{
+							for(int i = startTimeIndex; i <= endTimeIndex; i++){
+								for(int j = startLabelIndex; j <= endLabelIndex; j++){
+									lightRecArray[i][j].setOpacity(1);
+								}
+							}							
+							startRow = labelIndexConst;
+							lightRecArray[timeIndexConst][labelIndexConst].setFill(ColorPaletteModel.getInstance().getSelectedColor());
+							start = timeIndexConst;
+						}
 					}
-					copyAL.clear();
-					colAL.clear();
-					rowAL.clear();
-					copyAL.add(lightRecArray[timeIndexConst][labelIndexConst]);
-					if(ChoreographyController.getInstance().getIsSelected()){
-						lightCopy.setDisable(false);
-						lightRecArray[timeIndexConst][labelIndexConst].startFullDrag();
-						lightRecArray[timeIndexConst][labelIndexConst].setOpacity(50);
+				});
 
-						colAL.add(timeIndexConst);
-						rowAL.add(labelIndexConst);
+				lightRecArray[timeIndex][labelIndex].setOnDragDetected((MouseEvent e) -> {
+					if(ChoreographyController.getInstance().getShiftPressed()){
+						//lightCopy.setDisable(false);
+						lightRecArray[timeIndexConst][labelIndexConst].startFullDrag();
+						lightRecArray[timeIndexConst][labelIndexConst].setOpacity(.50);
 					}
 
 					lightRecArray[timeIndexConst][labelIndexConst].startFullDrag();
 				}); 
 				// continues and ends the drag event
-				lightRecArray[timeIndex][labelIndex].setOnMouseDragOver((MouseEvent me) -> {
-
-					//                    if (!copyAL.contains(lightRecArray[testI][testJ])){
-						//                            copyAL.add(lightRecArray[testI][testJ]);
-					//                            colAL.add(testI);
-					//                            rowAL.add(testJ);
-					//                    }
-					if (ChoreographyController.getInstance().getIsSelected()) {
-						lightRecArray[timeIndexConst][labelIndexConst].setOpacity(.50);
-						if (!copyAL.contains(lightRecArray[timeIndexConst][labelIndexConst])){
-							copyAL.add(lightRecArray[timeIndexConst][labelIndexConst]);
-							colAL.add(timeIndexConst);
-							rowAL.add(labelIndexConst);
+				lightRecArray[timeIndex][labelIndex].setOnMouseDragOver((MouseEvent e) -> {
+					if (ChoreographyController.getInstance().getShiftPressed()) {
+						if(timeIndexConst >= startTimeIndex && labelIndexConst >= startLabelIndex){
+							if(timeIndexConst < endTimeIndex){
+								for(int i = 0; i <= endLabelIndex - startLabelIndex; i++){
+									lightRecArray[endTimeIndex][startLabelIndex + i].setOpacity(1);
+								}
+							}
+							if(labelIndexConst < endLabelIndex){
+								for(int i = 0; i <= endTimeIndex - startTimeIndex; i++){
+									lightRecArray[startTimeIndex + i][endLabelIndex].setOpacity(1);
+								}
+							}
+							endTimeIndex = timeIndexConst;
+							endLabelIndex= labelIndexConst;
+							for(int i = 0; i <= endTimeIndex - startTimeIndex; i++){
+								for(int j = 0; j <= endLabelIndex - startLabelIndex; j++){
+									lightRecArray[startTimeIndex + i][startLabelIndex + j].setOpacity(.50);
+								}
+							}
 						}
 					} else {
 						if (startRow == labelIndexConst) {
@@ -586,16 +607,10 @@ public class TimelineController implements Initializable {
 											.getInstance()
 											.getSelectedColor());
 						}
-						//                    	lightRecArray[testI][testJ].setOpacity(1);
-						//                    	lightRecArray[testI][testJ].setFill(ColorPaletteController
-								//                                .getInstance()
-								//                                .getSelectedColor());
-						//                        timeline.setLightFcwAtPoint(testI, new FCW(testI, 
-						//                                ColorPaletteModel.getInstance().getSelectedIndex()));
 					}
 				});
-				lightRecArray[timeIndex][labelIndex].setOnMouseDragReleased((MouseEvent me) -> {
-					if (!ChoreographyController.getInstance().getIsSelected()){
+				lightRecArray[timeIndex][labelIndex].setOnMouseDragReleased((MouseEvent e) -> {
+					if (!ChoreographyController.getInstance().getShiftPressed()){
 						if (startRow != labelIndexConst){
 							FCW f = new FCW(channelAddresses[startRow], ColorPaletteModel.getInstance().getSelectedIndex());
 							timeline.setLightFcw(f, start, timeIndexConst + 1);
@@ -604,11 +619,8 @@ public class TimelineController implements Initializable {
 						else{
 							FCW f = new FCW(channelAddresses[labelIndexConst], ColorPaletteModel.getInstance().getSelectedIndex());
 							timeline.setLightFcw(f, start, timeIndexConst + 1);
-							//                    System.out.println(f + " " + start + " " + testI + 1);
 						}
 					}
-
-
 				});
 			}
 		}

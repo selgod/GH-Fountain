@@ -168,6 +168,7 @@ public class ChoreographyController implements Initializable {
 	private Pane simPane;
 	private boolean lookUp = true;
 	private boolean toogleSimulation = true;
+	private boolean shiftPressed = false;
 
 	/**
 	 * Initializes the controller class.
@@ -402,6 +403,24 @@ public class ChoreographyController implements Initializable {
 			}
 
 		});
+		
+		csGUI.setOnKeyPressed(new EventHandler<KeyEvent>(){
+			@Override
+			public void handle(KeyEvent e){
+				if(e.getCode() == KeyCode.SHIFT) {
+					shiftPressed = true;
+				}
+			}
+		});
+		
+		csGUI.setOnKeyReleased(new EventHandler<KeyEvent>(){
+			@Override
+			public void handle(KeyEvent e){
+				if(e.getCode() == KeyCode.SHIFT) {
+					shiftPressed = false;
+				}
+			}
+		});
 
 		events = new ConcurrentSkipListMap<>();
 		fcwOutput.setText("Choreographer has loaded!");
@@ -627,6 +646,10 @@ public class ChoreographyController implements Initializable {
 
 	public boolean getIsSelected() {
 		return isSelected;
+	}
+	
+	public boolean getShiftPressed(){
+		return shiftPressed;
 	}
 
 	public void stopTimelineTimer() {
