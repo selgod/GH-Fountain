@@ -487,7 +487,7 @@ public class FountainSimController implements Initializable {
 
 	@FXML
 	private Rectangle spoutRec;
-
+	private String sweepCommand = "None";
 	private int sweepType = 1;
 	private double leftSweepSpeed = 1;
 	private double rightSweepSpeed = 1;
@@ -725,229 +725,349 @@ public class FountainSimController implements Initializable {
 				}
 				break;
 			case 35:
-				if (actionsList.contains("RIGHTSHORTLEFTLONG")) {
-					if (sweepType == 1) {
-						moveLeftSweeps(-30, 15);
-						moveRightSweeps(-30, 15);
-					}
-					if (sweepType == 2) {
-						moveLeftSweeps(-30, 15);
-						moveRightSweeps(15, -30);
-					}
+				final int ll = -45; // Left Long
+				final int ls = -30; // Left Short
+				final int lv = -15; // Left Very Short
+				final int rl = 45; // Right Long
+				final int rs = 30; // Right Short
+				final int rv = 15; // Right Very Short
 
-				}
-				if (actionsList.contains("RIGHTSHORTLEFTSHORT")) {
-					if (sweepType == 1) {
-						moveLeftSweeps(-15, 15);
-						moveRightSweeps(-15, 15);
-					}
-					if (sweepType == 2) {
-						moveLeftSweeps(-15, 15);
-						moveRightSweeps(15, -15);
-					}
-				}
-				if (actionsList.contains("RIGHTLONGLEFTLONG")) {
-					if (sweepType == 1) {
-						moveLeftSweeps(-30, 30);
-						moveRightSweeps(-30, 30);
-					}
-					if (sweepType == 2) {
-						moveLeftSweeps(-30, 30);
-						moveRightSweeps(30, -30);
+				if (actionsList.contains("RIGHTSHORTLEFTLONG")) { // 39
+					if (sweepCommand != "RIGHTSHORTLEFTLONG") {
+						sweepCommand = "RIGHTSHORTLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rs, ll);
+							moveRightSweeps(rs, ll);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rs, ll);
+							moveRightSweeps(ll, rs);
+						}
 					}
 				}
-				if (actionsList.contains("HOLDRIGHTLONG")) {
-					if (sweepType == 1 || sweepType == 2) {
-						moveLeftSweeps(30, 30);
-						moveRightSweeps(30, 30);
+				if (actionsList.contains("RIGHTSHORTLEFTSHORT")) { // 38
+					if (sweepCommand != "RIGHTSHORTLEFTSHORT") {
+						sweepCommand = "RIGHTSHORTLEFTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rs, ls);
+							moveRightSweeps(rs, ls);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rs, ls);
+							moveRightSweeps(ls, rs);
+						}
 					}
 				}
-				if (actionsList.contains("HOLDRIGHTSHORT")) {
-					if (sweepType == 1 || sweepType == 2) {
-						moveLeftSweeps(15, 15);
-						moveRightSweeps(15, 15);
+				if (actionsList.contains("RIGHTLONGLEFTLONG")) { // 23
+					if (sweepCommand != "RIGHTLONGLEFTLONG") {
+						sweepCommand = "RIGHTLONGLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rl, ll);
+							moveRightSweeps(rl, ll);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rl, ll);
+							moveRightSweeps(ll, rs);
+						}
 					}
 				}
-				if (actionsList.contains("HOLDLEFTLONG")) {
-					if (sweepType == 1 || sweepType == 2) {
-						moveLeftSweeps(-30, -30);
-						moveRightSweeps(-30, -30);
+				if (actionsList.contains("HOLDRIGHTLONG")) { // 17
+					if (sweepCommand != "HOLDRIGHTLONG") {
+						sweepCommand = "HOLDRIGHTLONG";
+						moveLeftSweeps(rl, rl);
+						moveRightSweeps(rl, rl);
 					}
 				}
-				if (actionsList.contains("HOLDLEFTSHORT")) {
-					if (sweepType == 1 || sweepType == 2) {
-						moveLeftSweeps(-15, -15);
-						moveRightSweeps(-15, -15);
+				if (actionsList.contains("HOLDRIGHTSHORT")) { // 34
+					if (sweepCommand != "HOLDRIGHTSHORT") {
+						sweepCommand = "HOLDRIGHTSHORT";
+						moveLeftSweeps(rs, rs);
+						moveRightSweeps(rs, rs);
 					}
 				}
-				if (actionsList.contains("RIGHTLONGRIGHTSHORT")) {
-					if (sweepType == 1) {
-						moveLeftSweeps(15, 30);
-						moveRightSweeps(15, 30);
-					}
-					if (sweepType == 2) {
-						moveLeftSweeps(15, 30);
-						moveRightSweeps(30, 15);
+				if (actionsList.contains("HOLDLEFTLONG")) { // 119
+					if (sweepCommand != "HOLDLEFTLONG") {
+						sweepCommand = "HOLDLEFTLONG";
+						moveLeftSweeps(ll, ll);
+						moveRightSweeps(ll, ll);
 					}
 				}
-				if (actionsList.contains("RIGHTLONGCENTER")) {
-					if (sweepType == 1) {
-						moveLeftSweeps(0, 30);
-						moveRightSweeps(0, 30);
-					}
-					if (sweepType == 2) {
-						moveLeftSweeps(0, 30);
-						moveRightSweeps(30, 0);
+				if (actionsList.contains("HOLDLEFTSHORT")) { // 102
+					if (sweepCommand != "HOLDLEFTSHORT") {
+						sweepCommand = "HOLDLEFTSHORT";
+						moveLeftSweeps(ls, ls);
+						moveRightSweeps(ls, ls);
 					}
 				}
-				if (actionsList.contains("RIGHTSHORTCENTER")) {
-					if (sweepType == 1) {
-						moveLeftSweeps(0, 15);
-						moveRightSweeps(0, 15);
-					}
-					if (sweepType == 2) {
-						moveLeftSweeps(0, 15);
-						moveRightSweeps(15, 0);
-					}
-				}
-				if (actionsList.contains("RIGHTLONGLEFTSHORT")) {
-					if (sweepType == 1) {
-						moveLeftSweeps(-15, 30);
-						moveRightSweeps(-15, 30);
-					}
-					if (sweepType == 2) {
-						moveLeftSweeps(-15, 30);
-						moveRightSweeps(30, -15);
+				if (actionsList.contains("RIGHTLONGRIGHTSHORT")) { // 19
+					if (sweepCommand != "RIGHTLONGRIGHTSHORT") {
+						sweepCommand = "RIGHTLONGRIGHTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rl, rs);
+							moveRightSweeps(rl, rs);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rl, rs);
+							moveRightSweeps(rs, rl);
+						}
 					}
 				}
-				if (actionsList.contains("HOLDCENTER")) {
-					if (sweepType == 1 || sweepType == 2) {
+				if (actionsList.contains("RIGHTLONGCENTER")) { // 20
+					if (sweepCommand != "RIGHTLONGCENTER") {
+						sweepCommand = "RIGHTLONGCENTER";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rl, 0);
+							moveRightSweeps(rl, 0);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rl, 0);
+							moveRightSweeps(0, rl);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTSHORTCENTER")) { // 36
+					if (sweepCommand != "RIGHTSHORTCENTER") {
+						sweepCommand = "RIGHTSHORTCENTER";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rs, 0);
+							moveRightSweeps(rs, 0);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rs, 0);
+							moveRightSweeps(0, rs);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTLONGLEFTSHORT")) { // 22
+					if (sweepCommand != "RIGHTLONGLEFTSHORT") {
+						sweepCommand = "RIGHTLONGLEFTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rl, ls);
+							moveRightSweeps(rl, ls);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rl, ls);
+							moveRightSweeps(ls, rl);
+						}
+					}
+				}
+				if (actionsList.contains("HOLDCENTER")) { // 0,68
+					if (sweepCommand != "HOLDCENTER") {
+						sweepCommand = "HOLDCENTER";
 						moveLeftSweeps(0, 0);
 						moveRightSweeps(0, 0);
 					}
 				}
-				if (actionsList.contains("CENTERLEFTSHORT")) {
-					if (sweepType == 1) {
-						moveLeftSweeps(-15, 0);
-						moveRightSweeps(-15, 0);
-					}
-					if (sweepType == 2) {
-						moveLeftSweeps(-15, 0);
-						moveRightSweeps(0, -15);
-					}
-				}
-				if (actionsList.contains("CENTERLEFTLONG")) {
-					if (sweepType == 1) {
-						moveLeftSweeps(-30, 0);
-						moveRightSweeps(-30, 0);
-					}
-					if (sweepType == 2) {
-						moveLeftSweeps(-30, 0);
-						moveRightSweeps(0, -30);
+				if (actionsList.contains("CENTERLEFTSHORT")) { // 70
+					if (sweepCommand != "CENTERLEFTSHORT") {
+						sweepCommand = "CENTERLEFTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(0, ls);
+							moveRightSweeps(0, ls);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(0, ls);
+							moveRightSweeps(ls, 0);
+						}
 					}
 				}
-				if (actionsList.contains("LEFTSHORTLEFTLONG")) {
-					if (sweepType == 1) {
-						moveLeftSweeps(-30, -15);
-						moveRightSweeps(-30, -15);
-					}
-					if (sweepType == 2) {
-						moveLeftSweeps(-30, -15);
-						moveRightSweeps(-15, -30);
+				if (actionsList.contains("CENTERLEFTLONG")) { // 52
+					if (sweepCommand != "CENTERLEFTLONG") {
+						sweepCommand = "CENTERLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(0, ll);
+							moveRightSweeps(0, ll);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(0, ll);
+							moveRightSweeps(ll, 0);
+						}
 					}
 				}
+				if (actionsList.contains("LEFTSHORTLEFTLONG")) { // 69
+					if (sweepCommand != "LEFTSHORTLEFTLONG") {
+						sweepCommand = "LEFTSHORTLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(ls, ll);
+							moveRightSweeps(ls, ll);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(ls, ll);
+							moveRightSweeps(ll, ls);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTLONGLEFTVERYSHORT")) { // 21
+					if (sweepCommand != "RIGHTLONGLEFTVERYSHORT") {
+						sweepCommand = "RIGHTLONGLEFTVERYSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rl, lv);
+							moveRightSweeps(rl, lv);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rl, lv);
+							moveRightSweeps(lv, rl);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTSHORTLEFTVERYSHORT")) { // 37
+					if (sweepCommand != "RIGHTSHORTLEFTVERYSHORT") {
+						sweepCommand = "RIGHTSHORTLEFTVERYSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rs, lv);
+							moveRightSweeps(rs, lv);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rs, lv);
+							moveRightSweeps(lv, rs);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTVERYSHORTLEFTSHORT")) { // 54
+					if (sweepCommand != "RIGHTVERYSHORTLEFTSHORT") {
+						sweepCommand = "RIGHTVERYSHORTLEFTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rv, ls);
+							moveRightSweeps(rv, ls);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rv, ls);
+							moveRightSweeps(ls, rv);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTVERYSHORTLEFTLONG")) { // 55
+					if (sweepCommand != "RIGHTVERYSHORTLEFTLONG") {
+						sweepCommand = "RIGHTVERYSHORTLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rv, ll);
+							moveRightSweeps(rv, ll);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rv, ll);
+							moveRightSweeps(ll, rv);
+						}
+					}
+				}
+				if (actionsList.contains("CENTERLEFTLONG")) { // 71
+					if (sweepCommand != "CENTERLEFTLONG") {
+						sweepCommand = "CENTERLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(0, ll);
+							moveRightSweeps(0, ll);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(0, ll);
+							moveRightSweeps(ll, 0);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTLONGCENTER")) { // 87
+					if (sweepCommand != "RIGHTLONGCENTER") {
+						sweepCommand = "RIGHTLONGCENTER";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rl, 0);
+							moveRightSweeps(rl, 0);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rl, 0);
+							moveRightSweeps(0, rl);
+						}
+					}
+				}
+
 				break;
 			case 36:
-				if (actionsList.contains("RIGHTSHORTLEFTLONG")) {
+				if (actionsList.contains("RIGHTSHORTLEFTLONG")) { // 39
 					moveLeftSweeps(-30, 15);
 				}
-				if (actionsList.contains("RIGHTSHORTLEFTSHORT")) {
+				if (actionsList.contains("RIGHTSHORTLEFTSHORT")) { // 38
 					moveLeftSweeps(-15, 15);
 				}
-				if (actionsList.contains("RIGHTLONGLEFTLONG")) {
+				if (actionsList.contains("RIGHTLONGLEFTLONG")) { // 23
 					moveLeftSweeps(-30, 30);
 				}
-				if (actionsList.contains("HOLDRIGHTLONG")) {
+				if (actionsList.contains("HOLDRIGHTLONG")) { // 17
 					moveLeftSweeps(30, 30);
 				}
-				if (actionsList.contains("HOLDRIGHTSHORT")) {
+				if (actionsList.contains("HOLDRIGHTSHORT")) { // 34
 					moveLeftSweeps(15, 15);
 				}
-				if (actionsList.contains("HOLDLEFTLONG")) {
+				if (actionsList.contains("HOLDLEFTLONG")) { // 85
 					moveLeftSweeps(-30, -30);
 				}
-				if (actionsList.contains("HOLDLEFTSHORT")) {
+				if (actionsList.contains("HOLDLEFTSHORT")) { // 68
 					moveLeftSweeps(-15, -15);
 				}
-				if (actionsList.contains("RIGHTLONGRIGHTSHORT")) {
+				if (actionsList.contains("RIGHTLONGRIGHTSHORT")) { // 19
 					moveLeftSweeps(15, 30);
 				}
-				if (actionsList.contains("RIGHTLONGCENTER")) {
+				if (actionsList.contains("RIGHTLONGCENTER")) { // 20
 					moveLeftSweeps(0, 30);
 				}
-				if (actionsList.contains("RIGHTSHORTCENTER")) {
+				if (actionsList.contains("RIGHTSHORTCENTER")) { // 35
 					moveLeftSweeps(0, 15);
 				}
-				if (actionsList.contains("RIGHTLONGLEFTSHORT")) {
+				if (actionsList.contains("RIGHTLONGLEFTSHORT")) { // 22
 					moveLeftSweeps(-15, 30);
 				}
-				if (actionsList.contains("HOLDCENTER")) {
+				if (actionsList.contains("HOLDCENTER")) { // 51
 					moveLeftSweeps(0, 0);
 				}
-				if (actionsList.contains("CENTERLEFTSHORT")) {
+				if (actionsList.contains("CENTERLEFTSHORT")) { // 70
 					moveLeftSweeps(-15, 0);
 				}
-				if (actionsList.contains("CENTERLEFTLONG")) {
+				if (actionsList.contains("CENTERLEFTLONG")) { // 71
 					moveLeftSweeps(-30, 0);
 				}
-				if (actionsList.contains("LEFTSHORTLEFTLONG")) {
+				if (actionsList.contains("LEFTSHORTLEFTLONG")) { // 69????????????
 					moveLeftSweeps(-30, -15);
 				}
 				break;
 			case 37:
-				if (actionsList.contains("RIGHTSHORTLEFTLONG")) {
+				if (actionsList.contains("RIGHTSHORTLEFTLONG")) { // 39
 					moveRightSweeps(-30, 15);
 				}
-				if (actionsList.contains("RIGHTSHORTLEFTSHORT")) {
+				if (actionsList.contains("RIGHTSHORTLEFTSHORT")) {// 38
 					moveRightSweeps(-15, 15);
 				}
-				if (actionsList.contains("RIGHTLONGLEFTLONG")) {
+				if (actionsList.contains("RIGHTLONGLEFTLONG")) {// 21
 					moveRightSweeps(-30, 30);
 				}
-				if (actionsList.contains("HOLDRIGHTLONG")) {
+				if (actionsList.contains("HOLDRIGHTLONG")) {// 17
 					moveRightSweeps(30, 30);
 				}
-				if (actionsList.contains("HOLDRIGHTSHORT")) {
+				if (actionsList.contains("HOLDRIGHTSHORT")) {// 34
 					moveRightSweeps(15, 15);
 				}
-				if (actionsList.contains("HOLDLEFTLONG")) {
+				if (actionsList.contains("HOLDLEFTLONG")) {// 119
 					moveRightSweeps(-30, -30);
 				}
-				if (actionsList.contains("HOLDLEFTSHORT")) {
-					moveRightSweeps(-15, -15);
+				if (actionsList.contains("HOLDLEFTSHORT")) {// 102
+					moveRightSweeps(-15, -15);// 102
 				}
-				if (actionsList.contains("RIGHTLONGRIGHTSHORT")) {
+				if (actionsList.contains("RIGHTLONGRIGHTSHORT")) {// 19
 					moveRightSweeps(15, 30);
 				}
-				if (actionsList.contains("RIGHTLONGCENTER")) {
+				if (actionsList.contains("RIGHTLONGCENTER")) {// 20
 					moveRightSweeps(0, 30);
 				}
-				if (actionsList.contains("RIGHTSHORTCENTER")) {
+				if (actionsList.contains("RIGHTSHORTCENTER")) {// 36
 					moveRightSweeps(0, 15);
 				}
-				if (actionsList.contains("RIGHTLONGLEFTSHORT")) {
+				if (actionsList.contains("RIGHTLONGLEFTSHORT")) {// 22
 					moveRightSweeps(-15, 30);
 				}
-				if (actionsList.contains("HOLDCENTER")) {
+				if (actionsList.contains("HOLDCENTER")) {// 0,68
 					moveRightSweeps(0, 0);
 				}
-				if (actionsList.contains("CENTERLEFTSHORT")) {
+				if (actionsList.contains("CENTERLEFTSHORT")) {// 70
 					moveRightSweeps(-15, 0);
 				}
-				if (actionsList.contains("CENTERLEFTLONG")) {
+				if (actionsList.contains("CENTERLEFTLONG")) {// 52
 					moveRightSweeps(-30, 0);
 				}
-				if (actionsList.contains("LEFTSHORTLEFTLONG")) {
+				if (actionsList.contains("LEFTSHORTLEFTLONG")) {// 69
 					moveRightSweeps(-30, -15);
 				}
 				break;
@@ -1554,14 +1674,6 @@ public class FountainSimController implements Initializable {
 		leftSweepTimeline.setAutoReverse(true);
 
 		// These are for the animations and hold time values
-		KeyValue kv25 = null;
-		KeyValue kv26 = null;
-		KeyValue kv27 = null;
-		KeyValue kv28 = null;
-		KeyValue kv29 = null;
-		KeyValue kv30 = null;
-		KeyValue kv31 = null;
-		KeyValue kv32 = null;
 		KeyValue kv1 = null;
 		KeyValue kv2 = null;
 		KeyValue kv7 = null;
@@ -1569,14 +1681,6 @@ public class FountainSimController implements Initializable {
 		KeyValue kv13 = null;
 		KeyValue kv14 = null;
 		KeyValue kv19 = null;
-		KeyValue kv20 = null;
-
-		/*
-		 * mod1sweep1.setVisible(true); mod2sweep1.setVisible(true);
-		 * mod3sweep1.setVisible(true); mod4sweep1.setVisible(true);
-		 * mod5sweep1.setVisible(true); mod6sweep1.setVisible(true);
-		 * mod7sweep1.setVisible(true);
-		 */
 
 		// Makes sure that there are no current animations happening to the
 		// object
@@ -1617,7 +1721,7 @@ public class FountainSimController implements Initializable {
 
 		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit);
 
-		final KeyFrame kf = new KeyFrame(Duration.seconds(leftSweepSpeed), kv1, kv2, kv7, kv8, kv13, kv14, kv14, kv19, kv20, kv25, kv26, kv27, kv28, kv29, kv30, kv31, kv32);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(leftSweepSpeed), kv1, kv2, kv7, kv8, kv13, kv14, kv14, kv19);
 		leftSweepTimeline.getKeyFrames().add(kf);
 		leftSweepTimeline.play();
 	}
@@ -1633,18 +1737,13 @@ public class FountainSimController implements Initializable {
 		}
 		rightSweepTimeline.setAutoReverse(true);
 
-		KeyValue kv15 = null;
-		KeyValue kv16 = null;
-		KeyValue kv17 = null;
-		KeyValue kv18 = null;
-		KeyValue kv19 = null;
-		KeyValue kv20 = null;
 		KeyValue kv1 = null;
 		KeyValue kv2 = null;
 		KeyValue kv7 = null;
 		KeyValue kv8 = null;
 		KeyValue kv13 = null;
 		KeyValue kv14 = null;
+		KeyValue kv19 = null;
 
 		mod1sweep2.setVisible(true);
 		mod2sweep2.setVisible(true);
@@ -1700,7 +1799,7 @@ public class FountainSimController implements Initializable {
 
 		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit);
 
-		final KeyFrame kf = new KeyFrame(Duration.seconds(rightSweepSpeed), kv1, kv2, kv7, kv8, kv13, kv14, kv15, kv16, kv17, kv18, kv19, kv20);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(rightSweepSpeed), kv1, kv2, kv7, kv8, kv13, kv14, kv19);
 		rightSweepTimeline.getKeyFrames().add(kf);
 
 		rightSweepTimeline.play();
