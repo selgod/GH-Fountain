@@ -516,6 +516,12 @@ public class FountainSimController implements Initializable {
 			double lagTime = 0;
 			FCW f = it.next();
 			String[] actions = FCWLib.getInstance().reverseLookupData(f);
+			final int ll = -45; // Left Long
+			final int ls = -30; // Left Short
+			final int lv = -15; // Left Very Short
+			final int rl = 45; // Right Long
+			final int rs = 30; // Right Short
+			final int rv = 15; // Right Very Short
 			if (f.getIsWater() && f.getAddr() != 99) {
 				lagTime = LagTimeLibrary.getInstance().getLagTimeInSeconds(f);
 			}
@@ -650,6 +656,7 @@ public class FountainSimController implements Initializable {
 					leftSweepSpeed = 2.5;
 				}
 				if (actionsList.contains("MODERATO")) {
+					System.out.println("Moderate Speed");
 					leftSweepTimeline.setRate(1.0);
 					leftSweepSpeed = 1.0;
 				}
@@ -666,10 +673,20 @@ public class FountainSimController implements Initializable {
 					leftSweepSpeed = 1.5;
 				}
 				if (actionsList.contains("SHORT")) {
-					moveLeftSweeps(-15, 15);
+					if (sweepCommand != "SHORT") {
+						System.out.println("Short");
+						sweepCommand = "SHORT";
+						moveLeftSweeps(ls, rs);
+						moveRightSweeps(ls, rs);
+					}
 				}
 				if (actionsList.contains("LONG")) {
-					moveLeftSweeps(-30, 30);
+					if (sweepCommand != "LONG") {
+						System.out.println("Long");
+						sweepCommand = "LONG";
+						moveLeftSweeps(ll, rl);
+						moveRightSweeps(ll, rl);
+					}
 				}
 				break;
 			case 34:
@@ -718,20 +735,21 @@ public class FountainSimController implements Initializable {
 					rightSweepSpeed = 1.5;
 				}
 				if (actionsList.contains("SHORT")) {
-					moveRightSweeps(-15, 15);
+					if (sweepCommand != "SHORT") {
+						sweepCommand = "SHORT";
+						moveRightSweeps(ls, rs);
+						moveLeftSweeps(rs, ls);
+					}
 				}
 				if (actionsList.contains("LONG")) {
-					moveRightSweeps(-30, 30);
+					if (sweepCommand != "LONG") {
+						sweepCommand = "LONG";
+						moveRightSweeps(ll, rl);
+						moveLeftSweeps(rl, ll);
+					}
 				}
 				break;
 			case 35:
-				final int ll = -45; // Left Long
-				final int ls = -30; // Left Short
-				final int lv = -15; // Left Very Short
-				final int rl = 45; // Right Long
-				final int rs = 30; // Right Short
-				final int rv = 15; // Right Very Short
-
 				if (actionsList.contains("RIGHTSHORTLEFTLONG")) { // 39
 					if (sweepCommand != "RIGHTSHORTLEFTLONG") {
 						sweepCommand = "RIGHTSHORTLEFTLONG";
@@ -979,97 +997,451 @@ public class FountainSimController implements Initializable {
 				break;
 			case 36:
 				if (actionsList.contains("RIGHTSHORTLEFTLONG")) { // 39
-					moveLeftSweeps(-30, 15);
+					if (sweepCommand != "RIGHTSHORTLEFTLONG") {
+						sweepCommand = "RIGHTSHORTLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rs, ll);
+							moveRightSweeps(rs, ll);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rs, ll);
+							moveRightSweeps(ll, rs);
+						}
+					}
 				}
 				if (actionsList.contains("RIGHTSHORTLEFTSHORT")) { // 38
-					moveLeftSweeps(-15, 15);
+					if (sweepCommand != "RIGHTSHORTLEFTSHORT") {
+						sweepCommand = "RIGHTSHORTLEFTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rs, ls);
+							moveRightSweeps(rs, ls);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rs, ls);
+							moveRightSweeps(ls, rs);
+						}
+					}
 				}
 				if (actionsList.contains("RIGHTLONGLEFTLONG")) { // 23
-					moveLeftSweeps(-30, 30);
+					if (sweepCommand != "RIGHTLONGLEFTLONG") {
+						sweepCommand = "RIGHTLONGLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rl, ll);
+							moveRightSweeps(rl, ll);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rl, ll);
+							moveRightSweeps(ll, rs);
+						}
+					}
 				}
 				if (actionsList.contains("HOLDRIGHTLONG")) { // 17
-					moveLeftSweeps(30, 30);
+					if (sweepCommand != "HOLDRIGHTLONG") {
+						sweepCommand = "HOLDRIGHTLONG";
+						moveLeftSweeps(rl, rl);
+						moveRightSweeps(rl, rl);
+					}
 				}
 				if (actionsList.contains("HOLDRIGHTSHORT")) { // 34
-					moveLeftSweeps(15, 15);
+					if (sweepCommand != "HOLDRIGHTSHORT") {
+						sweepCommand = "HOLDRIGHTSHORT";
+						moveLeftSweeps(rs, rs);
+						moveRightSweeps(rs, rs);
+					}
 				}
-				if (actionsList.contains("HOLDLEFTLONG")) { // 85
-					moveLeftSweeps(-30, -30);
+				if (actionsList.contains("HOLDLEFTLONG")) { // 119
+					if (sweepCommand != "HOLDLEFTLONG") {
+						sweepCommand = "HOLDLEFTLONG";
+						moveLeftSweeps(ll, ll);
+						moveRightSweeps(ll, ll);
+					}
 				}
-				if (actionsList.contains("HOLDLEFTSHORT")) { // 68
-					moveLeftSweeps(-15, -15);
+				if (actionsList.contains("HOLDLEFTSHORT")) { // 102
+					if (sweepCommand != "HOLDLEFTSHORT") {
+						sweepCommand = "HOLDLEFTSHORT";
+						moveLeftSweeps(ls, ls);
+						moveRightSweeps(ls, ls);
+					}
 				}
 				if (actionsList.contains("RIGHTLONGRIGHTSHORT")) { // 19
-					moveLeftSweeps(15, 30);
+					if (sweepCommand != "RIGHTLONGRIGHTSHORT") {
+						sweepCommand = "RIGHTLONGRIGHTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rl, rs);
+							moveRightSweeps(rl, rs);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rl, rs);
+							moveRightSweeps(rs, rl);
+						}
+					}
 				}
 				if (actionsList.contains("RIGHTLONGCENTER")) { // 20
-					moveLeftSweeps(0, 30);
+					if (sweepCommand != "RIGHTLONGCENTER") {
+						sweepCommand = "RIGHTLONGCENTER";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rl, 0);
+							moveRightSweeps(rl, 0);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rl, 0);
+							moveRightSweeps(0, rl);
+						}
+					}
 				}
-				if (actionsList.contains("RIGHTSHORTCENTER")) { // 35
-					moveLeftSweeps(0, 15);
+				if (actionsList.contains("RIGHTSHORTCENTER")) { // 36
+					if (sweepCommand != "RIGHTSHORTCENTER") {
+						sweepCommand = "RIGHTSHORTCENTER";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rs, 0);
+							moveRightSweeps(rs, 0);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rs, 0);
+							moveRightSweeps(0, rs);
+						}
+					}
 				}
 				if (actionsList.contains("RIGHTLONGLEFTSHORT")) { // 22
-					moveLeftSweeps(-15, 30);
+					if (sweepCommand != "RIGHTLONGLEFTSHORT") {
+						sweepCommand = "RIGHTLONGLEFTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rl, ls);
+							moveRightSweeps(rl, ls);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rl, ls);
+							moveRightSweeps(ls, rl);
+						}
+					}
 				}
-				if (actionsList.contains("HOLDCENTER")) { // 51
-					moveLeftSweeps(0, 0);
+				if (actionsList.contains("HOLDCENTER")) { // 0,68
+					if (sweepCommand != "HOLDCENTER") {
+						sweepCommand = "HOLDCENTER";
+						moveLeftSweeps(0, 0);
+						moveRightSweeps(0, 0);
+					}
 				}
 				if (actionsList.contains("CENTERLEFTSHORT")) { // 70
-					moveLeftSweeps(-15, 0);
+					if (sweepCommand != "CENTERLEFTSHORT") {
+						sweepCommand = "CENTERLEFTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(0, ls);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(0, ls);
+						}
+					}
+				}
+				if (actionsList.contains("CENTERLEFTLONG")) { // 52
+					if (sweepCommand != "CENTERLEFTLONG") {
+						sweepCommand = "CENTERLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(0, ll);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(0, ll);
+						}
+					}
+				}
+				if (actionsList.contains("LEFTSHORTLEFTLONG")) { // 69
+					if (sweepCommand != "LEFTSHORTLEFTLONG") {
+						sweepCommand = "LEFTSHORTLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(ls, ll);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(ls, ll);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTLONGLEFTVERYSHORT")) { // 21
+					if (sweepCommand != "RIGHTLONGLEFTVERYSHORT") {
+						sweepCommand = "RIGHTLONGLEFTVERYSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rl, lv);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rl, lv);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTSHORTLEFTVERYSHORT")) { // 37
+					if (sweepCommand != "RIGHTSHORTLEFTVERYSHORT") {
+						sweepCommand = "RIGHTSHORTLEFTVERYSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rs, lv);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rs, lv);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTVERYSHORTLEFTSHORT")) { // 54
+					if (sweepCommand != "RIGHTVERYSHORTLEFTSHORT") {
+						sweepCommand = "RIGHTVERYSHORTLEFTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rv, ls);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rv, ls);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTVERYSHORTLEFTLONG")) { // 55
+					if (sweepCommand != "RIGHTVERYSHORTLEFTLONG") {
+						sweepCommand = "RIGHTVERYSHORTLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rv, ll);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rv, ll);
+						}
+					}
 				}
 				if (actionsList.contains("CENTERLEFTLONG")) { // 71
-					moveLeftSweeps(-30, 0);
+					if (sweepCommand != "CENTERLEFTLONG") {
+						sweepCommand = "CENTERLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(0, ll);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(0, ll);
+						}
+					}
 				}
-				if (actionsList.contains("LEFTSHORTLEFTLONG")) { // 69????????????
-					moveLeftSweeps(-30, -15);
+				if (actionsList.contains("RIGHTLONGCENTER")) { // 87
+					if (sweepCommand != "RIGHTLONGCENTER") {
+						sweepCommand = "RIGHTLONGCENTER";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rl, 0);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rl, 0);
+						}
+					}
 				}
 				break;
 			case 37:
 				if (actionsList.contains("RIGHTSHORTLEFTLONG")) { // 39
-					moveRightSweeps(-30, 15);
+					if (sweepCommand != "RIGHTSHORTLEFTLONG") {
+						sweepCommand = "RIGHTSHORTLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveRightSweeps(rs, ll);
+						}
+						if (sweepType == 2) {
+							moveRightSweeps(ll, rs);
+						}
+					}
 				}
-				if (actionsList.contains("RIGHTSHORTLEFTSHORT")) {// 38
-					moveRightSweeps(-15, 15);
+				if (actionsList.contains("RIGHTSHORTLEFTSHORT")) { // 38
+					if (sweepCommand != "RIGHTSHORTLEFTSHORT") {
+						sweepCommand = "RIGHTSHORTLEFTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveRightSweeps(rs, ls);
+						}
+						if (sweepType == 2) {
+							moveRightSweeps(ls, rs);
+						}
+					}
 				}
-				if (actionsList.contains("RIGHTLONGLEFTLONG")) {// 21
-					moveRightSweeps(-30, 30);
+				if (actionsList.contains("RIGHTLONGLEFTLONG")) { // 23
+					if (sweepCommand != "RIGHTLONGLEFTLONG") {
+						sweepCommand = "RIGHTLONGLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveRightSweeps(rl, ll);
+						}
+						if (sweepType == 2) {
+							moveRightSweeps(ll, rs);
+						}
+					}
 				}
-				if (actionsList.contains("HOLDRIGHTLONG")) {// 17
-					moveRightSweeps(30, 30);
+				if (actionsList.contains("HOLDRIGHTLONG")) { // 17
+					if (sweepCommand != "HOLDRIGHTLONG") {
+						sweepCommand = "HOLDRIGHTLONG";
+						moveRightSweeps(rl, rl);
+					}
 				}
-				if (actionsList.contains("HOLDRIGHTSHORT")) {// 34
-					moveRightSweeps(15, 15);
+				if (actionsList.contains("HOLDRIGHTSHORT")) { // 34
+					if (sweepCommand != "HOLDRIGHTSHORT") {
+						sweepCommand = "HOLDRIGHTSHORT";
+						moveRightSweeps(rs, rs);
+					}
 				}
-				if (actionsList.contains("HOLDLEFTLONG")) {// 119
-					moveRightSweeps(-30, -30);
+				if (actionsList.contains("HOLDLEFTLONG")) { // 119
+					if (sweepCommand != "HOLDLEFTLONG") {
+						sweepCommand = "HOLDLEFTLONG";
+						moveRightSweeps(ll, ll);
+					}
 				}
-				if (actionsList.contains("HOLDLEFTSHORT")) {// 102
-					moveRightSweeps(-15, -15);// 102
+				if (actionsList.contains("HOLDLEFTSHORT")) { // 102
+					if (sweepCommand != "HOLDLEFTSHORT") {
+						sweepCommand = "HOLDLEFTSHORT";
+						moveRightSweeps(ls, ls);
+					}
 				}
-				if (actionsList.contains("RIGHTLONGRIGHTSHORT")) {// 19
-					moveRightSweeps(15, 30);
+				if (actionsList.contains("RIGHTLONGRIGHTSHORT")) { // 19
+					if (sweepCommand != "RIGHTLONGRIGHTSHORT") {
+						sweepCommand = "RIGHTLONGRIGHTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveRightSweeps(rl, rs);
+						}
+						if (sweepType == 2) {
+							moveRightSweeps(rs, rl);
+						}
+					}
 				}
-				if (actionsList.contains("RIGHTLONGCENTER")) {// 20
-					moveRightSweeps(0, 30);
+				if (actionsList.contains("RIGHTLONGCENTER")) { // 20
+					if (sweepCommand != "RIGHTLONGCENTER") {
+						sweepCommand = "RIGHTLONGCENTER";
+						if (sweepType == 1 || sweepType == 0) {
+							moveRightSweeps(rl, 0);
+						}
+						if (sweepType == 2) {
+							moveRightSweeps(0, rl);
+						}
+					}
 				}
-				if (actionsList.contains("RIGHTSHORTCENTER")) {// 36
-					moveRightSweeps(0, 15);
+				if (actionsList.contains("RIGHTSHORTCENTER")) { // 36
+					if (sweepCommand != "RIGHTSHORTCENTER") {
+						sweepCommand = "RIGHTSHORTCENTER";
+						if (sweepType == 1 || sweepType == 0) {
+							moveRightSweeps(rs, 0);
+						}
+						if (sweepType == 2) {
+							moveRightSweeps(0, rs);
+						}
+					}
 				}
-				if (actionsList.contains("RIGHTLONGLEFTSHORT")) {// 22
-					moveRightSweeps(-15, 30);
+				if (actionsList.contains("RIGHTLONGLEFTSHORT")) { // 22
+					if (sweepCommand != "RIGHTLONGLEFTSHORT") {
+						sweepCommand = "RIGHTLONGLEFTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveRightSweeps(rl, ls);
+						}
+						if (sweepType == 2) {
+							moveRightSweeps(ls, rl);
+						}
+					}
 				}
-				if (actionsList.contains("HOLDCENTER")) {// 0,68
-					moveRightSweeps(0, 0);
+				if (actionsList.contains("HOLDCENTER")) { // 0,68
+					if (sweepCommand != "HOLDCENTER") {
+						sweepCommand = "HOLDCENTER";
+						moveRightSweeps(0, 0);
+					}
 				}
-				if (actionsList.contains("CENTERLEFTSHORT")) {// 70
-					moveRightSweeps(-15, 0);
+				if (actionsList.contains("CENTERLEFTSHORT")) { // 70
+					if (sweepCommand != "CENTERLEFTSHORT") {
+						sweepCommand = "CENTERLEFTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveRightSweeps(0, ls);
+						}
+						if (sweepType == 2) {
+							moveRightSweeps(ls, 0);
+						}
+					}
 				}
-				if (actionsList.contains("CENTERLEFTLONG")) {// 52
-					moveRightSweeps(-30, 0);
+				if (actionsList.contains("CENTERLEFTLONG")) { // 52
+					if (sweepCommand != "CENTERLEFTLONG") {
+						sweepCommand = "CENTERLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveRightSweeps(0, ll);
+						}
+						if (sweepType == 2) {
+							moveRightSweeps(ll, 0);
+						}
+					}
 				}
-				if (actionsList.contains("LEFTSHORTLEFTLONG")) {// 69
-					moveRightSweeps(-30, -15);
+				if (actionsList.contains("LEFTSHORTLEFTLONG")) { // 69
+					if (sweepCommand != "LEFTSHORTLEFTLONG") {
+						sweepCommand = "LEFTSHORTLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveRightSweeps(ls, ll);
+						}
+						if (sweepType == 2) {
+							moveRightSweeps(ll, ls);
+						}
+					}
 				}
+				if (actionsList.contains("RIGHTLONGLEFTVERYSHORT")) { // 21
+					if (sweepCommand != "RIGHTLONGLEFTVERYSHORT") {
+						sweepCommand = "RIGHTLONGLEFTVERYSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rl, lv);
+							moveRightSweeps(rl, lv);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rl, lv);
+							moveRightSweeps(lv, rl);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTSHORTLEFTVERYSHORT")) { // 37
+					if (sweepCommand != "RIGHTSHORTLEFTVERYSHORT") {
+						sweepCommand = "RIGHTSHORTLEFTVERYSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rs, lv);
+							moveRightSweeps(rs, lv);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rs, lv);
+							moveRightSweeps(lv, rs);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTVERYSHORTLEFTSHORT")) { // 54
+					if (sweepCommand != "RIGHTVERYSHORTLEFTSHORT") {
+						sweepCommand = "RIGHTVERYSHORTLEFTSHORT";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rv, ls);
+							moveRightSweeps(rv, ls);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rv, ls);
+							moveRightSweeps(ls, rv);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTVERYSHORTLEFTLONG")) { // 55
+					if (sweepCommand != "RIGHTVERYSHORTLEFTLONG") {
+						sweepCommand = "RIGHTVERYSHORTLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rv, ll);
+							moveRightSweeps(rv, ll);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rv, ll);
+							moveRightSweeps(ll, rv);
+						}
+					}
+				}
+				if (actionsList.contains("CENTERLEFTLONG")) { // 71
+					if (sweepCommand != "CENTERLEFTLONG") {
+						sweepCommand = "CENTERLEFTLONG";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(0, ll);
+							moveRightSweeps(0, ll);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(0, ll);
+							moveRightSweeps(ll, 0);
+						}
+					}
+				}
+				if (actionsList.contains("RIGHTLONGCENTER")) { // 87
+					if (sweepCommand != "RIGHTLONGCENTER") {
+						sweepCommand = "RIGHTLONGCENTER";
+						if (sweepType == 1 || sweepType == 0) {
+							moveLeftSweeps(rl, 0);
+							moveRightSweeps(rl, 0);
+						}
+						if (sweepType == 2) {
+							moveLeftSweeps(rl, 0);
+							moveRightSweeps(0, rl);
+						}
+					}
+				}
+
 				break;
 			case 38:
 				if (actionsList.contains("LARGO")) {
@@ -1829,7 +2201,6 @@ public class FountainSimController implements Initializable {
 		KeyValue kv18 = null;
 		KeyValue kv19 = null;
 		KeyValue kv20 = null;
-		KeyValue kv21 = null;
 
 		if (level == 1.0 || level == 0.0) {
 			kv1 = new KeyValue(mod1ring1.heightProperty(), ((35 * level)));
@@ -1957,24 +2328,18 @@ public class FountainSimController implements Initializable {
 		KeyValue kv1 = null;
 		KeyValue kv2 = null;
 		KeyValue kv3 = null;
-		KeyValue kv4 = null;
 		KeyValue kv5 = null;
 		KeyValue kv6 = null;
 		KeyValue kv7 = null;
-		KeyValue kv8 = null;
 		KeyValue kv9 = null;
 		KeyValue kv10 = null;
 		KeyValue kv11 = null;
-		KeyValue kv12 = null;
 		KeyValue kv13 = null;
 		KeyValue kv14 = null;
 		KeyValue kv15 = null;
-		KeyValue kv16 = null;
 		KeyValue kv17 = null;
 		KeyValue kv18 = null;
 		KeyValue kv19 = null;
-		KeyValue kv20 = null;
-		KeyValue kv21 = null;
 
 		if (level == 1.0 || level == 0.0) {
 			kv1 = new KeyValue(mod2ring1.heightProperty(), ((35 * level)));
