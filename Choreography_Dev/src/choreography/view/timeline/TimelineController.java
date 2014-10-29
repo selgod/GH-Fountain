@@ -89,6 +89,9 @@ public class TimelineController implements Initializable {
 	GridPane gridpaneWater;
 	Rectangle[] waterRecArray;
 	Rectangle[][] lightRecArray;
+	Rectangle[][] copyArray;
+	int pasteTimeIndex;
+	int pasteLabelIndex;
 	final ArrayList<Rectangle> copyAL;
 	final ArrayList<Integer> colAL;
 	final ArrayList<Integer> rowAL;
@@ -203,6 +206,7 @@ public class TimelineController implements Initializable {
 		//        waterCM.getItems().add(waterCopy);
 		//        waterCM.getItems().add(waterPaste);
 
+		lightCut.setDisable(true);
 		lightCopy.setDisable(true);
 		lightPaste.setDisable(true);
 
@@ -226,20 +230,51 @@ public class TimelineController implements Initializable {
 		//            }
 		//    	});
 
+		
+		lightCut.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				copyArray = new Rectangle[(endTimeIndex - startTimeIndex) + 1][(endLabelIndex - startLabelIndex) + 1];
+				for(int i = 0; i < copyArray.length; i++){
+					for(int j = 0; j < copyArray[i].length; j++){
+						copyArray[i][j] = new Rectangle();
+						copyArray[i][j].setFill(lightRecArray[startTimeIndex + i][startLabelIndex + j].getFill());
+						lightRecArray[startTimeIndex + i][startLabelIndex + j].setFill(Color.LIGHTGRAY); //TODO use delete() here instead
+						lightRecArray[startTimeIndex + i][startLabelIndex + j].setOpacity(1);
+					}
+				}
+				lightCM.hide();
+				lightPaste.setDisable(false);
+			}
+		});
+		
 		lightCopy.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				lightPaste.setDisable(false);
-				//                System.out.println(copyAL.toString());
-				lightCopy.setDisable(true);
+				copyArray = new Rectangle[(endTimeIndex - startTimeIndex) + 1][(endLabelIndex - startLabelIndex) + 1];
+				for(int i = 0; i < copyArray.length; i++){
+					for(int j = 0; j < copyArray[i].length; j++){
+						copyArray[i][j] = lightRecArray[startTimeIndex + i][startLabelIndex + j];
+					}
+				}
 				lightCM.hide();
+				lightPaste.setDisable(false);
 			}
 		});
 
 		lightPaste.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-
+				//TODO does not check for Timeline bounds
+				for(int i = 0; i < copyArray.length; i++){
+					for(int j = 0; j < copyArray[i].length; j++){
+						lightRecArray[pasteTimeIndex + i][pasteLabelIndex + j].setFill(copyArray[i][j].getFill());
+					}
+				}
+				TimelineController.getInstance().rePaintLightTimeline();
+				lightCM.hide();
+				
+				/* Old Code
 				ArrayList<Integer> transColAL = new ArrayList<>();
 				ArrayList<Integer> transRowAL = new ArrayList<>();
 
@@ -336,11 +371,8 @@ public class TimelineController implements Initializable {
 						start.add(transRowAL.get(i -1));
 					}
 					
-					lightCM.hide();
-				}
-			}    		
-
-
+					lightCM.hide();*/
+			}   		
 		});
 	}
 
@@ -543,12 +575,16 @@ public class TimelineController implements Initializable {
 						selectedLabelIndex = labelIndexConst;
 						if (e.getButton() == MouseButton.SECONDARY) {
 							lightCM.show(lightRecArray[timeIndexConst][labelIndexConst], e.getScreenX(), e.getScreenY());
+							pasteTimeIndex = timeIndexConst;
+							pasteLabelIndex = labelIndexConst;
 						}else if(ChoreographyController.getInstance().getShiftPressed()){
 							for(int i = startTimeIndex; i <= endTimeIndex; i++){
 								for(int j = startLabelIndex; j <= endLabelIndex; j++){
 									lightRecArray[i][j].setOpacity(1);
 								}
 							}
+							lightCut.setDisable(true);
+							lightCopy.setDisable(true);
 							lightRecArray[timeIndexConst][labelIndexConst].setStroke(Color.BLACK);
 							lightRecArray[timeIndexConst][labelIndexConst].setStrokeWidth(3);
 							//lightRecArray[timeIndexConst][labelIndexConst].setOpacity(.50);
@@ -560,7 +596,9 @@ public class TimelineController implements Initializable {
 								for(int j = startLabelIndex; j <= endLabelIndex; j++){
 									lightRecArray[i][j].setOpacity(1);
 								}
-							}							
+							}		
+							lightCut.setDisable(true);
+							lightCopy.setDisable(true);
 							startRow = labelIndexConst;
 							lightRecArray[timeIndexConst][labelIndexConst].setFill(ColorPaletteModel.getInstance().getSelectedColor());
 							start = timeIndexConst;
@@ -570,7 +608,6 @@ public class TimelineController implements Initializable {
 
 				lightRecArray[timeIndex][labelIndex].setOnDragDetected((MouseEvent e) -> {
 					if(ChoreographyController.getInstance().getShiftPressed()){
-						//lightCopy.setDisable(false);
 						lightRecArray[timeIndexConst][labelIndexConst].startFullDrag();
 						lightRecArray[timeIndexConst][labelIndexConst].setOpacity(.50);
 					}
@@ -610,6 +647,8 @@ public class TimelineController implements Initializable {
 					}
 				});
 				lightRecArray[timeIndex][labelIndex].setOnMouseDragReleased((MouseEvent e) -> {
+					lightCut.setDisable(false);
+					lightCopy.setDisable(false);
 					if (!ChoreographyController.getInstance().getShiftPressed()){
 						if (startRow != labelIndexConst){
 							FCW f = new FCW(channelAddresses[startRow], ColorPaletteModel.getInstance().getSelectedIndex());
