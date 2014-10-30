@@ -226,6 +226,19 @@ public class MusicPaneController {
 		} else
 			songName.setText("No File Selected");
 	}
+	
+	public void resetSongName(){
+		songName.setText("No File Selected");
+	}
+	
+	public void resetSongProgress(){
+		songProgress.setText("0.0");
+	}
+	
+	public void disablePlaybackButtons(){
+		playButton.setDisable(true);
+		resetButton.setDisable(true);
+	}
 
 	public void loadMusicFile(File file2) {
 		URL url = null;

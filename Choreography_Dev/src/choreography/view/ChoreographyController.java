@@ -389,6 +389,14 @@ public class ChoreographyController implements Initializable {
 				// MusicPaneController.getInstance().disposeMusic();
 				stopSliderTimer();
 				MusicPaneController.getInstance().resetAll();
+				
+				// TODO Working code starts here
+				MusicPaneController.getInstance().disposeMusic();
+				MusicPaneController.getInstance().resetSongName();
+				MusicPaneController.getInstance().resetSongProgress();
+				MusicPaneController.getInstance().disablePlaybackButtons();
+				// TODO Working code ends here
+				
 				TimelineController.getInstance().disposeTimeline();
 				FountainSimController.getInstance().clearSweeps();
 				FountainSimController.getInstance().clearSim();
