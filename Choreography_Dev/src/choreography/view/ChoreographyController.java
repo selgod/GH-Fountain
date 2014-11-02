@@ -386,17 +386,21 @@ public class ChoreographyController implements Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				// MusicPaneController.getInstance().disposeMusic();
 				stopSliderTimer();
 				MusicPaneController.getInstance().resetAll();
-				
-				// TODO Working code starts here
+
 				MusicPaneController.getInstance().disposeMusic();
 				MusicPaneController.getInstance().resetSongName();
 				MusicPaneController.getInstance().resetSongProgress();
 				MusicPaneController.getInstance().disablePlaybackButtons();
-				// TODO Working code ends here
+				MusicPaneController.getInstance().resetTimeLabel();
+				beatMarkScrollPane.setContent(null);
+				FountainSimController.getInstance().resetAll();
+				openCTLMenuItem.setDisable(true);
 				
+				//TODO Remove instance of ctl file
+				CtlLib.getInstance();
+
 				TimelineController.getInstance().disposeTimeline();
 				FountainSimController.getInstance().clearSweeps();
 				FountainSimController.getInstance().clearSim();

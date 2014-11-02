@@ -1717,7 +1717,7 @@ public class TimelineController implements Initializable {
 		waterRecArray = null;
 		gridpaneLight.getChildren().clear();
 		gridpaneWater.getChildren().clear();
-		initializeTimelines();
+//	TODO: This call was causing alot of exceptions to be thrown. I'm not sure why it was being called to begin with...	initializeTimelines();
 		timeline.getChannelColorMap().clear();
 	}
 	public Timeline getTimeline() {

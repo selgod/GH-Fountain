@@ -235,6 +235,10 @@ public class MusicPaneController {
 		songProgress.setText("0.0");
 	}
 	
+	public void resetTimeLabel(){
+		timeLabel.setContent(null);
+	}
+	
 	public void disablePlaybackButtons(){
 		playButton.setDisable(true);
 		resetButton.setDisable(true);
