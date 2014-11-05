@@ -32,8 +32,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-import javax.swing.JOptionPane;
-
 import choreography.io.FCWLib;
 import choreography.model.color.ColorPaletteEnum;
 import choreography.model.color.ColorPaletteModel;
@@ -178,12 +176,12 @@ public class TimelineController implements Initializable {
 		if (waterCol != 0){
 			timeline.deleteActionAtTime(waterCol - 1);
 			waterRecArray[waterCol-1].setFill(Color.LIGHTGRAY);
-			t.uninstall(waterRecArray[waterCol-1], t);
+			Tooltip.uninstall(waterRecArray[waterCol-1], t);
 		}
 		else{
 			timeline.deleteActionAtTime(waterCol);
 			waterRecArray[waterCol].setFill(Color.LIGHTGRAY);
-			t.uninstall(waterRecArray[waterCol], t);
+			Tooltip.uninstall(waterRecArray[waterCol], t);
 		}
 		SlidersController.getInstance().resetAllSliders();
 	}
@@ -553,6 +551,7 @@ public class TimelineController implements Initializable {
 				final int timeIndexConst = timeIndex;
 				final int labelIndexConst = labelIndex;
 				
+				/*this code allows the user to see what rectangle the mouse is currently over, however it shows the lag
 				lightRecArray[timeIndex][labelIndex].setOnMouseEntered(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent e){
@@ -565,7 +564,7 @@ public class TimelineController implements Initializable {
 					public void handle(MouseEvent e){
 						((Rectangle)e.getSource()).setStroke(null);
 					}
-				});
+				});*/
 
 				lightRecArray[timeIndex][labelIndex].setOnMousePressed(new EventHandler<MouseEvent>() {
 					@Override
@@ -608,12 +607,13 @@ public class TimelineController implements Initializable {
 
 				lightRecArray[timeIndex][labelIndex].setOnDragDetected((MouseEvent e) -> {
 					if(ChoreographyController.getInstance().getShiftPressed()){
-						lightRecArray[timeIndexConst][labelIndexConst].startFullDrag();
+						//lightRecArray[timeIndexConst][labelIndexConst].startFullDrag();
 						lightRecArray[timeIndexConst][labelIndexConst].setOpacity(.50);
 					}
 
 					lightRecArray[timeIndexConst][labelIndexConst].startFullDrag();
 				}); 
+				
 				// continues and ends the drag event
 				lightRecArray[timeIndex][labelIndex].setOnMouseDragOver((MouseEvent e) -> {
 					if (ChoreographyController.getInstance().getShiftPressed()) {
@@ -637,28 +637,26 @@ public class TimelineController implements Initializable {
 							}
 						}
 					} else {
-						if (startRow == labelIndexConst) {
-							lightRecArray[timeIndexConst][labelIndexConst].setOpacity(1);
-							lightRecArray[timeIndexConst][labelIndexConst]
-									.setFill(ColorPaletteModel
-											.getInstance()
-											.getSelectedColor());
+						if (labelIndexConst == startRow) {
+							//lightRecArray[timeIndexConst][labelIndexConst].setOpacity(1);
+							lightRecArray[timeIndexConst][labelIndexConst].setFill(ColorPaletteModel.getInstance().getSelectedColor());
 						}
 					}
 				});
+				
 				lightRecArray[timeIndex][labelIndex].setOnMouseDragReleased((MouseEvent e) -> {
-					lightCut.setDisable(false);
-					lightCopy.setDisable(false);
 					if (!ChoreographyController.getInstance().getShiftPressed()){
 						if (startRow != labelIndexConst){
 							FCW f = new FCW(channelAddresses[startRow], ColorPaletteModel.getInstance().getSelectedIndex());
 							timeline.setLightFcw(f, start, timeIndexConst + 1);
 							System.out.println(f + " " + start + " " + timeIndexConst + 1);
-						}
-						else{
+						}else{
 							FCW f = new FCW(channelAddresses[labelIndexConst], ColorPaletteModel.getInstance().getSelectedIndex());
 							timeline.setLightFcw(f, start, timeIndexConst + 1);
 						}
+					}else{
+						lightCut.setDisable(false);
+						lightCopy.setDisable(false);
 					}
 				});
 			}
