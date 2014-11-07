@@ -6,6 +6,7 @@ package choreography.model.lagtime;
 import java.util.ArrayList;
 
 import choreography.io.FCWLib;
+import choreography.io.LagTimeLibrary;
 import choreography.model.fcw.FCW;
 
 /**
@@ -101,7 +102,9 @@ public class LagTimeTable {
      * @return
      */
     public static synchronized double getLagTime(FCW f) {
+    	double lagTime = 1.0; 
         String[] actions = FCWLib.getInstance().reverseLookupData(f);
+        /*
         String cannon = FCWLib.getInstance().reverseLookupAddress(f.getAddr());
         if(cannon.contains("OFF")){
         	return 0;
@@ -109,7 +112,7 @@ public class LagTimeTable {
         if(cannon.contains("SWEEP")) {
             return 0;
         }
-        double lagTime = 1.0; 
+        
         if(cannon.contains("VOICE")) {
             for(LagTime lt: delays) {
                 if(lt.getDelayName().equalsIgnoreCase(cannon)) {
@@ -117,12 +120,18 @@ public class LagTimeTable {
                 }
             }
         }
-        for(LagTime lt: delays) {
-            if(lt.getDelayName().equalsIgnoreCase(cannon)) {
-                lagTime = lt.getDelayTime();
-                break;
+        */
+        for(String a: actions){
+        	for(LagTime lt: delays) 
+        	{
+                if(lt.getDelayName().equalsIgnoreCase(a)) {
+                    lagTime = lt.getDelayTime();
+                    break;
             }
         }
+        
+        }
+        /*
         for(String action: actions) {
             switch(action) {
                 case "0": return 0.4;
@@ -134,6 +143,8 @@ public class LagTimeTable {
                 case "6": return lagTime *= level5;
             }
         }
-        throw new IllegalArgumentException("Invalid lag time! " + f);
+        */
+        //throw new IllegalArgumentException("Invalid lag time! " + f);
+        return lagTime;
     }
 }
