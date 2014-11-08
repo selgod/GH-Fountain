@@ -302,7 +302,7 @@ public class CtlLib {
                     content.get(timeIndex - lag).add(f);
                 }
                 else {
-                    content.put(timeIndex - lag, new ArrayList<FCW>());
+                    content.put(timeIndex - lag, new ArrayList<FCW>(10));
                     content.get(timeIndex - lag).add(f);
                 }
                 return true;
@@ -352,7 +352,7 @@ public class CtlLib {
         return new FilePayload(MusicPaneController.getInstance().getMusicName() + ".ctl", sb.toString().getBytes());
     }
     
- /*   public static void main(String[] args)
+    public static void main(String[] args)
     {
     	CtlLib testlib = CtlLib.getInstance();
     	FCW l = new FCW(17, 10);
@@ -373,5 +373,5 @@ public class CtlLib {
     	timeline.put(20, listtwo);
     	testlib.saveFile(new File("savedctlfile"), timeline);
     	
-    }*/
+    }
 }
