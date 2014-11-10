@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -408,41 +410,24 @@ public class ChoreographyController implements Initializable {
 		newItemMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
-			public void handle(ActionEvent event) {
-				
-				stopSliderTimer();
-				MusicPaneController.getInstance().resetAll();
-				TimelineController.getInstance().clearAllAL();
-				
-				// TODO We can swap the next two lines if we want to disable the timeline grid on clicking New
-				
-				TimelineController.getInstance().disposeTimeline();
-				TimelineController.getInstance().setTimelineGridPane();
-				
-				MusicPaneController.getInstance().disposeMusic();
-				MusicPaneController.getInstance().resetSongName();
-				MusicPaneController.getInstance().resetSongProgress();
-				MusicPaneController.getInstance().disablePlaybackButtons();
-				MusicPaneController.getInstance().resetTimeLabel();
-				beatMarkScrollPane.setContent(null);
-				FountainSimController.getInstance().resetAll();
-				openCTLMenuItem.setDisable(true);
-				
-				FountainSimController.getInstance().clearSweeps();
-				FountainSimController.getInstance().clearSim();
-				ColorPaletteModel.getInstance().resetModel();
-				MapLib.setMapLoaded(false);
-				SlidersController.getInstance().resurrectSlidersPane();
-				SlidersController.getInstance().setFountain(null);
-				SpecialoperationsController.getInstance().resurrectSpecialOpsPane();
-				MapLib.openMap(getClass().getResourceAsStream("/resources/default.map"));
-
-				//TODO Open !Silence.wav & ctl files for reset state. 
-				
-			
-				MusicPaneController.getInstance().selectMusic(file);
-					// TODO
-					// ColorPaletteController.getInstance().resurrectColorPalettePane();
+			public void handle(ActionEvent event) {		
+				StringBuilder cmd = new StringBuilder();
+		        cmd.append(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java ");
+		        for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
+		            cmd.append(jvmArg + " ");
+		        }
+		        cmd.append("-cp ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
+		        cmd.append(Main.class.getName()).append(" ");
+		    
+		        try {
+					Runtime.getRuntime().exec(cmd.toString());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				  
+		        //TODO We can optionally have the current instance close with this call: System.exit(0);
+		        // For now, I'm leaving the previous open. 
 			}
 
 		});
@@ -469,10 +454,10 @@ public class ChoreographyController implements Initializable {
 		fcwOutput.setText("Choreographer has loaded!");
 		openCTLMenuItem.setDisable(true);
 		cc = this;
-		if(!isMusicLoaded)
-			newItemMenuItem.setDisable(true);
-		else
-			newItemMenuItem.setDisable(false);
+		//if(!isMusicLoaded)
+		//	newItemMenuItem.setDisable(true);
+		//else
+		//	newItemMenuItem.setDisable(false);
 	}
 
 	private void lookUp() {
