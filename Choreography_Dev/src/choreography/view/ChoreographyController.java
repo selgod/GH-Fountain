@@ -7,6 +7,7 @@
 package choreography.view;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
@@ -411,7 +412,13 @@ public class ChoreographyController implements Initializable {
 				
 				stopSliderTimer();
 				MusicPaneController.getInstance().resetAll();
+				TimelineController.getInstance().clearAllAL();
+				
+				// TODO We can swap the next two lines if we want to disable the timeline grid on clicking New
+				
+				TimelineController.getInstance().disposeTimeline();
 				TimelineController.getInstance().setTimelineGridPane();
+				
 				MusicPaneController.getInstance().disposeMusic();
 				MusicPaneController.getInstance().resetSongName();
 				MusicPaneController.getInstance().resetSongProgress();
@@ -420,17 +427,20 @@ public class ChoreographyController implements Initializable {
 				beatMarkScrollPane.setContent(null);
 				FountainSimController.getInstance().resetAll();
 				openCTLMenuItem.setDisable(true);
-
-				// TODO Remove instance of ctl file
-
-				TimelineController.getInstance().disposeTimeline();
+				
 				FountainSimController.getInstance().clearSweeps();
 				FountainSimController.getInstance().clearSim();
 				ColorPaletteModel.getInstance().resetModel();
 				MapLib.setMapLoaded(false);
 				SlidersController.getInstance().resurrectSlidersPane();
+				SlidersController.getInstance().setFountain(null);
 				SpecialoperationsController.getInstance().resurrectSpecialOpsPane();
 				MapLib.openMap(getClass().getResourceAsStream("/resources/default.map"));
+
+				//TODO Open !Silence.wav & ctl files for reset state. 
+				
+			
+				MusicPaneController.getInstance().selectMusic(file);
 					// TODO
 					// ColorPaletteController.getInstance().resurrectColorPalettePane();
 			}
