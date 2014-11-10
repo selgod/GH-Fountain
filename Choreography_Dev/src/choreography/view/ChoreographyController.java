@@ -158,7 +158,6 @@ public class ChoreographyController implements Initializable {
 	private boolean isAdvanced;
 	private boolean isSelected = false;
 	boolean isFirst = true;
-	private boolean isMusicLoaded = false;
 	Timer timelineTimer = new Timer("progressTimer", true);
 	Timer sliderTimer = new Timer("progressTimer", true);
 
@@ -261,8 +260,6 @@ public class ChoreographyController implements Initializable {
 				TimelineController.getInstance().initializeTimelines();
 				openCTLMenuItem.setDisable(false);
 				fcwOutput.setText("Choreographer has loaded!");
-					isMusicLoaded = true;
-					newItemMenuItem.setDisable(false);
 			}
 
 		});
@@ -454,10 +451,6 @@ public class ChoreographyController implements Initializable {
 		fcwOutput.setText("Choreographer has loaded!");
 		openCTLMenuItem.setDisable(true);
 		cc = this;
-		//if(!isMusicLoaded)
-		//	newItemMenuItem.setDisable(true);
-		//else
-		//	newItemMenuItem.setDisable(false);
 	}
 
 	private void lookUp() {
