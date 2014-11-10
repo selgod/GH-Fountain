@@ -131,10 +131,11 @@ public class MusicPaneController {
 	void resetSong(ActionEvent event) {
 		resetAll();
 	}
-	
+
 	// Handler for Button[Button[id=null, styleClass=button]] onAction
 	@FXML
 	void pauseSong(ActionEvent event) {
+
 		mediaPlayer.pause();
 		ChoreographyController.getInstance().stopTimelineTimer();
 		ChoreographyController.getInstance().stopSliderTimer();
@@ -154,8 +155,7 @@ public class MusicPaneController {
 			FountainSimController.getInstance().playLeftSweep();
 			FountainSimController.getInstance().playRightSweep();
 			playButton.setText("Pause");
-			ChoreographyController.getInstance()
-					.startPollingTimeSliderAlgorithm();
+			ChoreographyController.getInstance().startPollingTimeSliderAlgorithm();
 			// ChoreographyController.getInstance().startPollingSlidersAlgorithm();
 			ChoreographyController.getInstance().startPollingSimAlgorithm();
 			ChoreographyController.getInstance().startPollingColorAlgorithm();
@@ -186,7 +186,7 @@ public class MusicPaneController {
 		// FountainSimController.getInstance().disposeBuffer();
 		SlidersController.getInstance().resetAllSliders();
 		FountainSimController.getInstance().clearSweeps();
-		playButton.setText("Play");		
+		playButton.setText("Play");
 	}
 
 	private void getAllMusic(File fileChosen) {
@@ -226,20 +226,20 @@ public class MusicPaneController {
 		} else
 			songName.setText("No File Selected");
 	}
-	
-	public void resetSongName(){
+
+	public void resetSongName() {
 		songName.setText("No File Selected");
 	}
-	
-	public void resetSongProgress(){
+
+	public void resetSongProgress() {
 		songProgress.setText("0.0");
 	}
-	
-	public void resetTimeLabel(){
+
+	public void resetTimeLabel() {
 		timeLabel.setContent(null);
 	}
-	
-	public void disablePlaybackButtons(){
+
+	public void disablePlaybackButtons() {
 		playButton.setDisable(true);
 		resetButton.setDisable(true);
 	}
@@ -305,32 +305,22 @@ public class MusicPaneController {
 			// songProgress.setText(
 			// f.format((mediaPlayer.getTotalDuration().toSeconds() -
 			// mediaPlayer.getCurrentTime().toSeconds())) + "s");
-			songProgress.setText(f.format(mediaPlayer.getCurrentTime()
-					.toSeconds())
-					+ "/"
+			songProgress.setText(f.format(mediaPlayer.getCurrentTime().toSeconds()) + "/"
 					+ f.format(mediaPlayer.getTotalDuration().toSeconds()));
 			duration = mediaPlayer.getMedia().getDuration();
 			// int currTime = (int)mediaPlayer.getCurrentTime().toSeconds()*10;
 			// FountainSimController.getInstance().updateColors(currTime);
-			
+
 			double totalTime = mediaPlayer.getTotalDuration().toSeconds();
 			double currentTime = mediaPlayer.getCurrentTime().toSeconds();
 			double percentComplete = currentTime / totalTime * 100;
-			
-			
+
 			double hValue = (100 * percentComplete) / (100 - 1.51);
-			
-			
-			TimelineController
-					.getInstance()
-					.getScrollPane()
-					.setHvalue(hValue);
+
+			TimelineController.getInstance().getScrollPane().setHvalue(hValue);
 			timeSlider.setValue(percentComplete);
 			waterTimeline.setHvalue(hValue);
-			ChoreographyController
-					.getInstance()
-					.getBeatMarkScrollPane()
-					.setHvalue(hValue);
+			ChoreographyController.getInstance().getBeatMarkScrollPane().setHvalue(hValue);
 			timeLabel.setHvalue(hValue);
 		} catch (Exception e) {
 			System.out.println("Error updating song progress " + e);
@@ -403,8 +393,7 @@ public class MusicPaneController {
 	}
 
 	public String getMusicName() {
-		return music2.getName().substring(0, music2.getName().length() - 4)
-				.replaceAll("\\d*$", "");
+		return music2.getName().substring(0, music2.getName().length() - 4).replaceAll("\\d*$", "");
 	}
 
 	public FilePayload createFilePayload() {
@@ -417,11 +406,9 @@ public class MusicPaneController {
 			input.close();
 			return new FilePayload(music2.getName(), musicFileBytes);
 		} catch (FileNotFoundException ex) {
-			Logger.getLogger(MusicPaneController.class.getName()).log(
-					Level.SEVERE, null, ex);
+			Logger.getLogger(MusicPaneController.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (IOException ex) {
-			Logger.getLogger(MusicPaneController.class.getName()).log(
-					Level.SEVERE, null, ex);
+			Logger.getLogger(MusicPaneController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		throw new IllegalArgumentException("Unable to create music FilePayload");
 	}
