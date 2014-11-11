@@ -29,16 +29,16 @@ import javafx.geometry.Side;
  */
 public class ColorPaletteController implements Initializable {
 	
-	@FXML private static ColorPaletteController cpc;
+	private static ColorPaletteController cpc;
     @FXML private HBox defaultColors;
     @FXML private HBox customColors;
+    @FXML private ColorPicker colorPicker;
     
     private Tooltip[] defaultTooltips;
     private Tooltip[] customTooltips;
     private Rectangle selectedRectangle;
-    private ContextMenu contextMenu = new ContextMenu();
-    private MenuItem changeColor = new MenuItem();
-    private ColorPicker colorPicker = new ColorPicker();
+    private ContextMenu contextMenu;
+    private MenuItem changeColor;
     
     /**
      * Constructor class ColorPaletteController. Initializes the UI elements that were not defined in ColorPalette.fxml.
@@ -50,7 +50,7 @@ public class ColorPaletteController implements Initializable {
     					  new Tooltip("Blue"),new Tooltip("Violet"),new Tooltip("Light Violet"),new Tooltip("Magenta")};
     	customTooltips = new Tooltip[16];
     	contextMenu = new ContextMenu();
-    	changeColor = new MenuItem();
+    	changeColor = new MenuItem("Change Color");
     	colorPicker = new ColorPicker();
     }
     
@@ -98,8 +98,8 @@ public class ColorPaletteController implements Initializable {
     	((Rectangle)defaultColors.getChildren().get(0)).setStroke(Color.GREY);
     	((Rectangle)defaultColors.getChildren().get(0)).setStrokeWidth(4);
     	ColorPaletteModel.getInstance().setDefaultColors();
+    	colorPicker.getStyleClass().add("button");
     	contextMenu.getItems().add(changeColor);
-    	changeColor.setGraphic(colorPicker);
     	
     	for(int i = 0; i < defaultColors.getChildren().size(); i++) {
     		Tooltip.install(defaultColors.getChildren().get(i), defaultTooltips[i]);
@@ -229,10 +229,10 @@ public class ColorPaletteController implements Initializable {
         	});
         }
         
-        colorPicker.setOnAction(new EventHandler<ActionEvent>(){
+        changeColor.setOnAction(new EventHandler<ActionEvent>(){
         	@Override
         	public void handle(ActionEvent e){
-        		ColorPaletteModel.getInstance().setColor(((ColorPicker)e.getSource()).getValue(), 16 + customColors.getChildren().indexOf(selectedRectangle));
+        		ColorPaletteModel.getInstance().setColor(colorPicker.getValue(), 16 + customColors.getChildren().indexOf(selectedRectangle));
         	}
         });
         
