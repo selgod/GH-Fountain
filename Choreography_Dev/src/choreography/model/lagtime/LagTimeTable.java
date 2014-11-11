@@ -102,7 +102,7 @@ public class LagTimeTable {
      * @return
      */
     public static synchronized double getLagTime(FCW f) {
-    	double lagTime = 1.0; 
+    	double lagTime = 1; 
         String[] actions = FCWLib.getInstance().reverseLookupData(f);
         /*
         String cannon = FCWLib.getInstance().reverseLookupAddress(f.getAddr());

@@ -426,4 +426,20 @@ public class MusicPaneController {
 		FountainSimController.getInstance().clearSweeps();
 		FountainSimController.getInstance().resetAll();
 	}
+
+	public Button getPlayButton() {
+		return playButton;
+	}
+
+	public void setPlayButton(Button playButton) {
+		this.playButton = playButton;
+	}
+
+	public Button getResetButton() {
+		return resetButton;
+	}
+
+	public void setResetButton(Button resetButton) {
+		this.resetButton = resetButton;
+	}
 }
