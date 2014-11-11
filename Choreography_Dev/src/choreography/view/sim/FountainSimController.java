@@ -8,8 +8,12 @@ import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.FillTransition;
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,6 +22,7 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaPlayer.Status;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.QuadCurve;
 import javafx.scene.shape.Rectangle;
@@ -35,6 +40,7 @@ public class FountainSimController implements Initializable {
 	// private Timeline timeline;
 	Timeline leftSweepTimeline = new Timeline();
 	Timeline rightSweepTimeline = new Timeline();
+	int sweepLevel = 0;
 
 	@FXML
 	private ResourceBundle resources;
@@ -933,16 +939,16 @@ public class FountainSimController implements Initializable {
 						}
 					}
 				}
-				if (actionsList.contains("OSCLEFTVERYSHORT, ")) { // 69
-					if (sweepCommand != "OSCLEFTVERYSHORT, ") {
-						sweepCommand = "OSCLEFTVERYSHORT, ";
+				if (actionsList.contains("OSCLEFTVERYSHORT")) { // 69
+					if (sweepCommand != "OSCLEFTVERYSHORT") {
+						sweepCommand = "OSCLEFTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(lv);
-							sweepRightSweeps(lv);
+							oscillateLeftSweeps(lv, 0);
+							oscillateRightSweeps(lv, 0);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(lv);
-							sweepRightSweeps(lv);
+							oscillateLeftSweeps(lv, 0);
+							oscillateRightSweeps(0, lv);
 						}
 					}
 				}
@@ -1011,9 +1017,9 @@ public class FountainSimController implements Initializable {
 						}
 					}
 				}
-				if (actionsList.contains("LEFTVERYSHORTLEFTLONG, ")) { // 87
-					if (sweepCommand != "LEFTVERYSHORTLEFTLONG, ") {
-						sweepCommand = "LEFTVERYSHORTLEFTLONG, ";
+				if (actionsList.contains("LEFTVERYSHORTLEFTLONG")) { // 87
+					if (sweepCommand != "LEFTVERYSHORTLEFTLONG") {
+						sweepCommand = "LEFTVERYSHORTLEFTLONG";
 						if (sweepType == 1 || sweepType == 0) {
 							sweepLeftSweeps(lv, ll);
 							sweepRightSweeps(lv, ll);
@@ -1028,12 +1034,12 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "HOLDRIGHTVERYSHORT") {
 						sweepCommand = "HOLDRIGHTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(rv);
-							sweepRightSweeps(rv);
+							oscillateLeftSweeps(rv, rv);
+							sweepRightSweeps(rv, rv);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(rv);
-							sweepRightSweeps(rv);
+							oscillateLeftSweeps(rv, rv);
+							oscillateRightSweeps(rv, rv);
 						}
 					}
 				}
@@ -1041,12 +1047,12 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "HOLDLEFTVERYSHORT") {
 						sweepCommand = "HOLDLEFTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(lv);
-							sweepRightSweeps(lv);
+							oscillateLeftSweeps(lv, lv);
+							oscillateRightSweeps(lv, lv);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(lv);
-							sweepRightSweeps(lv);
+							oscillateLeftSweeps(lv, lv);
+							oscillateRightSweeps(lv, lv);
 						}
 					}
 				}
@@ -1054,12 +1060,12 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCRIGHTLONG") {
 						sweepCommand = "OSCRIGHTLONG";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(rl);
-							sweepRightSweeps(rl);
+							oscillateLeftSweeps(rl, rs);
+							oscillateRightSweeps(rl, rs);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(rl);
-							sweepRightSweeps(rl);
+							oscillateLeftSweeps(rl, rs);
+							oscillateRightSweeps(rs, rl);
 						}
 					}
 				}
@@ -1067,12 +1073,12 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCRIGHTSHORT") {
 						sweepCommand = "OSCRIGHTSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(rs);
-							sweepRightSweeps(rs);
+							oscillateLeftSweeps(rs, rv);
+							oscillateRightSweeps(rs, rv);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(rs);
-							sweepRightSweeps(rs);
+							oscillateLeftSweeps(rs, rv);
+							oscillateRightSweeps(rv, rs);
 						}
 					}
 				}
@@ -1080,12 +1086,12 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCRIGHTVERYSHORT") {
 						sweepCommand = "OSCRIGHTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(rv);
-							sweepRightSweeps(rv);
+							oscillateLeftSweeps(rv, 0);
+							oscillateRightSweeps(rv, 0);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(rv);
-							sweepRightSweeps(rv);
+							oscillateLeftSweeps(rv, 0);
+							oscillateRightSweeps(0, rv);
 						}
 					}
 				}
@@ -1093,12 +1099,12 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCCENTER") {
 						sweepCommand = "OSCCENTER";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(0);
-							sweepRightSweeps(0);
+							oscillateLeftSweeps(lv, rv);
+							oscillateRightSweeps(lv, rv);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(0);
-							sweepRightSweeps(0);
+							oscillateLeftSweeps(lv, rv);
+							oscillateRightSweeps(rv, lv);
 						}
 					}
 				}
@@ -1106,12 +1112,12 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCLEFTSHORT") {
 						sweepCommand = "OSCLEFTSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(ls);
-							sweepRightSweeps(ls);
+							oscillateLeftSweeps(ls, lv);
+							oscillateRightSweeps(ls, lv);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(ls);
-							sweepRightSweeps(ls);
+							oscillateLeftSweeps(ls, lv);
+							oscillateRightSweeps(lv, ls);
 						}
 					}
 				}
@@ -1119,12 +1125,12 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCLEFTLONG") {
 						sweepCommand = "OSCLEFTLONG";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(ll);
-							sweepRightSweeps(ll);
+							oscillateLeftSweeps(ll, ls);
+							oscillateRightSweeps(ll, ls);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(ll);
-							sweepRightSweeps(ll);
+							oscillateLeftSweeps(ll, ls);
+							oscillateRightSweeps(ls, ll);
 						}
 					}
 				}
@@ -1193,7 +1199,6 @@ public class FountainSimController implements Initializable {
 						sweepCommand = "RIGHTLONGRIGHTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
 							sweepLeftSweeps(rl, rv);
-							sweepRightSweeps(rl, rv);
 						}
 						if (sweepType == 2) {
 							sweepLeftSweeps(rl, rv);
@@ -1227,7 +1232,6 @@ public class FountainSimController implements Initializable {
 						sweepCommand = "RIGHTLONGLEFTSHORT";
 						if (sweepType == 1 || sweepType == 0) {
 							sweepLeftSweeps(rl, ls);
-							sweepRightSweeps(rl, ls);
 						}
 						if (sweepType == 2) {
 							sweepLeftSweeps(rl, ls);
@@ -1251,14 +1255,14 @@ public class FountainSimController implements Initializable {
 						}
 					}
 				}
-				if (actionsList.contains("OSCLEFTVERYSHORT, ")) { // 69
-					if (sweepCommand != "OSCLEFTVERYSHORT, ") {
-						sweepCommand = "OSCLEFTVERYSHORT, ";
+				if (actionsList.contains("OSCLEFTVERYSHORT")) { // 69
+					if (sweepCommand != "OSCLEFTVERYSHORT") {
+						sweepCommand = "OSCLEFTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(lv);
+							oscillateLeftSweeps(lv, 0);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(lv);
+							oscillateLeftSweeps(lv, 0);
 						}
 					}
 				}
@@ -1317,9 +1321,9 @@ public class FountainSimController implements Initializable {
 						}
 					}
 				}
-				if (actionsList.contains("LEFTVERYSHORTLEFTLONG, ")) { // 87
-					if (sweepCommand != "LEFTVERYSHORTLEFTLONG, ") {
-						sweepCommand = "LEFTVERYSHORTLEFTLONG, ";
+				if (actionsList.contains("LEFTVERYSHORTLEFTLONG")) { // 87
+					if (sweepCommand != "LEFTVERYSHORTLEFTLONG") {
+						sweepCommand = "LEFTVERYSHORTLEFTLONG";
 						if (sweepType == 1 || sweepType == 0) {
 							sweepLeftSweeps(lv, ll);
 						}
@@ -1332,11 +1336,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "HOLDRIGHTVERYSHORT") {
 						sweepCommand = "HOLDRIGHTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(rv);
+							oscillateLeftSweeps(rv, rv);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(rv);
-							sweepRightSweeps(rv);
+							oscillateLeftSweeps(rv, rv);
 						}
 					}
 				}
@@ -1344,10 +1347,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "HOLDLEFTVERYSHORT") {
 						sweepCommand = "HOLDLEFTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(lv);
+							oscillateLeftSweeps(lv, lv);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(lv);
+							oscillateLeftSweeps(lv, lv);
 						}
 					}
 				}
@@ -1355,10 +1358,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCRIGHTLONG") {
 						sweepCommand = "OSCRIGHTLONG";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(rl);
+							oscillateLeftSweeps(rl, rs);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(rl);
+							oscillateLeftSweeps(rl, rs);
 						}
 					}
 				}
@@ -1366,10 +1369,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCRIGHTSHORT") {
 						sweepCommand = "OSCRIGHTSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(rs);
+							oscillateLeftSweeps(rs, rv);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(rs);
+							oscillateLeftSweeps(rs, rv);
 						}
 					}
 				}
@@ -1377,10 +1380,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCRIGHTVERYSHORT") {
 						sweepCommand = "OSCRIGHTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(rv);
+							oscillateLeftSweeps(rv, 0);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(rv);
+							oscillateLeftSweeps(rv, 0);
 						}
 					}
 				}
@@ -1388,10 +1391,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCCENTER") {
 						sweepCommand = "OSCCENTER";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(0);
+							oscillateLeftSweeps(lv, rv);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(0);
+							oscillateLeftSweeps(lv, rv);
 						}
 					}
 				}
@@ -1399,10 +1402,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCLEFTSHORT") {
 						sweepCommand = "OSCLEFTSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(ls);
+							oscillateLeftSweeps(ls, lv);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(ls);
+							oscillateLeftSweeps(ls, lv);
 						}
 					}
 				}
@@ -1410,10 +1413,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCLEFTLONG") {
 						sweepCommand = "OSCLEFTLONG";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(ll);
+							oscillateLeftSweeps(ll, ls);
 						}
 						if (sweepType == 2) {
-							sweepLeftSweeps(ll);
+							oscillateLeftSweeps(ll, ls);
 						}
 					}
 				}
@@ -1531,7 +1534,6 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "CENTERLEFTSHORT") {
 						sweepCommand = "CENTERLEFTSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(0, ls);
 							sweepRightSweeps(0, ls);
 						}
 						if (sweepType == 2) {
@@ -1539,15 +1541,14 @@ public class FountainSimController implements Initializable {
 						}
 					}
 				}
-				if (actionsList.contains("OSCLEFTVERYSHORT, ")) { // 69
-					if (sweepCommand != "OSCLEFTVERYSHORT, ") {
-						sweepCommand = "OSCLEFTVERYSHORT, ";
+				if (actionsList.contains("OSCLEFTVERYSHORT")) { // 69
+					if (sweepCommand != "OSCLEFTVERYSHORT") {
+						sweepCommand = "OSCLEFTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(lv);
-							sweepRightSweeps(lv);
+							oscillateRightSweeps(lv, 0);
 						}
 						if (sweepType == 2) {
-							sweepRightSweeps(lv);
+							oscillateRightSweeps(0, lv);
 						}
 					}
 				}
@@ -1555,7 +1556,6 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "RIGHTLONGLEFTVERYSHORT") {
 						sweepCommand = "RIGHTLONGLEFTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(rl, lv);
 							sweepRightSweeps(rl, lv);
 						}
 						if (sweepType == 2) {
@@ -1567,7 +1567,6 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "RIGHTSHORTLEFTVERYSHORT") {
 						sweepCommand = "RIGHTSHORTLEFTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(rs, lv);
 							sweepRightSweeps(rs, lv);
 						}
 						if (sweepType == 2) {
@@ -1579,7 +1578,6 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "RIGHTVERYSHORTLEFTSHORT") {
 						sweepCommand = "RIGHTVERYSHORTLEFTSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(rv, ls);
 							sweepRightSweeps(rv, ls);
 						}
 						if (sweepType == 2) {
@@ -1591,7 +1589,6 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "RIGHTVERYSHORTLEFTLONG") {
 						sweepCommand = "RIGHTVERYSHORTLEFTLONG";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepLeftSweeps(rv, ll);
 							sweepRightSweeps(rv, ll);
 						}
 						if (sweepType == 2) {
@@ -1610,9 +1607,9 @@ public class FountainSimController implements Initializable {
 						}
 					}
 				}
-				if (actionsList.contains("LEFTVERYSHORTLEFTLONG, ")) { // 87
-					if (sweepCommand != "LEFTVERYSHORTLEFTLONG, ") {
-						sweepCommand = "LEFTVERYSHORTLEFTLONG, ";
+				if (actionsList.contains("LEFTVERYSHORTLEFTLONG")) { // 87
+					if (sweepCommand != "LEFTVERYSHORTLEFTLONG") {
+						sweepCommand = "LEFTVERYSHORTLEFTLONG";
 						if (sweepType == 1 || sweepType == 0) {
 							sweepRightSweeps(lv, ll);
 						}
@@ -1625,10 +1622,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "HOLDRIGHTVERYSHORT") {
 						sweepCommand = "HOLDRIGHTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepRightSweeps(rv);
+							oscillateRightSweeps(rv, rv);
 						}
 						if (sweepType == 2) {
-							sweepRightSweeps(rv);
+							oscillateRightSweeps(rv, rv);
 						}
 					}
 				}
@@ -1636,10 +1633,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "HOLDLEFTVERYSHORT") {
 						sweepCommand = "HOLDLEFTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepRightSweeps(lv);
+							oscillateRightSweeps(lv, lv);
 						}
 						if (sweepType == 2) {
-							sweepRightSweeps(lv);
+							oscillateRightSweeps(lv, lv);
 						}
 					}
 				}
@@ -1647,10 +1644,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCRIGHTLONG") {
 						sweepCommand = "OSCRIGHTLONG";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepRightSweeps(rl);
+							oscillateRightSweeps(rl, rs);
 						}
 						if (sweepType == 2) {
-							sweepRightSweeps(rl);
+							oscillateRightSweeps(rs, rl);
 						}
 					}
 				}
@@ -1658,10 +1655,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCRIGHTSHORT") {
 						sweepCommand = "OSCRIGHTSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepRightSweeps(rs);
+							oscillateRightSweeps(rs, rv);
 						}
 						if (sweepType == 2) {
-							sweepRightSweeps(rs);
+							oscillateRightSweeps(rv, rs);
 						}
 					}
 				}
@@ -1669,10 +1666,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCRIGHTVERYSHORT") {
 						sweepCommand = "OSCRIGHTVERYSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepRightSweeps(rv);
+							oscillateRightSweeps(rv, 0);
 						}
 						if (sweepType == 2) {
-							sweepRightSweeps(rv);
+							oscillateRightSweeps(0, rv);
 						}
 					}
 				}
@@ -1680,10 +1677,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCCENTER") {
 						sweepCommand = "OSCCENTER";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepRightSweeps(0);
+							oscillateRightSweeps(lv, rv);
 						}
 						if (sweepType == 2) {
-							sweepRightSweeps(0);
+							oscillateRightSweeps(rv, lv);
 						}
 					}
 				}
@@ -1691,10 +1688,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCLEFTSHORT") {
 						sweepCommand = "OSCLEFTSHORT";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepRightSweeps(ls);
+							oscillateRightSweeps(ls, lv);
 						}
 						if (sweepType == 2) {
-							sweepRightSweeps(ls);
+							oscillateRightSweeps(lv, ls);
 						}
 					}
 				}
@@ -1702,10 +1699,10 @@ public class FountainSimController implements Initializable {
 					if (sweepCommand != "OSCLEFTLONG") {
 						sweepCommand = "OSCLEFTLONG";
 						if (sweepType == 1 || sweepType == 0) {
-							sweepRightSweeps(ll);
+							oscillateRightSweeps(ll, ls);
 						}
 						if (sweepType == 2) {
-							sweepRightSweeps(ll);
+							oscillateRightSweeps(ls, ll);
 						}
 					}
 				}
@@ -1713,10 +1710,6 @@ public class FountainSimController implements Initializable {
 				break;
 			case 38:
 				if (actionsList.contains("LARGO")) {
-					// KeyFrame kf = timeline3.getKeyFrames().get(0);
-					// Set<KeyValue> kv = kf.getValues();
-					// KeyValue[] kvArray = (KeyValue[]) kv.toArray();
-					// kv
 					leftSweepTimeline.setRate(0.2);
 					leftSweepSpeed = 4.0;
 				}
@@ -1752,10 +1745,6 @@ public class FountainSimController implements Initializable {
 				break;
 			case 39:
 				if (actionsList.contains("LARGO")) {
-					// KeyFrame kf = timeline3.getKeyFrames().get(0);
-					// Set<KeyValue> kv = kf.getValues();
-					// KeyValue[] kvArray = (KeyValue[]) kv.toArray();
-					// kv
 					rightSweepTimeline.setRate(0.2);
 					rightSweepSpeed = 4.0;
 				}
@@ -1807,7 +1796,6 @@ public class FountainSimController implements Initializable {
 					mod7sweep2.getTransforms().clear();
 				}
 				if (actionsList.contains("PLAYPAUSE")) {
-
 					if (leftSweepTimeline.getStatus() == Animation.Status.PAUSED) {
 						leftSweepTimeline.pause();
 						rightSweepTimeline.pause();
@@ -1923,8 +1911,7 @@ public class FountainSimController implements Initializable {
 		final KeyValue kv13 = new KeyValue(frontCurtain13.heightProperty(), ((40 * level)));
 		final KeyValue kv14 = new KeyValue(frontCurtain14.heightProperty(), ((40 * level)));
 
-		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10,
-				kv11, kv12, kv13, kv14);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11, kv12, kv13, kv14);
 		timeline.getKeyFrames().add(kf);
 		timeline.play();
 	}
@@ -1949,8 +1936,7 @@ public class FountainSimController implements Initializable {
 		final KeyValue kv13 = new KeyValue(backCurtain13.heightProperty(), ((40 * level)));
 		final KeyValue kv14 = new KeyValue(backCurtain14.heightProperty(), ((40 * level)));
 
-		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10,
-				kv11, kv12, kv13, kv14);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11, kv12, kv13, kv14);
 		timeline.getKeyFrames().add(kf);
 		timeline.play();
 	}
@@ -2165,8 +2151,7 @@ public class FountainSimController implements Initializable {
 			// kv13 = new KeyValue(bazooka4.visibleProperty(), false);
 		}
 
-		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11,
-				kv12, kv13, kv14, kv15, kv16, kv17, kv18, kv19);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11, kv12, kv13, kv14, kv15, kv16, kv17, kv18, kv19);
 		timeline.getKeyFrames().add(kf);
 		timeline.play();
 	}
@@ -2275,8 +2260,7 @@ public class FountainSimController implements Initializable {
 
 		}
 
-		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11,
-				kv12, kv13, kv14, kv15, kv16, kv17, kv18, kv19, kv20, kv21, kv22, kv23, kv24, kv25, kv26, kv27, kv28);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11, kv12, kv13, kv14, kv15, kv16, kv17, kv18, kv19, kv20, kv21, kv22, kv23, kv24, kv25, kv26, kv27, kv28);
 		timeline.getKeyFrames().add(kf);
 		timeline.play();
 
@@ -2285,6 +2269,7 @@ public class FountainSimController implements Initializable {
 	public void drawSweepsA(int level, double lagTime) {
 		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(1);
+		sweepLevel = level;
 
 		KeyValue kv25 = null;
 		KeyValue kv26 = null;
@@ -2330,8 +2315,7 @@ public class FountainSimController implements Initializable {
 		final KeyValue kv19 = new KeyValue(mod7sweep1.endYProperty(), ((35 * level)));
 		final KeyValue kv20 = new KeyValue(mod7sweep2.endYProperty(), ((35 * level)));
 
-		final KeyFrame kf = new KeyFrame(Duration.seconds(.5), kv1, kv2, kv7, kv8, kv13, kv14, kv14, kv19, kv20, kv25,
-				kv26, kv27, kv28, kv29, kv30, kv31, kv32);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(.5), kv1, kv2, kv7, kv8, kv13, kv14, kv14, kv19, kv20, kv25, kv26, kv27, kv28, kv29, kv30, kv31, kv32);
 		timeline.getKeyFrames().add(kf);
 		timeline.play();
 	}
@@ -2374,8 +2358,7 @@ public class FountainSimController implements Initializable {
 		final KeyValue kv13 = new KeyValue(mod6sweep1.endYProperty(), ((35 * level)));
 		final KeyValue kv14 = new KeyValue(mod6sweep2.endYProperty(), ((35 * level)));
 
-		final KeyFrame kf = new KeyFrame(Duration.seconds(.5), kv1, kv2, kv7, kv8, kv13, kv14, kv15, kv16, kv17, kv18,
-				kv19, kv20);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(.5), kv1, kv2, kv7, kv8, kv13, kv14, kv15, kv16, kv17, kv18, kv19, kv20);
 		timeline.getKeyFrames().add(kf);
 		timeline.play();
 	}
@@ -2426,16 +2409,16 @@ public class FountainSimController implements Initializable {
 		mod6sweep1.getTransforms().add(rotate6);
 		mod7sweep1.getTransforms().add(rotate7);
 
-		kv1 = new KeyValue(rotate1.angleProperty(), rightLimit);
-		kv2 = new KeyValue(rotate2.angleProperty(), rightLimit);
+		kv1 = new KeyValue(rotate1.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv2 = new KeyValue(rotate2.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv7 = new KeyValue(rotate3.angleProperty(), rightLimit);
-		kv8 = new KeyValue(rotate4.angleProperty(), rightLimit);
+		kv7 = new KeyValue(rotate3.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv8 = new KeyValue(rotate4.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv13 = new KeyValue(rotate5.angleProperty(), rightLimit);
-		kv14 = new KeyValue(rotate6.angleProperty(), rightLimit);
+		kv13 = new KeyValue(rotate5.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv14 = new KeyValue(rotate6.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit);
+		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(leftSweepSpeed), kv1, kv2, kv7, kv8, kv13, kv14, kv14, kv19);
 		leftSweepTimeline.getKeyFrames().add(kf);
@@ -2491,16 +2474,16 @@ public class FountainSimController implements Initializable {
 		mod6sweep2.getTransforms().add(rotate6);
 		mod7sweep2.getTransforms().add(rotate7);
 
-		kv1 = new KeyValue(rotate1.angleProperty(), rightLimit);
-		kv2 = new KeyValue(rotate2.angleProperty(), rightLimit);
+		kv1 = new KeyValue(rotate1.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv2 = new KeyValue(rotate2.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv7 = new KeyValue(rotate3.angleProperty(), rightLimit);
-		kv8 = new KeyValue(rotate4.angleProperty(), rightLimit);
+		kv7 = new KeyValue(rotate3.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv8 = new KeyValue(rotate4.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv13 = new KeyValue(rotate5.angleProperty(), rightLimit);
-		kv14 = new KeyValue(rotate6.angleProperty(), rightLimit);
+		kv13 = new KeyValue(rotate5.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv14 = new KeyValue(rotate6.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit);
+		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(rightSweepSpeed), kv1, kv2, kv7, kv8, kv13, kv14, kv19);
 		rightSweepTimeline.getKeyFrames().add(kf);
@@ -2508,8 +2491,7 @@ public class FountainSimController implements Initializable {
 		rightSweepTimeline.play();
 	}
 
-	public void sweepLeftSweeps(double leftLimit) {
-		double rightLimit = -leftLimit;
+	public void oscillateLeftSweeps(double leftLimit, double rightLimit) {
 		leftSweepTimeline = new Timeline();
 		if (MusicPaneController.getInstance().getMediaPlayer().statusProperty().getValue() == Status.PLAYING) {
 			leftSweepTimeline.setCycleCount(Animation.INDEFINITE);
@@ -2555,24 +2537,23 @@ public class FountainSimController implements Initializable {
 		mod6sweep1.getTransforms().add(rotate6);
 		mod7sweep1.getTransforms().add(rotate7);
 
-		kv1 = new KeyValue(rotate1.angleProperty(), rightLimit);
-		kv2 = new KeyValue(rotate2.angleProperty(), rightLimit);
+		kv1 = new KeyValue(rotate1.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv2 = new KeyValue(rotate2.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv7 = new KeyValue(rotate3.angleProperty(), rightLimit);
-		kv8 = new KeyValue(rotate4.angleProperty(), rightLimit);
+		kv7 = new KeyValue(rotate3.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv8 = new KeyValue(rotate4.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv13 = new KeyValue(rotate5.angleProperty(), rightLimit);
-		kv14 = new KeyValue(rotate6.angleProperty(), rightLimit);
+		kv13 = new KeyValue(rotate5.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv14 = new KeyValue(rotate6.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit);
+		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(leftSweepSpeed), kv1, kv2, kv7, kv8, kv13, kv14, kv14, kv19);
 		leftSweepTimeline.getKeyFrames().add(kf);
 		leftSweepTimeline.play();
 	}
 
-	public void sweepRightSweeps(double leftLimit) {
-		double rightLimit = -leftLimit;
+	public void oscillateRightSweeps(double leftLimit, double rightLimit) {
 		rightSweepTimeline = new Timeline();
 		if (MusicPaneController.getInstance().getMediaPlayer().statusProperty().getValue() == Status.PLAYING) {
 			rightSweepTimeline.setCycleCount(Animation.INDEFINITE);
@@ -2621,16 +2602,16 @@ public class FountainSimController implements Initializable {
 		mod6sweep2.getTransforms().add(rotate6);
 		mod7sweep2.getTransforms().add(rotate7);
 
-		kv1 = new KeyValue(rotate1.angleProperty(), rightLimit);
-		kv2 = new KeyValue(rotate2.angleProperty(), rightLimit);
+		kv1 = new KeyValue(rotate1.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv2 = new KeyValue(rotate2.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv7 = new KeyValue(rotate3.angleProperty(), rightLimit);
-		kv8 = new KeyValue(rotate4.angleProperty(), rightLimit);
+		kv7 = new KeyValue(rotate3.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv8 = new KeyValue(rotate4.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv13 = new KeyValue(rotate5.angleProperty(), rightLimit);
-		kv14 = new KeyValue(rotate6.angleProperty(), rightLimit);
+		kv13 = new KeyValue(rotate5.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv14 = new KeyValue(rotate6.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit);
+		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(rightSweepSpeed), kv1, kv2, kv7, kv8, kv13, kv14, kv19);
 		rightSweepTimeline.getKeyFrames().add(kf);
@@ -2638,11 +2619,21 @@ public class FountainSimController implements Initializable {
 		rightSweepTimeline.play();
 	}
 
+	/*
+	 * Unimplimented Method This method is meant to be called before each
+	 * sweeping action. It is supposed to take the sweeper and move it to the
+	 * initial start position of the new FCW. For example, 035-23, will have
+	 * both sweepers sweep from left long to right long. All sweeps/oscillations
+	 * work from the left to the right. This method will take the current angle
+	 * and move it to the left long position before it calls sweepLeftSweeps(ll,
+	 * rl). However, there currently is no way to find the angle of the animated
+	 * line. If a way to find that angle is found, all that has to be done is
+	 * put that in for double angle.
+	 */
 	public void smoothLeftSweeps(double leftLimit) {
 		leftSweepTimeline = new Timeline();
 		leftSweepTimeline.setCycleCount(1);
 		leftSweepTimeline.setAutoReverse(false);
-		leftSweepTimeline.setRate(.22);
 
 		// These are for the animations and hold actions
 		KeyValue kv1 = null;
@@ -2663,14 +2654,16 @@ public class FountainSimController implements Initializable {
 		mod6sweep1.getTransforms().clear();
 		mod7sweep1.getTransforms().clear();
 
+		double angle = 0;
+
 		// Creates a rotate object Rotate (X,Y,Z)
-		Rotate rotate1 = new Rotate(leftLimit, mod1sweep1.getStartX(), mod1sweep1.getStartY());
-		Rotate rotate2 = new Rotate(leftLimit, mod2sweep1.getStartX(), mod2sweep1.getStartY());
-		Rotate rotate3 = new Rotate(leftLimit, mod3sweep1.getStartX(), mod3sweep1.getStartY());
-		Rotate rotate4 = new Rotate(leftLimit, mod4sweep1.getStartX(), mod4sweep1.getStartY());
-		Rotate rotate5 = new Rotate(leftLimit, mod5sweep1.getStartX(), mod5sweep1.getStartY());
-		Rotate rotate6 = new Rotate(leftLimit, mod6sweep1.getStartX(), mod6sweep1.getStartY());
-		Rotate rotate7 = new Rotate(leftLimit, mod7sweep1.getStartX(), mod7sweep1.getStartY());
+		Rotate rotate1 = new Rotate(angle, mod1sweep1.getStartX(), mod1sweep1.getStartY());
+		Rotate rotate2 = new Rotate(angle, mod2sweep1.getStartX(), mod2sweep1.getStartY());
+		Rotate rotate3 = new Rotate(angle, mod3sweep1.getStartX(), mod3sweep1.getStartY());
+		Rotate rotate4 = new Rotate(angle, mod4sweep1.getStartX(), mod4sweep1.getStartY());
+		Rotate rotate5 = new Rotate(angle, mod5sweep1.getStartX(), mod5sweep1.getStartY());
+		Rotate rotate6 = new Rotate(angle, mod6sweep1.getStartX(), mod6sweep1.getStartY());
+		Rotate rotate7 = new Rotate(angle, mod7sweep1.getStartX(), mod7sweep1.getStartY());
 
 		// Tells the sweep that it needs to rotate
 		mod1sweep1.getTransforms().add(rotate1);
@@ -2681,22 +2674,33 @@ public class FountainSimController implements Initializable {
 		mod6sweep1.getTransforms().add(rotate6);
 		mod7sweep1.getTransforms().add(rotate7);
 
-		kv1 = new KeyValue(rotate1.angleProperty(), leftLimit);
-		kv2 = new KeyValue(rotate2.angleProperty(), leftLimit);
+		kv1 = new KeyValue(rotate1.angleProperty(), leftLimit, Interpolator.EASE_BOTH);
+		kv2 = new KeyValue(rotate2.angleProperty(), leftLimit, Interpolator.EASE_BOTH);
 
-		kv7 = new KeyValue(rotate3.angleProperty(), leftLimit);
-		kv8 = new KeyValue(rotate4.angleProperty(), leftLimit);
+		kv7 = new KeyValue(rotate3.angleProperty(), leftLimit, Interpolator.EASE_BOTH);
+		kv8 = new KeyValue(rotate4.angleProperty(), leftLimit, Interpolator.EASE_BOTH);
 
-		kv13 = new KeyValue(rotate5.angleProperty(), leftLimit);
-		kv14 = new KeyValue(rotate6.angleProperty(), leftLimit);
+		kv13 = new KeyValue(rotate5.angleProperty(), leftLimit, Interpolator.EASE_BOTH);
+		kv14 = new KeyValue(rotate6.angleProperty(), leftLimit, Interpolator.EASE_BOTH);
 
-		kv19 = new KeyValue(rotate7.angleProperty(), leftLimit);
+		kv19 = new KeyValue(rotate7.angleProperty(), leftLimit, Interpolator.EASE_BOTH);
 
-		final KeyFrame kf = new KeyFrame(Duration.seconds(3), kv1, kv2, kv7, kv8, kv13, kv14, kv14, kv19);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(2), kv1, kv2, kv7, kv8, kv13, kv14, kv14, kv19);
 		leftSweepTimeline.getKeyFrames().add(kf);
 		leftSweepTimeline.play();
 	}
 
+	/*
+	 * Unimplimented Method This method is meant to be called before each
+	 * sweeping action. It is supposed to take the sweeper and move it to the
+	 * initial start position of the new FCW. For example, 035-23, will have
+	 * both sweepers sweep from left long to right long. All sweeps/oscillations
+	 * work from the left to the right. This method will take the current angle
+	 * and move it to the left long position before it calls
+	 * sweepRightSweeps(ll, rl). However, there currently is no way to find the
+	 * angle of the animated line. If a way to find that angle is found, all
+	 * that has to be done is put that in for double angle.
+	 */
 	public void smoothRightSweeps(double leftLimit) {
 		double rightLimit = -leftLimit;
 		rightSweepTimeline = new Timeline();
@@ -2747,16 +2751,16 @@ public class FountainSimController implements Initializable {
 		mod6sweep2.getTransforms().add(rotate6);
 		mod7sweep2.getTransforms().add(rotate7);
 
-		kv1 = new KeyValue(rotate1.angleProperty(), rightLimit);
-		kv2 = new KeyValue(rotate2.angleProperty(), rightLimit);
+		kv1 = new KeyValue(rotate1.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv2 = new KeyValue(rotate2.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv7 = new KeyValue(rotate3.angleProperty(), rightLimit);
-		kv8 = new KeyValue(rotate4.angleProperty(), rightLimit);
+		kv7 = new KeyValue(rotate3.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv8 = new KeyValue(rotate4.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv13 = new KeyValue(rotate5.angleProperty(), rightLimit);
-		kv14 = new KeyValue(rotate6.angleProperty(), rightLimit);
+		kv13 = new KeyValue(rotate5.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
+		kv14 = new KeyValue(rotate6.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit);
+		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(rightSweepSpeed), kv1, kv2, kv7, kv8, kv13, kv14, kv19);
 		rightSweepTimeline.getKeyFrames().add(kf);
@@ -2903,8 +2907,7 @@ public class FountainSimController implements Initializable {
 			kv19 = new KeyValue(mod5ring5.heightProperty(), ((35 * (level - 0))));
 			kv20 = new KeyValue(mod7ring5.heightProperty(), ((35 * (level - 0))));
 		}
-		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10,
-				kv11, kv12, kv13, kv14, kv15, kv16, kv17, kv18, kv19, kv20);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11, kv12, kv13, kv14, kv15, kv16, kv17, kv18, kv19, kv20);
 		timeline.getKeyFrames().add(kf);
 		timeline.play();
 	}
@@ -3018,8 +3021,7 @@ public class FountainSimController implements Initializable {
 			kv18 = new KeyValue(mod4ring5.heightProperty(), ((35 * (level - 0))));
 			kv19 = new KeyValue(mod6ring5.heightProperty(), ((35 * (level - 0))));
 		}
-		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv5, kv6, kv7, kv9, kv10, kv11,
-				kv13, kv14, kv15, kv17, kv18, kv19);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv5, kv6, kv7, kv9, kv10, kv11, kv13, kv14, kv15, kv17, kv18, kv19);
 		timeline.getKeyFrames().add(kf);
 		timeline.play();
 	}
@@ -3136,12 +3138,1033 @@ public class FountainSimController implements Initializable {
 		final KeyValue kv23 = new KeyValue(mod7candle5.endYProperty(), ((35 * level)));
 		final KeyValue kv24 = new KeyValue(mod7candle6.endYProperty(), ((35 * level)));
 
-		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10,
-				kv11, kv12, kv13, kv14, kv15, kv16, kv17, kv18, kv19, kv20, kv21, kv22, kv23, kv24, kv25, kv26, kv27,
-				kv28, kv29, kv30, kv31, kv32, kv33, kv34, kv35, kv36, kv37, kv38, kv39, kv40, kv41, kv42, kv43, kv44,
-				kv45, kv46, kv47, kv48);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11, kv12, kv13, kv14, kv15, kv16, kv17, kv18, kv19, kv20, kv21, kv22, kv23, kv24, kv25, kv26, kv27, kv28, kv29, kv30, kv31, kv32, kv33, kv34, kv35, kv36, kv37, kv38, kv39, kv40,
+				kv41, kv42, kv43, kv44, kv45, kv46, kv47, kv48);
 		timeline.getKeyFrames().add(kf);
 		timeline.play();
+	}
+
+	/**
+	 * @param mod
+	 *            The module that needs to fade
+	 * @param length
+	 *            How long it takes to fade
+	 * @param start
+	 *            The starting brightness of the fade
+	 * @param end
+	 *            The ending brightness of the fade
+	 * @param begin
+	 *            The starting color
+	 * @param stop
+	 *            The ending color of the fade
+	 * 
+	 *            Bazooka's still need a little work.
+	 */
+	public void fadeModule(int mod, double length, double start, double end, Color begin, Color stop) {
+
+		// Fade transitions
+		FadeTransition ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16;
+		FillTransition ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16;
+		ParallelTransition pt;
+
+		// Converts seconds to milliseconds
+		double millis = length / 1000;
+
+		switch (mod) {
+		case 1:
+			ct0 = new FillTransition(Duration.millis(millis), bazooka1, begin, stop);
+			ct0.setCycleCount(1);
+			ct0.setAutoReverse(false);
+			ft0 = new FadeTransition(Duration.millis(millis), bazooka1);
+			ft0.setFromValue(start);
+			ft0.setToValue(end);
+			ft0.setCycleCount(1);
+			ft0.setAutoReverse(false);
+			ct1 = new FillTransition(Duration.millis(millis), mod1ring1, begin, stop);
+			ct1.setCycleCount(1);
+			ct1.setAutoReverse(false);
+			ft1 = new FadeTransition(Duration.millis(millis), mod1ring1);
+			ft1.setFromValue(start);
+			ft1.setToValue(end);
+			ft1.setCycleCount(1);
+			ft1.setAutoReverse(false);
+			ct2 = new FillTransition(Duration.millis(millis), mod1ring2, begin, stop);
+			ct2.setCycleCount(1);
+			ct2.setAutoReverse(false);
+			ft2 = new FadeTransition(Duration.millis(millis), mod1ring2);
+			ft2.setFromValue(start);
+			ft2.setToValue(end);
+			ft2.setCycleCount(1);
+			ft2.setAutoReverse(false);
+			ct3 = new FillTransition(Duration.millis(millis), mod1ring3, begin, stop);
+			ct3.setCycleCount(1);
+			ct3.setAutoReverse(false);
+			ft3 = new FadeTransition(Duration.millis(millis), mod1ring3);
+			ft3.setFromValue(start);
+			ft3.setToValue(end);
+			ft3.setCycleCount(1);
+			ft3.setAutoReverse(false);
+			ct4 = new FillTransition(Duration.millis(millis), mod1ring4, begin, stop);
+			ct4.setCycleCount(1);
+			ct4.setAutoReverse(false);
+			ft4 = new FadeTransition(Duration.millis(millis), mod1ring4);
+			ft4.setFromValue(start);
+			ft4.setToValue(end);
+			ft4.setCycleCount(1);
+			ft4.setAutoReverse(false);
+			ct5 = new FillTransition(Duration.millis(millis), mod1ring5, begin, stop);
+			ct5.setCycleCount(1);
+			ct5.setAutoReverse(false);
+			ft5 = new FadeTransition(Duration.millis(millis), mod1ring5);
+			ft5.setFromValue(start);
+			ft5.setToValue(end);
+			ft5.setCycleCount(1);
+			ft5.setAutoReverse(false);
+			ct6 = new FillTransition(Duration.millis(millis), peacock1, begin, stop);
+			ct6.setCycleCount(1);
+			ct6.setAutoReverse(false);
+			ft6 = new FadeTransition(Duration.millis(millis), peacock1);
+			ft6.setFromValue(start);
+			ft6.setToValue(end);
+			ft6.setCycleCount(1);
+			ft6.setAutoReverse(false);
+			ct7 = new FillTransition(Duration.millis(millis), frontCurtain1, begin, stop);
+			ct7.setCycleCount(1);
+			ct7.setAutoReverse(false);
+			ft7 = new FadeTransition(Duration.millis(millis), frontCurtain1);
+			ft7.setFromValue(start);
+			ft7.setToValue(end);
+			ft7.setCycleCount(1);
+			ft7.setAutoReverse(false);
+			ct8 = new FillTransition(Duration.millis(millis), backCurtain1, begin, stop);
+			ct8.setCycleCount(1);
+			ct8.setAutoReverse(false);
+			ft8 = new FadeTransition(Duration.millis(millis), backCurtain1);
+			ft8.setFromValue(start);
+			ft8.setToValue(end);
+			ft8.setCycleCount(1);
+			ft8.setAutoReverse(false);
+			ct9 = new FillTransition(Duration.millis(millis), mod1sweep1, begin, stop);
+			ct9.setCycleCount(1);
+			ct9.setAutoReverse(false);
+			ft9 = new FadeTransition(Duration.millis(millis), mod1sweep1);
+			ft9.setFromValue(start);
+			ft9.setToValue(end);
+			ft9.setCycleCount(1);
+			ft9.setAutoReverse(false);
+			ct10 = new FillTransition(Duration.millis(millis), mod1sweep2, begin, stop);
+			ct10.setCycleCount(1);
+			ct10.setAutoReverse(false);
+			ft10 = new FadeTransition(Duration.millis(millis), mod1sweep2);
+			ft10.setFromValue(start);
+			ft10.setToValue(end);
+			ft10.setCycleCount(1);
+			ft10.setAutoReverse(false);
+			ct11 = new FillTransition(Duration.millis(millis), mod1candle1, begin, stop);
+			ct11.setCycleCount(1);
+			ct11.setAutoReverse(false);
+			ft11 = new FadeTransition(Duration.millis(millis), mod1candle1);
+			ft11.setFromValue(start);
+			ft11.setToValue(end);
+			ft11.setCycleCount(1);
+			ft11.setAutoReverse(false);
+			ct12 = new FillTransition(Duration.millis(millis), mod1candle2, begin, stop);
+			ct12.setCycleCount(1);
+			ct12.setAutoReverse(false);
+			ft12 = new FadeTransition(Duration.millis(millis), mod1candle2);
+			ft12.setFromValue(start);
+			ft12.setToValue(end);
+			ft12.setCycleCount(1);
+			ft12.setAutoReverse(false);
+			ct13 = new FillTransition(Duration.millis(millis), mod1candle3, begin, stop);
+			ct13.setCycleCount(1);
+			ct13.setAutoReverse(false);
+			ft13 = new FadeTransition(Duration.millis(millis), mod1candle3);
+			ft13.setFromValue(start);
+			ft13.setToValue(end);
+			ft13.setCycleCount(1);
+			ft13.setAutoReverse(false);
+			ct14 = new FillTransition(Duration.millis(millis), mod1candle4, begin, stop);
+			ct14.setCycleCount(1);
+			ct14.setAutoReverse(false);
+			ft14 = new FadeTransition(Duration.millis(millis), mod1candle4);
+			ft14.setFromValue(start);
+			ft14.setToValue(end);
+			ft14.setCycleCount(1);
+			ft14.setAutoReverse(false);
+			ct15 = new FillTransition(Duration.millis(millis), mod1candle5, begin, stop);
+			ct15.setCycleCount(1);
+			ct15.setAutoReverse(false);
+			ft15 = new FadeTransition(Duration.millis(millis), mod1candle5);
+			ft15.setFromValue(start);
+			ft15.setToValue(end);
+			ft15.setCycleCount(1);
+			ft15.setAutoReverse(false);
+			ct16 = new FillTransition(Duration.millis(millis), mod1candle6, begin, stop);
+			ct16.setCycleCount(1);
+			ct16.setAutoReverse(false);
+			ft16 = new FadeTransition(Duration.millis(millis), mod1candle6);
+			ft16.setFromValue(start);
+			ft16.setToValue(end);
+			ft16.setCycleCount(1);
+			ft16.setAutoReverse(false);
+
+			pt = new ParallelTransition(ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
+			pt.play();
+			break;
+		case 2:
+			ct0 = new FillTransition(Duration.millis(millis), bazooka2, begin, stop);
+			ct0.setCycleCount(1);
+			ct0.setAutoReverse(false);
+			ft0 = new FadeTransition(Duration.millis(millis), bazooka2);
+			ft0.setFromValue(start);
+			ft0.setToValue(end);
+			ft0.setCycleCount(1);
+			ft0.setAutoReverse(false);
+			ct1 = new FillTransition(Duration.millis(millis), mod2ring1, begin, stop);
+			ct1.setCycleCount(1);
+			ct1.setAutoReverse(false);
+			ft1 = new FadeTransition(Duration.millis(millis), mod2ring1);
+			ft1.setFromValue(start);
+			ft1.setToValue(end);
+			ft1.setCycleCount(1);
+			ft1.setAutoReverse(false);
+			ct2 = new FillTransition(Duration.millis(millis), mod2ring2, begin, stop);
+			ct2.setCycleCount(1);
+			ct2.setAutoReverse(false);
+			ft2 = new FadeTransition(Duration.millis(millis), mod2ring2);
+			ft2.setFromValue(start);
+			ft2.setToValue(end);
+			ft2.setCycleCount(1);
+			ft2.setAutoReverse(false);
+			ct3 = new FillTransition(Duration.millis(millis), mod2ring3, begin, stop);
+			ct3.setCycleCount(1);
+			ct3.setAutoReverse(false);
+			ft3 = new FadeTransition(Duration.millis(millis), mod2ring3);
+			ft3.setFromValue(start);
+			ft3.setToValue(end);
+			ft3.setCycleCount(1);
+			ft3.setAutoReverse(false);
+			ct4 = new FillTransition(Duration.millis(millis), mod2ring4, begin, stop);
+			ct4.setCycleCount(1);
+			ct4.setAutoReverse(false);
+			ft4 = new FadeTransition(Duration.millis(millis), mod2ring4);
+			ft4.setFromValue(start);
+			ft4.setToValue(end);
+			ft4.setCycleCount(1);
+			ft4.setAutoReverse(false);
+			ct5 = new FillTransition(Duration.millis(millis), mod2ring5, begin, stop);
+			ct5.setCycleCount(1);
+			ct5.setAutoReverse(false);
+			ft5 = new FadeTransition(Duration.millis(millis), mod2ring5);
+			ft5.setFromValue(start);
+			ft5.setToValue(end);
+			ft5.setCycleCount(1);
+			ft5.setAutoReverse(false);
+			ct6 = new FillTransition(Duration.millis(millis), peacock2, begin, stop);
+			ct6.setCycleCount(1);
+			ct6.setAutoReverse(false);
+			ft6 = new FadeTransition(Duration.millis(millis), peacock2);
+			ft6.setFromValue(start);
+			ft6.setToValue(end);
+			ft6.setCycleCount(1);
+			ft6.setAutoReverse(false);
+			ct7 = new FillTransition(Duration.millis(millis), frontCurtain2, begin, stop);
+			ct7.setCycleCount(1);
+			ct7.setAutoReverse(false);
+			ft7 = new FadeTransition(Duration.millis(millis), frontCurtain2);
+			ft7.setFromValue(start);
+			ft7.setToValue(end);
+			ft7.setCycleCount(1);
+			ft7.setAutoReverse(false);
+			ct8 = new FillTransition(Duration.millis(millis), backCurtain2, begin, stop);
+			ct8.setCycleCount(1);
+			ct8.setAutoReverse(false);
+			ft8 = new FadeTransition(Duration.millis(millis), backCurtain2);
+			ft8.setFromValue(start);
+			ft8.setToValue(end);
+			ft8.setCycleCount(1);
+			ft8.setAutoReverse(false);
+			ct9 = new FillTransition(Duration.millis(millis), mod2sweep1, begin, stop);
+			ct9.setCycleCount(1);
+			ct9.setAutoReverse(false);
+			ft9 = new FadeTransition(Duration.millis(millis), mod2sweep1);
+			ft9.setFromValue(start);
+			ft9.setToValue(end);
+			ft9.setCycleCount(1);
+			ft9.setAutoReverse(false);
+			ct10 = new FillTransition(Duration.millis(millis), mod2sweep2, begin, stop);
+			ct10.setCycleCount(1);
+			ct10.setAutoReverse(false);
+			ft10 = new FadeTransition(Duration.millis(millis), mod2sweep2);
+			ft10.setFromValue(start);
+			ft10.setToValue(end);
+			ft10.setCycleCount(1);
+			ft10.setAutoReverse(false);
+			ct11 = new FillTransition(Duration.millis(millis), mod2candle1, begin, stop);
+			ct11.setCycleCount(1);
+			ct11.setAutoReverse(false);
+			ft11 = new FadeTransition(Duration.millis(millis), mod2candle1);
+			ft11.setFromValue(start);
+			ft11.setToValue(end);
+			ft11.setCycleCount(1);
+			ft11.setAutoReverse(false);
+			ct12 = new FillTransition(Duration.millis(millis), mod2candle2, begin, stop);
+			ct12.setCycleCount(1);
+			ct12.setAutoReverse(false);
+			ft12 = new FadeTransition(Duration.millis(millis), mod2candle2);
+			ft12.setFromValue(start);
+			ft12.setToValue(end);
+			ft12.setCycleCount(1);
+			ft12.setAutoReverse(false);
+			ct13 = new FillTransition(Duration.millis(millis), mod2candle3, begin, stop);
+			ct13.setCycleCount(1);
+			ct13.setAutoReverse(false);
+			ft13 = new FadeTransition(Duration.millis(millis), mod2candle3);
+			ft13.setFromValue(start);
+			ft13.setToValue(end);
+			ft13.setCycleCount(1);
+			ft13.setAutoReverse(false);
+			ct14 = new FillTransition(Duration.millis(millis), mod2candle4, begin, stop);
+			ct14.setCycleCount(1);
+			ct14.setAutoReverse(false);
+			ft14 = new FadeTransition(Duration.millis(millis), mod2candle4);
+			ft14.setFromValue(start);
+			ft14.setToValue(end);
+			ft14.setCycleCount(1);
+			ft14.setAutoReverse(false);
+			ct15 = new FillTransition(Duration.millis(millis), mod2candle5, begin, stop);
+			ct15.setCycleCount(1);
+			ct15.setAutoReverse(false);
+			ft15 = new FadeTransition(Duration.millis(millis), mod2candle5);
+			ft15.setFromValue(start);
+			ft15.setToValue(end);
+			ft15.setCycleCount(1);
+			ft15.setAutoReverse(false);
+			ct16 = new FillTransition(Duration.millis(millis), mod2candle6, begin, stop);
+			ct16.setCycleCount(1);
+			ct16.setAutoReverse(false);
+			ft16 = new FadeTransition(Duration.millis(millis), mod2candle6);
+			ft16.setFromValue(start);
+			ft16.setToValue(end);
+			ft16.setCycleCount(1);
+			ft16.setAutoReverse(false);
+
+			pt = new ParallelTransition(ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
+			pt.play();
+			break;
+
+		case 3:
+			ct0 = new FillTransition(Duration.millis(millis), bazooka3, begin, stop);
+			ct0.setCycleCount(1);
+			ct0.setAutoReverse(false);
+			ft0 = new FadeTransition(Duration.millis(millis), bazooka3);
+			ft0.setFromValue(start);
+			ft0.setToValue(end);
+			ft0.setCycleCount(1);
+			ft0.setAutoReverse(false);
+			ct1 = new FillTransition(Duration.millis(millis), mod3ring1, begin, stop);
+			ct1.setCycleCount(1);
+			ct1.setAutoReverse(false);
+			ft1 = new FadeTransition(Duration.millis(millis), mod3ring1);
+			ft1.setFromValue(start);
+			ft1.setToValue(end);
+			ft1.setCycleCount(1);
+			ft1.setAutoReverse(false);
+			ct2 = new FillTransition(Duration.millis(millis), mod3ring2, begin, stop);
+			ct2.setCycleCount(1);
+			ct2.setAutoReverse(false);
+			ft2 = new FadeTransition(Duration.millis(millis), mod3ring2);
+			ft2.setFromValue(start);
+			ft2.setToValue(end);
+			ft2.setCycleCount(1);
+			ft2.setAutoReverse(false);
+			ct3 = new FillTransition(Duration.millis(millis), mod3ring3, begin, stop);
+			ct3.setCycleCount(1);
+			ct3.setAutoReverse(false);
+			ft3 = new FadeTransition(Duration.millis(millis), mod3ring3);
+			ft3.setFromValue(start);
+			ft3.setToValue(end);
+			ft3.setCycleCount(1);
+			ft3.setAutoReverse(false);
+			ct4 = new FillTransition(Duration.millis(millis), mod3ring4, begin, stop);
+			ct4.setCycleCount(1);
+			ct4.setAutoReverse(false);
+			ft4 = new FadeTransition(Duration.millis(millis), mod3ring4);
+			ft4.setFromValue(start);
+			ft4.setToValue(end);
+			ft4.setCycleCount(1);
+			ft4.setAutoReverse(false);
+			ct5 = new FillTransition(Duration.millis(millis), mod3ring5, begin, stop);
+			ct5.setCycleCount(1);
+			ct5.setAutoReverse(false);
+			ft5 = new FadeTransition(Duration.millis(millis), mod3ring5);
+			ft5.setFromValue(start);
+			ft5.setToValue(end);
+			ft5.setCycleCount(1);
+			ft5.setAutoReverse(false);
+			ct6 = new FillTransition(Duration.millis(millis), peacock3, begin, stop);
+			ct6.setCycleCount(1);
+			ct6.setAutoReverse(false);
+			ft6 = new FadeTransition(Duration.millis(millis), peacock3);
+			ft6.setFromValue(start);
+			ft6.setToValue(end);
+			ft6.setCycleCount(1);
+			ft6.setAutoReverse(false);
+			ct7 = new FillTransition(Duration.millis(millis), frontCurtain3, begin, stop);
+			ct7.setCycleCount(1);
+			ct7.setAutoReverse(false);
+			ft7 = new FadeTransition(Duration.millis(millis), frontCurtain3);
+			ft7.setFromValue(start);
+			ft7.setToValue(end);
+			ft7.setCycleCount(1);
+			ft7.setAutoReverse(false);
+			ct8 = new FillTransition(Duration.millis(millis), backCurtain3, begin, stop);
+			ct8.setCycleCount(1);
+			ct8.setAutoReverse(false);
+			ft8 = new FadeTransition(Duration.millis(millis), backCurtain3);
+			ft8.setFromValue(start);
+			ft8.setToValue(end);
+			ft8.setCycleCount(1);
+			ft8.setAutoReverse(false);
+			ct9 = new FillTransition(Duration.millis(millis), mod3sweep1, begin, stop);
+			ct9.setCycleCount(1);
+			ct9.setAutoReverse(false);
+			ft9 = new FadeTransition(Duration.millis(millis), mod3sweep1);
+			ft9.setFromValue(start);
+			ft9.setToValue(end);
+			ft9.setCycleCount(1);
+			ft9.setAutoReverse(false);
+			ct10 = new FillTransition(Duration.millis(millis), mod3sweep2, begin, stop);
+			ct10.setCycleCount(1);
+			ct10.setAutoReverse(false);
+			ft10 = new FadeTransition(Duration.millis(millis), mod3sweep2);
+			ft10.setFromValue(start);
+			ft10.setToValue(end);
+			ft10.setCycleCount(1);
+			ft10.setAutoReverse(false);
+			ct11 = new FillTransition(Duration.millis(millis), mod3candle1, begin, stop);
+			ct11.setCycleCount(1);
+			ct11.setAutoReverse(false);
+			ft11 = new FadeTransition(Duration.millis(millis), mod3candle1);
+			ft11.setFromValue(start);
+			ft11.setToValue(end);
+			ft11.setCycleCount(1);
+			ft11.setAutoReverse(false);
+			ct12 = new FillTransition(Duration.millis(millis), mod3candle2, begin, stop);
+			ct12.setCycleCount(1);
+			ct12.setAutoReverse(false);
+			ft12 = new FadeTransition(Duration.millis(millis), mod3candle2);
+			ft12.setFromValue(start);
+			ft12.setToValue(end);
+			ft12.setCycleCount(1);
+			ft12.setAutoReverse(false);
+			ct13 = new FillTransition(Duration.millis(millis), mod3candle3, begin, stop);
+			ct13.setCycleCount(1);
+			ct13.setAutoReverse(false);
+			ft13 = new FadeTransition(Duration.millis(millis), mod3candle3);
+			ft13.setFromValue(start);
+			ft13.setToValue(end);
+			ft13.setCycleCount(1);
+			ft13.setAutoReverse(false);
+			ct14 = new FillTransition(Duration.millis(millis), mod3candle4, begin, stop);
+			ct14.setCycleCount(1);
+			ct14.setAutoReverse(false);
+			ft14 = new FadeTransition(Duration.millis(millis), mod3candle4);
+			ft14.setFromValue(start);
+			ft14.setToValue(end);
+			ft14.setCycleCount(1);
+			ft14.setAutoReverse(false);
+			ct15 = new FillTransition(Duration.millis(millis), mod3candle5, begin, stop);
+			ct15.setCycleCount(1);
+			ct15.setAutoReverse(false);
+			ft15 = new FadeTransition(Duration.millis(millis), mod3candle5);
+			ft15.setFromValue(start);
+			ft15.setToValue(end);
+			ft15.setCycleCount(1);
+			ft15.setAutoReverse(false);
+			ct16 = new FillTransition(Duration.millis(millis), mod3candle6, begin, stop);
+			ct16.setCycleCount(1);
+			ct16.setAutoReverse(false);
+			ft16 = new FadeTransition(Duration.millis(millis), mod3candle6);
+			ft16.setFromValue(start);
+			ft16.setToValue(end);
+			ft16.setCycleCount(1);
+			ft16.setAutoReverse(false);
+
+			pt = new ParallelTransition(ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
+			pt.play();
+			break;
+
+		case 4:
+			ct0 = new FillTransition(Duration.millis(millis), bazooka4, begin, stop);
+			ct0.setCycleCount(1);
+			ct0.setAutoReverse(false);
+			ft0 = new FadeTransition(Duration.millis(millis), bazooka4);
+			ft0.setFromValue(start);
+			ft0.setToValue(end);
+			ft0.setCycleCount(1);
+			ft0.setAutoReverse(false);
+			ct1 = new FillTransition(Duration.millis(millis), mod4ring1, begin, stop);
+			ct1.setCycleCount(1);
+			ct1.setAutoReverse(false);
+			ft1 = new FadeTransition(Duration.millis(millis), mod4ring1);
+			ft1.setFromValue(start);
+			ft1.setToValue(end);
+			ft1.setCycleCount(1);
+			ft1.setAutoReverse(false);
+			ct2 = new FillTransition(Duration.millis(millis), mod4ring2, begin, stop);
+			ct2.setCycleCount(1);
+			ct2.setAutoReverse(false);
+			ft2 = new FadeTransition(Duration.millis(millis), mod4ring2);
+			ft2.setFromValue(start);
+			ft2.setToValue(end);
+			ft2.setCycleCount(1);
+			ft2.setAutoReverse(false);
+			ct3 = new FillTransition(Duration.millis(millis), mod4ring3, begin, stop);
+			ct3.setCycleCount(1);
+			ct3.setAutoReverse(false);
+			ft3 = new FadeTransition(Duration.millis(millis), mod4ring3);
+			ft3.setFromValue(start);
+			ft3.setToValue(end);
+			ft3.setCycleCount(1);
+			ft3.setAutoReverse(false);
+			ct4 = new FillTransition(Duration.millis(millis), mod4ring4, begin, stop);
+			ct4.setCycleCount(1);
+			ct4.setAutoReverse(false);
+			ft4 = new FadeTransition(Duration.millis(millis), mod4ring4);
+			ft4.setFromValue(start);
+			ft4.setToValue(end);
+			ft4.setCycleCount(1);
+			ft4.setAutoReverse(false);
+			ct5 = new FillTransition(Duration.millis(millis), mod4ring5, begin, stop);
+			ct5.setCycleCount(1);
+			ct5.setAutoReverse(false);
+			ft5 = new FadeTransition(Duration.millis(millis), mod4ring5);
+			ft5.setFromValue(start);
+			ft5.setToValue(end);
+			ft5.setCycleCount(1);
+			ft5.setAutoReverse(false);
+			ct6 = new FillTransition(Duration.millis(millis), peacock4, begin, stop);
+			ct6.setCycleCount(1);
+			ct6.setAutoReverse(false);
+			ft6 = new FadeTransition(Duration.millis(millis), peacock4);
+			ft6.setFromValue(start);
+			ft6.setToValue(end);
+			ft6.setCycleCount(1);
+			ft6.setAutoReverse(false);
+			ct7 = new FillTransition(Duration.millis(millis), frontCurtain4, begin, stop);
+			ct7.setCycleCount(1);
+			ct7.setAutoReverse(false);
+			ft7 = new FadeTransition(Duration.millis(millis), frontCurtain4);
+			ft7.setFromValue(start);
+			ft7.setToValue(end);
+			ft7.setCycleCount(1);
+			ft7.setAutoReverse(false);
+			ct8 = new FillTransition(Duration.millis(millis), backCurtain4, begin, stop);
+			ct8.setCycleCount(1);
+			ct8.setAutoReverse(false);
+			ft8 = new FadeTransition(Duration.millis(millis), backCurtain4);
+			ft8.setFromValue(start);
+			ft8.setToValue(end);
+			ft8.setCycleCount(1);
+			ft8.setAutoReverse(false);
+			ct9 = new FillTransition(Duration.millis(millis), mod4sweep1, begin, stop);
+			ct9.setCycleCount(1);
+			ct9.setAutoReverse(false);
+			ft9 = new FadeTransition(Duration.millis(millis), mod4sweep1);
+			ft9.setFromValue(start);
+			ft9.setToValue(end);
+			ft9.setCycleCount(1);
+			ft9.setAutoReverse(false);
+			ct10 = new FillTransition(Duration.millis(millis), mod4sweep2, begin, stop);
+			ct10.setCycleCount(1);
+			ct10.setAutoReverse(false);
+			ft10 = new FadeTransition(Duration.millis(millis), mod4sweep2);
+			ft10.setFromValue(start);
+			ft10.setToValue(end);
+			ft10.setCycleCount(1);
+			ft10.setAutoReverse(false);
+			ct11 = new FillTransition(Duration.millis(millis), mod4candle1, begin, stop);
+			ct11.setCycleCount(1);
+			ct11.setAutoReverse(false);
+			ft11 = new FadeTransition(Duration.millis(millis), mod4candle1);
+			ft11.setFromValue(start);
+			ft11.setToValue(end);
+			ft11.setCycleCount(1);
+			ft11.setAutoReverse(false);
+			ct12 = new FillTransition(Duration.millis(millis), mod4candle2, begin, stop);
+			ct12.setCycleCount(1);
+			ct12.setAutoReverse(false);
+			ft12 = new FadeTransition(Duration.millis(millis), mod4candle2);
+			ft12.setFromValue(start);
+			ft12.setToValue(end);
+			ft12.setCycleCount(1);
+			ft12.setAutoReverse(false);
+			ct13 = new FillTransition(Duration.millis(millis), mod4candle3, begin, stop);
+			ct13.setCycleCount(1);
+			ct13.setAutoReverse(false);
+			ft13 = new FadeTransition(Duration.millis(millis), mod4candle3);
+			ft13.setFromValue(start);
+			ft13.setToValue(end);
+			ft13.setCycleCount(1);
+			ft13.setAutoReverse(false);
+			ct14 = new FillTransition(Duration.millis(millis), mod4candle4, begin, stop);
+			ct14.setCycleCount(1);
+			ct14.setAutoReverse(false);
+			ft14 = new FadeTransition(Duration.millis(millis), mod4candle4);
+			ft14.setFromValue(start);
+			ft14.setToValue(end);
+			ft14.setCycleCount(1);
+			ft14.setAutoReverse(false);
+			ct15 = new FillTransition(Duration.millis(millis), mod4candle5, begin, stop);
+			ct15.setCycleCount(1);
+			ct15.setAutoReverse(false);
+			ft15 = new FadeTransition(Duration.millis(millis), mod4candle5);
+			ft15.setFromValue(start);
+			ft15.setToValue(end);
+			ft15.setCycleCount(1);
+			ft15.setAutoReverse(false);
+			ct16 = new FillTransition(Duration.millis(millis), mod4candle6, begin, stop);
+			ct16.setCycleCount(1);
+			ct16.setAutoReverse(false);
+			ft16 = new FadeTransition(Duration.millis(millis), mod4candle6);
+			ft16.setFromValue(start);
+			ft16.setToValue(end);
+			ft16.setCycleCount(1);
+			ft16.setAutoReverse(false);
+
+			pt = new ParallelTransition(ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
+			pt.play();
+			break;
+
+		case 5:
+			ct0 = new FillTransition(Duration.millis(millis), bazooka3, begin, stop);
+			ct0.setCycleCount(1);
+			ct0.setAutoReverse(false);
+			ft0 = new FadeTransition(Duration.millis(millis), bazooka3);
+			ft0.setFromValue(start);
+			ft0.setToValue(end);
+			ft0.setCycleCount(1);
+			ft0.setAutoReverse(false);
+			ct1 = new FillTransition(Duration.millis(millis), mod5ring1, begin, stop);
+			ct1.setCycleCount(1);
+			ct1.setAutoReverse(false);
+			ft1 = new FadeTransition(Duration.millis(millis), mod5ring1);
+			ft1.setFromValue(start);
+			ft1.setToValue(end);
+			ft1.setCycleCount(1);
+			ft1.setAutoReverse(false);
+			ct2 = new FillTransition(Duration.millis(millis), mod5ring2, begin, stop);
+			ct2.setCycleCount(1);
+			ct2.setAutoReverse(false);
+			ft2 = new FadeTransition(Duration.millis(millis), mod5ring2);
+			ft2.setFromValue(start);
+			ft2.setToValue(end);
+			ft2.setCycleCount(1);
+			ft2.setAutoReverse(false);
+			ct3 = new FillTransition(Duration.millis(millis), mod5ring3, begin, stop);
+			ct3.setCycleCount(1);
+			ct3.setAutoReverse(false);
+			ft3 = new FadeTransition(Duration.millis(millis), mod5ring3);
+			ft3.setFromValue(start);
+			ft3.setToValue(end);
+			ft3.setCycleCount(1);
+			ft3.setAutoReverse(false);
+			ct4 = new FillTransition(Duration.millis(millis), mod5ring4, begin, stop);
+			ct4.setCycleCount(1);
+			ct4.setAutoReverse(false);
+			ft4 = new FadeTransition(Duration.millis(millis), mod5ring4);
+			ft4.setFromValue(start);
+			ft4.setToValue(end);
+			ft4.setCycleCount(1);
+			ft4.setAutoReverse(false);
+			ct5 = new FillTransition(Duration.millis(millis), mod5ring5, begin, stop);
+			ct5.setCycleCount(1);
+			ct5.setAutoReverse(false);
+			ft5 = new FadeTransition(Duration.millis(millis), mod5ring5);
+			ft5.setFromValue(start);
+			ft5.setToValue(end);
+			ft5.setCycleCount(1);
+			ft5.setAutoReverse(false);
+			ct6 = new FillTransition(Duration.millis(millis), peacock5, begin, stop);
+			ct6.setCycleCount(1);
+			ct6.setAutoReverse(false);
+			ft6 = new FadeTransition(Duration.millis(millis), peacock5);
+			ft6.setFromValue(start);
+			ft6.setToValue(end);
+			ft6.setCycleCount(1);
+			ft6.setAutoReverse(false);
+			ct7 = new FillTransition(Duration.millis(millis), frontCurtain5, begin, stop);
+			ct7.setCycleCount(1);
+			ct7.setAutoReverse(false);
+			ft7 = new FadeTransition(Duration.millis(millis), frontCurtain5);
+			ft7.setFromValue(start);
+			ft7.setToValue(end);
+			ft7.setCycleCount(1);
+			ft7.setAutoReverse(false);
+			ct8 = new FillTransition(Duration.millis(millis), backCurtain5, begin, stop);
+			ct8.setCycleCount(1);
+			ct8.setAutoReverse(false);
+			ft8 = new FadeTransition(Duration.millis(millis), backCurtain5);
+			ft8.setFromValue(start);
+			ft8.setToValue(end);
+			ft8.setCycleCount(1);
+			ft8.setAutoReverse(false);
+			ct9 = new FillTransition(Duration.millis(millis), mod5sweep1, begin, stop);
+			ct9.setCycleCount(1);
+			ct9.setAutoReverse(false);
+			ft9 = new FadeTransition(Duration.millis(millis), mod5sweep1);
+			ft9.setFromValue(start);
+			ft9.setToValue(end);
+			ft9.setCycleCount(1);
+			ft9.setAutoReverse(false);
+			ct10 = new FillTransition(Duration.millis(millis), mod5sweep2, begin, stop);
+			ct10.setCycleCount(1);
+			ct10.setAutoReverse(false);
+			ft10 = new FadeTransition(Duration.millis(millis), mod5sweep2);
+			ft10.setFromValue(start);
+			ft10.setToValue(end);
+			ft10.setCycleCount(1);
+			ft10.setAutoReverse(false);
+			ct11 = new FillTransition(Duration.millis(millis), mod5candle1, begin, stop);
+			ct11.setCycleCount(1);
+			ct11.setAutoReverse(false);
+			ft11 = new FadeTransition(Duration.millis(millis), mod5candle1);
+			ft11.setFromValue(start);
+			ft11.setToValue(end);
+			ft11.setCycleCount(1);
+			ft11.setAutoReverse(false);
+			ct12 = new FillTransition(Duration.millis(millis), mod5candle2, begin, stop);
+			ct12.setCycleCount(1);
+			ct12.setAutoReverse(false);
+			ft12 = new FadeTransition(Duration.millis(millis), mod5candle2);
+			ft12.setFromValue(start);
+			ft12.setToValue(end);
+			ft12.setCycleCount(1);
+			ft12.setAutoReverse(false);
+			ct13 = new FillTransition(Duration.millis(millis), mod5candle3, begin, stop);
+			ct13.setCycleCount(1);
+			ct13.setAutoReverse(false);
+			ft13 = new FadeTransition(Duration.millis(millis), mod5candle3);
+			ft13.setFromValue(start);
+			ft13.setToValue(end);
+			ft13.setCycleCount(1);
+			ft13.setAutoReverse(false);
+			ct14 = new FillTransition(Duration.millis(millis), mod5candle4, begin, stop);
+			ct14.setCycleCount(1);
+			ct14.setAutoReverse(false);
+			ft14 = new FadeTransition(Duration.millis(millis), mod5candle4);
+			ft14.setFromValue(start);
+			ft14.setToValue(end);
+			ft14.setCycleCount(1);
+			ft14.setAutoReverse(false);
+			ct15 = new FillTransition(Duration.millis(millis), mod5candle5, begin, stop);
+			ct15.setCycleCount(1);
+			ct15.setAutoReverse(false);
+			ft15 = new FadeTransition(Duration.millis(millis), mod5candle5);
+			ft15.setFromValue(start);
+			ft15.setToValue(end);
+			ft15.setCycleCount(1);
+			ft15.setAutoReverse(false);
+			ct16 = new FillTransition(Duration.millis(millis), mod5candle6, begin, stop);
+			ct16.setCycleCount(1);
+			ct16.setAutoReverse(false);
+			ft16 = new FadeTransition(Duration.millis(millis), mod5candle6);
+			ft16.setFromValue(start);
+			ft16.setToValue(end);
+			ft16.setCycleCount(1);
+			ft16.setAutoReverse(false);
+
+			pt = new ParallelTransition(ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
+			pt.play();
+			break;
+
+		case 6:
+			ct0 = new FillTransition(Duration.millis(millis), bazooka2, begin, stop);
+			ct0.setCycleCount(1);
+			ct0.setAutoReverse(false);
+			ft0 = new FadeTransition(Duration.millis(millis), bazooka2);
+			ft0.setFromValue(start);
+			ft0.setToValue(end);
+			ft0.setCycleCount(1);
+			ft0.setAutoReverse(false);
+			ct1 = new FillTransition(Duration.millis(millis), mod6ring1, begin, stop);
+			ct1.setCycleCount(1);
+			ct1.setAutoReverse(false);
+			ft1 = new FadeTransition(Duration.millis(millis), mod6ring1);
+			ft1.setFromValue(start);
+			ft1.setToValue(end);
+			ft1.setCycleCount(1);
+			ft1.setAutoReverse(false);
+			ct2 = new FillTransition(Duration.millis(millis), mod6ring2, begin, stop);
+			ct2.setCycleCount(1);
+			ct2.setAutoReverse(false);
+			ft2 = new FadeTransition(Duration.millis(millis), mod6ring2);
+			ft2.setFromValue(start);
+			ft2.setToValue(end);
+			ft2.setCycleCount(1);
+			ft2.setAutoReverse(false);
+			ct3 = new FillTransition(Duration.millis(millis), mod6ring3, begin, stop);
+			ct3.setCycleCount(1);
+			ct3.setAutoReverse(false);
+			ft3 = new FadeTransition(Duration.millis(millis), mod6ring3);
+			ft3.setFromValue(start);
+			ft3.setToValue(end);
+			ft3.setCycleCount(1);
+			ft3.setAutoReverse(false);
+			ct4 = new FillTransition(Duration.millis(millis), mod6ring4, begin, stop);
+			ct4.setCycleCount(1);
+			ct4.setAutoReverse(false);
+			ft4 = new FadeTransition(Duration.millis(millis), mod6ring4);
+			ft4.setFromValue(start);
+			ft4.setToValue(end);
+			ft4.setCycleCount(1);
+			ft4.setAutoReverse(false);
+			ct5 = new FillTransition(Duration.millis(millis), mod6ring5, begin, stop);
+			ct5.setCycleCount(1);
+			ct5.setAutoReverse(false);
+			ft5 = new FadeTransition(Duration.millis(millis), mod6ring5);
+			ft5.setFromValue(start);
+			ft5.setToValue(end);
+			ft5.setCycleCount(1);
+			ft5.setAutoReverse(false);
+			ct6 = new FillTransition(Duration.millis(millis), peacock6, begin, stop);
+			ct6.setCycleCount(1);
+			ct6.setAutoReverse(false);
+			ft6 = new FadeTransition(Duration.millis(millis), peacock6);
+			ft6.setFromValue(start);
+			ft6.setToValue(end);
+			ft6.setCycleCount(1);
+			ft6.setAutoReverse(false);
+			ct7 = new FillTransition(Duration.millis(millis), frontCurtain6, begin, stop);
+			ct7.setCycleCount(1);
+			ct7.setAutoReverse(false);
+			ft7 = new FadeTransition(Duration.millis(millis), frontCurtain6);
+			ft7.setFromValue(start);
+			ft7.setToValue(end);
+			ft7.setCycleCount(1);
+			ft7.setAutoReverse(false);
+			ct8 = new FillTransition(Duration.millis(millis), backCurtain6, begin, stop);
+			ct8.setCycleCount(1);
+			ct8.setAutoReverse(false);
+			ft8 = new FadeTransition(Duration.millis(millis), backCurtain6);
+			ft8.setFromValue(start);
+			ft8.setToValue(end);
+			ft8.setCycleCount(1);
+			ft8.setAutoReverse(false);
+			ct9 = new FillTransition(Duration.millis(millis), mod6sweep1, begin, stop);
+			ct9.setCycleCount(1);
+			ct9.setAutoReverse(false);
+			ft9 = new FadeTransition(Duration.millis(millis), mod6sweep1);
+			ft9.setFromValue(start);
+			ft9.setToValue(end);
+			ft9.setCycleCount(1);
+			ft9.setAutoReverse(false);
+			ct10 = new FillTransition(Duration.millis(millis), mod6sweep2, begin, stop);
+			ct10.setCycleCount(1);
+			ct10.setAutoReverse(false);
+			ft10 = new FadeTransition(Duration.millis(millis), mod6sweep2);
+			ft10.setFromValue(start);
+			ft10.setToValue(end);
+			ft10.setCycleCount(1);
+			ft10.setAutoReverse(false);
+			ct11 = new FillTransition(Duration.millis(millis), mod6candle1, begin, stop);
+			ct11.setCycleCount(1);
+			ct11.setAutoReverse(false);
+			ft11 = new FadeTransition(Duration.millis(millis), mod6candle1);
+			ft11.setFromValue(start);
+			ft11.setToValue(end);
+			ft11.setCycleCount(1);
+			ft11.setAutoReverse(false);
+			ct12 = new FillTransition(Duration.millis(millis), mod6candle2, begin, stop);
+			ct12.setCycleCount(1);
+			ct12.setAutoReverse(false);
+			ft12 = new FadeTransition(Duration.millis(millis), mod6candle2);
+			ft12.setFromValue(start);
+			ft12.setToValue(end);
+			ft12.setCycleCount(1);
+			ft12.setAutoReverse(false);
+			ct13 = new FillTransition(Duration.millis(millis), mod6candle3, begin, stop);
+			ct13.setCycleCount(1);
+			ct13.setAutoReverse(false);
+			ft13 = new FadeTransition(Duration.millis(millis), mod6candle3);
+			ft13.setFromValue(start);
+			ft13.setToValue(end);
+			ft13.setCycleCount(1);
+			ft13.setAutoReverse(false);
+			ct14 = new FillTransition(Duration.millis(millis), mod6candle4, begin, stop);
+			ct14.setCycleCount(1);
+			ct14.setAutoReverse(false);
+			ft14 = new FadeTransition(Duration.millis(millis), mod6candle4);
+			ft14.setFromValue(start);
+			ft14.setToValue(end);
+			ft14.setCycleCount(1);
+			ft14.setAutoReverse(false);
+			ct15 = new FillTransition(Duration.millis(millis), mod6candle5, begin, stop);
+			ct15.setCycleCount(1);
+			ct15.setAutoReverse(false);
+			ft15 = new FadeTransition(Duration.millis(millis), mod6candle5);
+			ft15.setFromValue(start);
+			ft15.setToValue(end);
+			ft15.setCycleCount(1);
+			ft15.setAutoReverse(false);
+			ct16 = new FillTransition(Duration.millis(millis), mod6candle6, begin, stop);
+			ct16.setCycleCount(1);
+			ct16.setAutoReverse(false);
+			ft16 = new FadeTransition(Duration.millis(millis), mod6candle6);
+			ft16.setFromValue(start);
+			ft16.setToValue(end);
+			ft16.setCycleCount(1);
+			ft16.setAutoReverse(false);
+
+			pt = new ParallelTransition(ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
+			pt.play();
+			break;
+
+		case 7:
+			ct0 = new FillTransition(Duration.millis(millis), bazooka1, begin, stop);
+			ct0.setCycleCount(1);
+			ct0.setAutoReverse(false);
+			ft0 = new FadeTransition(Duration.millis(millis), bazooka1);
+			ft0.setFromValue(start);
+			ft0.setToValue(end);
+			ft0.setCycleCount(1);
+			ft0.setAutoReverse(false);
+			ct1 = new FillTransition(Duration.millis(millis), mod7ring1, begin, stop);
+			ct1.setCycleCount(1);
+			ct1.setAutoReverse(false);
+			ft1 = new FadeTransition(Duration.millis(millis), mod7ring1);
+			ft1.setFromValue(start);
+			ft1.setToValue(end);
+			ft1.setCycleCount(1);
+			ft1.setAutoReverse(false);
+			ct2 = new FillTransition(Duration.millis(millis), mod7ring2, begin, stop);
+			ct2.setCycleCount(1);
+			ct2.setAutoReverse(false);
+			ft2 = new FadeTransition(Duration.millis(millis), mod7ring2);
+			ft2.setFromValue(start);
+			ft2.setToValue(end);
+			ft2.setCycleCount(1);
+			ft2.setAutoReverse(false);
+			ct3 = new FillTransition(Duration.millis(millis), mod7ring3, begin, stop);
+			ct3.setCycleCount(1);
+			ct3.setAutoReverse(false);
+			ft3 = new FadeTransition(Duration.millis(millis), mod7ring3);
+			ft3.setFromValue(start);
+			ft3.setToValue(end);
+			ft3.setCycleCount(1);
+			ft3.setAutoReverse(false);
+			ct4 = new FillTransition(Duration.millis(millis), mod7ring4, begin, stop);
+			ct4.setCycleCount(1);
+			ct4.setAutoReverse(false);
+			ft4 = new FadeTransition(Duration.millis(millis), mod7ring4);
+			ft4.setFromValue(start);
+			ft4.setToValue(end);
+			ft4.setCycleCount(1);
+			ft4.setAutoReverse(false);
+			ct5 = new FillTransition(Duration.millis(millis), mod7ring5, begin, stop);
+			ct5.setCycleCount(1);
+			ct5.setAutoReverse(false);
+			ft5 = new FadeTransition(Duration.millis(millis), mod7ring5);
+			ft5.setFromValue(start);
+			ft5.setToValue(end);
+			ft5.setCycleCount(1);
+			ft5.setAutoReverse(false);
+			ct6 = new FillTransition(Duration.millis(millis), peacock7, begin, stop);
+			ct6.setCycleCount(1);
+			ct6.setAutoReverse(false);
+			ft6 = new FadeTransition(Duration.millis(millis), peacock7);
+			ft6.setFromValue(start);
+			ft6.setToValue(end);
+			ft6.setCycleCount(1);
+			ft6.setAutoReverse(false);
+			ct7 = new FillTransition(Duration.millis(millis), frontCurtain7, begin, stop);
+			ct7.setCycleCount(1);
+			ct7.setAutoReverse(false);
+			ft7 = new FadeTransition(Duration.millis(millis), frontCurtain7);
+			ft7.setFromValue(start);
+			ft7.setToValue(end);
+			ft7.setCycleCount(1);
+			ft7.setAutoReverse(false);
+			ct8 = new FillTransition(Duration.millis(millis), backCurtain7, begin, stop);
+			ct8.setCycleCount(1);
+			ct8.setAutoReverse(false);
+			ft8 = new FadeTransition(Duration.millis(millis), backCurtain7);
+			ft8.setFromValue(start);
+			ft8.setToValue(end);
+			ft8.setCycleCount(1);
+			ft8.setAutoReverse(false);
+			ct9 = new FillTransition(Duration.millis(millis), mod7sweep1, begin, stop);
+			ct9.setCycleCount(1);
+			ct9.setAutoReverse(false);
+			ft9 = new FadeTransition(Duration.millis(millis), mod7sweep1);
+			ft9.setFromValue(start);
+			ft9.setToValue(end);
+			ft9.setCycleCount(1);
+			ft9.setAutoReverse(false);
+			ct10 = new FillTransition(Duration.millis(millis), mod7sweep2, begin, stop);
+			ct10.setCycleCount(1);
+			ct10.setAutoReverse(false);
+			ft10 = new FadeTransition(Duration.millis(millis), mod7sweep2);
+			ft10.setFromValue(start);
+			ft10.setToValue(end);
+			ft10.setCycleCount(1);
+			ft10.setAutoReverse(false);
+			ct11 = new FillTransition(Duration.millis(millis), mod7candle1, begin, stop);
+			ct11.setCycleCount(1);
+			ct11.setAutoReverse(false);
+			ft11 = new FadeTransition(Duration.millis(millis), mod7candle1);
+			ft11.setFromValue(start);
+			ft11.setToValue(end);
+			ft11.setCycleCount(1);
+			ft11.setAutoReverse(false);
+			ct12 = new FillTransition(Duration.millis(millis), mod7candle2, begin, stop);
+			ct12.setCycleCount(1);
+			ct12.setAutoReverse(false);
+			ft12 = new FadeTransition(Duration.millis(millis), mod7candle2);
+			ft12.setFromValue(start);
+			ft12.setToValue(end);
+			ft12.setCycleCount(1);
+			ft12.setAutoReverse(false);
+			ct13 = new FillTransition(Duration.millis(millis), mod7candle3, begin, stop);
+			ct13.setCycleCount(1);
+			ct13.setAutoReverse(false);
+			ft13 = new FadeTransition(Duration.millis(millis), mod7candle3);
+			ft13.setFromValue(start);
+			ft13.setToValue(end);
+			ft13.setCycleCount(1);
+			ft13.setAutoReverse(false);
+			ct14 = new FillTransition(Duration.millis(millis), mod7candle4, begin, stop);
+			ct14.setCycleCount(1);
+			ct14.setAutoReverse(false);
+			ft14 = new FadeTransition(Duration.millis(millis), mod7candle4);
+			ft14.setFromValue(start);
+			ft14.setToValue(end);
+			ft14.setCycleCount(1);
+			ft14.setAutoReverse(false);
+			ct15 = new FillTransition(Duration.millis(millis), mod7candle5, begin, stop);
+			ct15.setCycleCount(1);
+			ct15.setAutoReverse(false);
+			ft15 = new FadeTransition(Duration.millis(millis), mod7candle5);
+			ft15.setFromValue(start);
+			ft15.setToValue(end);
+			ft15.setCycleCount(1);
+			ft15.setAutoReverse(false);
+			ct16 = new FillTransition(Duration.millis(millis), mod7candle6, begin, stop);
+			ct16.setCycleCount(1);
+			ct16.setAutoReverse(false);
+			ft16 = new FadeTransition(Duration.millis(millis), mod7candle6);
+			ft16.setFromValue(start);
+			ft16.setToValue(end);
+			ft16.setCycleCount(1);
+			ft16.setAutoReverse(false);
+
+			pt = new ParallelTransition(ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
+			pt.play();
+			break;
+		}
+
 	}
 
 	public void drawCandlesB(int level, double lagTime) {
@@ -3231,9 +4254,7 @@ public class FountainSimController implements Initializable {
 		final KeyValue kv17 = new KeyValue(mod6candle5.endYProperty(), ((35 * level)));
 		final KeyValue kv18 = new KeyValue(mod6candle6.endYProperty(), ((35 * level)));
 
-		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10,
-				kv11, kv12, kv13, kv14, kv15, kv16, kv17, kv18, kv25, kv26, kv27, kv28, kv29, kv30, kv31, kv32, kv33,
-				kv34, kv35, kv36, kv37, kv38, kv39, kv40, kv41, kv42);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11, kv12, kv13, kv14, kv15, kv16, kv17, kv18, kv25, kv26, kv27, kv28, kv29, kv30, kv31, kv32, kv33, kv34, kv35, kv36, kv37, kv38, kv39, kv40, kv41, kv42);
 		timeline.getKeyFrames().add(kf);
 		timeline.play();
 	}
