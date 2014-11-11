@@ -3164,7 +3164,7 @@ public class FountainSimController implements Initializable {
 
 		// Fade transitions
 		FadeTransition ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16;
-		FillTransition ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16;
+		FillTransition ct0, ct1, ct2, ct3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16;
 		ParallelTransition pt;
 
 		// Converts seconds to milliseconds
@@ -3309,7 +3309,7 @@ public class FountainSimController implements Initializable {
 			ft16.setCycleCount(1);
 			ft16.setAutoReverse(false);
 
-			pt = new ParallelTransition(ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
+			pt = new ParallelTransition(ct0, ct1, ct2, ct3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
 			pt.play();
 			break;
 		case 2:
@@ -3450,7 +3450,7 @@ public class FountainSimController implements Initializable {
 			ft16.setCycleCount(1);
 			ft16.setAutoReverse(false);
 
-			pt = new ParallelTransition(ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
+			pt = new ParallelTransition(ct0, ct1, ct2, ct3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
 			pt.play();
 			break;
 
@@ -3592,7 +3592,7 @@ public class FountainSimController implements Initializable {
 			ft16.setCycleCount(1);
 			ft16.setAutoReverse(false);
 
-			pt = new ParallelTransition(ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
+			pt = new ParallelTransition(ct0, ct1, ct2, ct3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
 			pt.play();
 			break;
 
@@ -3734,7 +3734,7 @@ public class FountainSimController implements Initializable {
 			ft16.setCycleCount(1);
 			ft16.setAutoReverse(false);
 
-			pt = new ParallelTransition(ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
+			pt = new ParallelTransition(ct0, ct1, ct2, ct3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
 			pt.play();
 			break;
 
@@ -3876,7 +3876,7 @@ public class FountainSimController implements Initializable {
 			ft16.setCycleCount(1);
 			ft16.setAutoReverse(false);
 
-			pt = new ParallelTransition(ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
+			pt = new ParallelTransition(ct0, ct1, ct2, ct3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
 			pt.play();
 			break;
 
@@ -4018,7 +4018,7 @@ public class FountainSimController implements Initializable {
 			ft16.setCycleCount(1);
 			ft16.setAutoReverse(false);
 
-			pt = new ParallelTransition(ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
+			pt = new ParallelTransition(ct0, ct1, ct2, ct3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
 			pt.play();
 			break;
 
@@ -4160,7 +4160,7 @@ public class FountainSimController implements Initializable {
 			ft16.setCycleCount(1);
 			ft16.setAutoReverse(false);
 
-			pt = new ParallelTransition(ct0, ct1, ct2, c3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
+			pt = new ParallelTransition(ct0, ct1, ct2, ct3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16);
 			pt.play();
 			break;
 		}
