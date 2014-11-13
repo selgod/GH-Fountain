@@ -13,15 +13,19 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.ComboBox;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
@@ -31,7 +35,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-
 import choreography.io.FCWLib;
 import choreography.model.color.ColorPaletteEnum;
 import choreography.model.color.ColorPaletteModel;
@@ -104,10 +107,21 @@ public class TimelineController implements Initializable {
 	MenuItem lightCopy = new MenuItem("Copy");
 	MenuItem lightPaste = new MenuItem("Paste");
 	MenuItem lightSelect = new MenuItem("Select");
+	Menu fadeUp = new Menu("Fade Up");
+	Menu fadeDown = new Menu("Fade Down");
+	MenuItem fadeUpMenuItem = new MenuItem();
+	MenuItem fadeDownMenuItem = new MenuItem();
 	MenuItem waterCut = new MenuItem("Cut");
 	MenuItem waterCopy = new MenuItem("Copy");
 	MenuItem waterPaste = new MenuItem("Paste");
 	MenuItem waterSelect = new MenuItem("Select");
+	
+	
+	
+	ObservableList<String> options1 = FXCollections.observableArrayList(".10",".20",".30",".40",".50",".60",".70",".80",".90","1.0");
+	ObservableList<String> options2 = FXCollections.observableArrayList(".90",".80",".70",".60",".50",".40",".30",".20",".10","0.0");
+	ComboBox<String> fadeUpComboBox = new ComboBox<String>(options1);
+	ComboBox<String> fadeDownComboBox = new ComboBox<String>(options2);
 
 	final ContextMenu lightCM = new ContextMenu();
 	final ContextMenu waterCM = new ContextMenu();
@@ -196,10 +210,17 @@ public class TimelineController implements Initializable {
 		// setWaterGridPane();
 		instance = this;
 		initializeTimelines();
+		
+		fadeUpMenuItem.setGraphic(fadeUpComboBox);
+		fadeDownMenuItem.setGraphic(fadeDownComboBox);
+		fadeUp.getItems().add(fadeUpMenuItem);
+		fadeDown.getItems().add(fadeDownMenuItem);
 		lightCM.getItems().add(lightCut);
 		lightCM.getItems().add(lightCopy);
 		lightCM.getItems().add(lightPaste);
 		lightCM.getItems().add(lightSelect);
+		lightCM.getItems().add(fadeUp);
+		lightCM.getItems().add(fadeDown);
 
 		//        waterCM.getItems().add(waterCopy);
 		//        waterCM.getItems().add(waterPaste);
@@ -207,6 +228,8 @@ public class TimelineController implements Initializable {
 		lightCut.setDisable(true);
 		lightCopy.setDisable(true);
 		lightPaste.setDisable(true);
+		fadeUp.setDisable(true);
+		fadeDown.setDisable(true);
 
 		//        waterCopy.setDisable(true);
 		//        waterPaste.setDisable(true);
@@ -371,6 +394,30 @@ public class TimelineController implements Initializable {
 					
 					lightCM.hide();*/
 			}   		
+		});
+		
+		fadeUpComboBox.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				double interval = Double.parseDouble((String)fadeUpComboBox.getValue()) / ((endTimeIndex - startTimeIndex) + 1);
+				for(int i = startTimeIndex; i <= endTimeIndex; i++){
+					for(int j = startLabelIndex; j <= endLabelIndex; j++){
+						lightRecArray[i][j].setOpacity(interval * ((i - startTimeIndex) + 1));
+					}
+				}
+			}
+		});
+		
+		fadeDownComboBox.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				double interval = (1 - Double.parseDouble((String)fadeDownComboBox.getValue())) / ((endTimeIndex - startTimeIndex) + 1);
+				for(int i = startTimeIndex; i <= endTimeIndex; i++){
+					for(int j = startLabelIndex; j <= endLabelIndex; j++){
+						lightRecArray[i][j].setOpacity(1 - (interval * (i - startTimeIndex)));
+					}
+				}
+			}
 		});
 	}
 
@@ -579,13 +626,16 @@ public class TimelineController implements Initializable {
 						}else if(ChoreographyController.getInstance().getShiftPressed()){
 							for(int i = startTimeIndex; i <= endTimeIndex; i++){
 								for(int j = startLabelIndex; j <= endLabelIndex; j++){
-									lightRecArray[i][j].setOpacity(1);
+									lightRecArray[i][j].setStroke(null);
+									//lightRecArray[i][j].setOpacity(1);
 								}
 							}
 							lightCut.setDisable(true);
 							lightCopy.setDisable(true);
+							fadeUp.setDisable(true);
+							fadeDown.setDisable(true);
 							lightRecArray[timeIndexConst][labelIndexConst].setStroke(Color.BLACK);
-							lightRecArray[timeIndexConst][labelIndexConst].setStrokeWidth(3);
+							lightRecArray[timeIndexConst][labelIndexConst].setStrokeWidth(2);
 							//lightRecArray[timeIndexConst][labelIndexConst].setOpacity(.50);
 							
 							startTimeIndex = timeIndexConst;
@@ -593,11 +643,14 @@ public class TimelineController implements Initializable {
 						}else{
 							for(int i = startTimeIndex; i <= endTimeIndex; i++){
 								for(int j = startLabelIndex; j <= endLabelIndex; j++){
-									lightRecArray[i][j].setOpacity(1);
+									lightRecArray[i][j].setStroke(null);
+									//lightRecArray[i][j].setOpacity(1);
 								}
 							}		
 							lightCut.setDisable(true);
 							lightCopy.setDisable(true);
+							fadeUp.setDisable(true);
+							fadeDown.setDisable(true);
 							startRow = labelIndexConst;
 							lightRecArray[timeIndexConst][labelIndexConst].setFill(ColorPaletteModel.getInstance().getSelectedColor());
 							start = timeIndexConst;
@@ -607,8 +660,10 @@ public class TimelineController implements Initializable {
 
 				lightRecArray[timeIndex][labelIndex].setOnDragDetected((MouseEvent e) -> {
 					if(ChoreographyController.getInstance().getShiftPressed()){
-						//lightRecArray[timeIndexConst][labelIndexConst].startFullDrag();
-						lightRecArray[timeIndexConst][labelIndexConst].setOpacity(.50);
+						//lightRecArray[timeIndexConst][labelIndexConst].setOpacity(.50);
+						lightRecArray[timeIndexConst][labelIndexConst].setStroke(Color.BLACK);
+						lightRecArray[timeIndexConst][labelIndexConst].setStrokeWidth(2);
+						//lightRecArray[i][j].setOpacity(1);
 					}
 
 					lightRecArray[timeIndexConst][labelIndexConst].startFullDrag();
@@ -620,19 +675,23 @@ public class TimelineController implements Initializable {
 						if(timeIndexConst >= startTimeIndex && labelIndexConst >= startLabelIndex){
 							if(timeIndexConst < endTimeIndex){
 								for(int i = 0; i <= endLabelIndex - startLabelIndex; i++){
-									lightRecArray[endTimeIndex][startLabelIndex + i].setOpacity(1);
+									//lightRecArray[endTimeIndex][startLabelIndex + i].setOpacity(1);
+									lightRecArray[endTimeIndex][startLabelIndex + i].setStroke(null);
 								}
 							}
 							if(labelIndexConst < endLabelIndex){
 								for(int i = 0; i <= endTimeIndex - startTimeIndex; i++){
-									lightRecArray[startTimeIndex + i][endLabelIndex].setOpacity(1);
+									//lightRecArray[startTimeIndex + i][endLabelIndex].setOpacity(1);
+									lightRecArray[startTimeIndex + i][endLabelIndex].setStroke(null);
 								}
 							}
 							endTimeIndex = timeIndexConst;
 							endLabelIndex= labelIndexConst;
 							for(int i = 0; i <= endTimeIndex - startTimeIndex; i++){
 								for(int j = 0; j <= endLabelIndex - startLabelIndex; j++){
-									lightRecArray[startTimeIndex + i][startLabelIndex + j].setOpacity(.50);
+									//lightRecArray[startTimeIndex + i][startLabelIndex + j].setOpacity(.50);
+									lightRecArray[startTimeIndex + i][startLabelIndex + j].setStroke(Color.BLACK);
+									lightRecArray[startTimeIndex + i][startLabelIndex + j].setStrokeWidth(2);
 								}
 							}
 						}
@@ -657,6 +716,8 @@ public class TimelineController implements Initializable {
 					}else{
 						lightCut.setDisable(false);
 						lightCopy.setDisable(false);
+						fadeUp.setDisable(false);
+						fadeDown.setDisable(false);
 					}
 				});
 			}
