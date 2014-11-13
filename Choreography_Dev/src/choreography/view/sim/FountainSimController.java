@@ -514,9 +514,6 @@ public class FountainSimController implements Initializable {
 	}
 
 	public void drawFcw(ArrayList<FCW> fcws) {
-		// for(FCW f: fcws){
-		// String[] actions = FCWLib.getInstance().reverseLookupData(f);
-		// }
 		Iterator<FCW> it = fcws.iterator();
 		while (it.hasNext()) {
 			double lagTime = 0;
@@ -3160,15 +3157,23 @@ public class FountainSimController implements Initializable {
 	 * 
 	 *            Bazooka's still need a little work.
 	 */
+	/**
+	 * @param mod
+	 * @param length
+	 * @param start
+	 * @param end
+	 * @param begin
+	 * @param stop
+	 */
 	public void fadeModule(int mod, double length, double start, double end, Color begin, Color stop) {
-
+		System.out.println("Module: " + mod + " Time: " + length + " Start: " + start + " End: " + end + " ColorStart: " + begin + " ColorStop: " + stop);
 		// Fade transitions
 		FadeTransition ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16;
 		FillTransition ct0, ct1, ct2, ct3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16;
 		ParallelTransition pt;
 
 		// Converts seconds to milliseconds
-		double millis = length / 1000;
+		double millis = length * 1000;
 
 		switch (mod) {
 		case 1:
