@@ -65,9 +65,9 @@ public class GhmfLibrary {
         while(entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
             if(entry != null) {
-                if(entry.getName().endsWith(".ctl")) ctl = ghmfFile.getInputStream(entry);
-                if(entry.getName().endsWith(".map")) map = ghmfFile.getInputStream(entry);
-                if(entry.getName().endsWith(".wav")) {
+                if(entry.getName().toLowerCase().endsWith(".ctl")) ctl = ghmfFile.getInputStream(entry);
+                if(entry.getName().toLowerCase().endsWith(".map")) map = ghmfFile.getInputStream(entry);
+                if(entry.getName().toLowerCase().endsWith(".wav")) {
                     music = ghmfFile.getInputStream(entry);
                     String name = entry.getName().substring(entry.getName().lastIndexOf("/")+1, entry.getName().length());
                     String suffix = name.substring(name.length() - 4, name.length());
@@ -80,7 +80,9 @@ public class GhmfLibrary {
         }
         
         try {
-            MusicPaneController.getInstance().openMusicFile(musicFile);    
+            MusicPaneController.getInstance().openMusicFile(musicFile);   
+            MusicPaneController.getInstance().getPlayButton().setDisable(false);
+            MusicPaneController.getInstance().getResetButton().setDisable(false);
 
             MapLib.openMap(map);
             CtlLib.getInstance().openCtl(ctl);

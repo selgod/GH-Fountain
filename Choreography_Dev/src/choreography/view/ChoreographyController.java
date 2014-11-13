@@ -841,6 +841,14 @@ public class ChoreographyController implements Initializable {
 			getChildren().add(webView);
 		}
 	}
+
+	public MenuItem getSaveCTLMenuItem() {
+		return saveCTLMenuItem;
+	}
+
+	public void setSaveCTLMenuItem(MenuItem saveCTLMenuItem) {
+		this.saveCTLMenuItem = saveCTLMenuItem;
+	}
 }
 
 // class Browser extends Region{
