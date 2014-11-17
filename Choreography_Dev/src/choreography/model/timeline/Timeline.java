@@ -24,18 +24,7 @@ import choreography.view.timeline.TimelineController;
 
 public class Timeline {
 
-	/**
-    * 
-    */
 	public static final int OFF = -5;
-	// private static final long serialVersionUID = 7_242_109_851_591_362_314L;
-	// private static final Logger LOG =
-	// Logger.getLogger(Timeline.class.getName());
-	// private static final int BUFFERBOUNDARY = 200;
-	/**
-	 *
-	 * @return
-	 */
 	private int time;
 	private int numChannels;
 	private ConcurrentSkipListMap<Integer, ArrayList<FCW>> timeline;
@@ -58,8 +47,7 @@ public class Timeline {
 		return channelColorMap;
 	}
 
-	public void setChannelColorMap(
-			ConcurrentSkipListMap<Integer, SortedMap<Integer, Integer>> channelColorMap) {
+	public void setChannelColorMap(ConcurrentSkipListMap<Integer, SortedMap<Integer, Integer>> channelColorMap) {
 		this.channelColorMap = channelColorMap;
 	}
 
@@ -139,8 +127,7 @@ public class Timeline {
 	 * @param timeline
 	 *            the timeline to set
 	 */
-	public void setTimeline(
-			ConcurrentSkipListMap<Integer, ArrayList<FCW>> timeline) {
+	public void setTimeline(ConcurrentSkipListMap<Integer, ArrayList<FCW>> timeline) {
 		this.timeline = timeline;
 		/*
 		 * timeline.keySet().stream().forEach((i) -> {
@@ -151,8 +138,8 @@ public class Timeline {
 		time = (int) (MusicPaneController.SONG_TIME * 10); // tenths of a second
 		numChannels = countUChannels(getLightTimeline());
 		// lightFCWColorMap = new LinkedHashMap<>(numChannels);
-		channelColorMap = new ConcurrentSkipListMap<Integer, SortedMap<Integer, Integer>>(); // new//new
-																								// int[time][numChannels];
+		channelColorMap = new ConcurrentSkipListMap<Integer, SortedMap<Integer, Integer>>();
+		// int[time][numChannels];
 		startAndEndPoints(channelColorMap);
 		fillTheSpaces(channelColorMap);
 		// populateLightFcwArray();
@@ -192,8 +179,7 @@ public class Timeline {
 	 * @param end
 	 * @param color
 	 */
-	public void setLightFcwWithRange(SortedMap<Integer, Integer> channel,
-			int start, int end, int color) {
+	public void setLightFcwWithRange(SortedMap<Integer, Integer> channel, int start, int end, int color) {
 		for (int i = start; i < end; i++) {
 			channel.put(i, color);
 		}
@@ -241,8 +227,7 @@ public class Timeline {
 	 * }
 	 */
 
-	public void fillTheSpaces(
-			SortedMap<Integer, SortedMap<Integer, Integer>> channelMap) {
+	public void fillTheSpaces(SortedMap<Integer, SortedMap<Integer, Integer>> channelMap) {
 		for (Integer channel : channelMap.keySet()) {
 			int start, end, color;
 			SortedMap<Integer, Integer> newMap = new ConcurrentSkipListMap<>();
@@ -250,13 +235,10 @@ public class Timeline {
 				if (channelMap.get(channel).get(tenth) != 0) {
 					start = tenth;
 					color = channelMap.get(channel).get(tenth);
-					Iterator<Entry<Integer, Integer>> it = channelMap
-							.get(channel).tailMap(start + 1).entrySet()
-							.iterator();
+					Iterator<Entry<Integer, Integer>> it = channelMap.get(channel).tailMap(start + 1).entrySet().iterator();
 					while (it.hasNext()) {
 						Entry<Integer, Integer> timeColor = it.next();
-						if (timeColor.getValue() == 0
-								&& timeColor.getKey() != start) {
+						if (timeColor.getValue() == 0 && timeColor.getKey() != start) {
 							end = timeColor.getKey();
 							setLightFcwWithRange(newMap, start, end, color);
 							break;
@@ -272,17 +254,15 @@ public class Timeline {
 		}
 	}
 
-	private void insertIntoTimeline(
-			SortedMap<Integer, ArrayList<FCW>> srcTimeline, Integer time,
-			FCW currentFcw) {
+	private void insertIntoTimeline(SortedMap<Integer, ArrayList<FCW>> srcTimeline, Integer time, FCW currentFcw) {
 
 		if (srcTimeline.containsKey(time)) {
 
 			// ArrayList<FCW> newFcwList = srcTimeline.get(time);
 			//
 			// for (int g = 0; g < newFcwList.size(); g++) {
-			// if ((newFcwList.get(g).getAddr() == currentFcw.getAddr())
-			// && fcwAlreadyAdded(newFcwList.get(g), currentFcw)) {
+			// if ((newFcwList.get(g).getAddr() == currentFcw.getAddr()) &&
+			// fcwAlreadyAdded(newFcwList.get(g), currentFcw)) {
 			// System.out.println("removed");
 			// newFcwList.remove(g);
 			// newFcwList.add(currentFcw);
@@ -294,7 +274,7 @@ public class Timeline {
 			ArrayList<FCW> newFcwList = new ArrayList<FCW>();
 			newFcwList.add(currentFcw);
 
-			// until time 1 is reached
+			// // until time 1 is reached
 			// for (int j = time; j > 1; j--) {
 			//
 			// if (srcTimeline.containsKey(j)) {
@@ -306,8 +286,8 @@ public class Timeline {
 			//
 			// boolean lock = true;
 			// for (int g = 0; g < newFcwList.size(); g++) {
-			// if ((newFcwList.get(g).getAddr() == oldFcw.getAddr())
-			// && fcwAlreadyAdded(newFcwList.get(g), oldFcw)) {
+			// if ((newFcwList.get(g).getAddr() == oldFcw.getAddr()) &&
+			// fcwAlreadyAdded(newFcwList.get(g), oldFcw)) {
 			//
 			// lock = false;
 			// break;
@@ -353,8 +333,7 @@ public class Timeline {
 
 	}
 
-	private void startAndEndPoints(
-			SortedMap<Integer, SortedMap<Integer, Integer>> channelMap) {
+	private void startAndEndPoints(SortedMap<Integer, SortedMap<Integer, Integer>> channelMap) {
 		ConcurrentSkipListMap<Integer, ArrayList<FCW>> lightTimeline = (ConcurrentSkipListMap<Integer, ArrayList<FCW>>) getLightTimeline();
 		for (Integer timeIndex : lightTimeline.keySet()) {
 			SortedMap<Integer, Integer> newMap = new ConcurrentSkipListMap<>();
@@ -367,8 +346,7 @@ public class Timeline {
 				int secondsOnly = timeIndex / 10;
 				double tenths = (double) tenthOfSec;
 				double newTime = secondsOnly + (tenths / 10);
-				int colAtTime = (int) (newTime * MusicPaneController
-						.getInstance().getTimeFactor());
+				int colAtTime = (int) (newTime * MusicPaneController.getInstance().getTimeFactor());
 				if (colAtTime != 0) {
 					colAtTime = colAtTime - 1;
 				}
@@ -409,21 +387,20 @@ public class Timeline {
 		// if(waterTimeline.containsKey(time)) {
 		ConcurrentSkipListMap<Integer, ArrayList<FCW>> waterTimeline = (ConcurrentSkipListMap<Integer, ArrayList<FCW>>) getWaterTimeline();
 		Integer closestKey = waterTimeline.floorKey(time);
-		SlidersController.getInstance().setSlidersWithFcw(
-				waterTimeline.get(closestKey));
+		SlidersController.getInstance().setSlidersWithFcw(waterTimeline.get(closestKey));
 		// }
 
 	}
 
 	public void sendTimelineInstanceToSim(int time) {
 		// if(waterTimeline.containsKey(time)) {
+		int closestKey = 0;
 		ConcurrentSkipListMap<Integer, ArrayList<FCW>> waterTimeline = (ConcurrentSkipListMap<Integer, ArrayList<FCW>>) getWaterTimeline();
-		Integer closestKey = waterTimeline.floorKey(time);
+		closestKey = waterTimeline.floorKey(time);
 		if (time == 0) {
 			closestKey = time;
 		}
-		FountainSimController.getInstance().drawFcw(
-				waterTimeline.get(closestKey));
+		FountainSimController.getInstance().drawFcw(waterTimeline.get(closestKey));
 
 	}
 
@@ -445,22 +422,17 @@ public class Timeline {
 		// true, MusicPaneController.getInstance().SONG_TIME, true));
 	}
 
-	private boolean checkForCollision(
-			SortedMap<Integer, ArrayList<FCW>> timeline, int pointInTime,
-			FCW query) {
+	private boolean checkForCollision(SortedMap<Integer, ArrayList<FCW>> timeline, int pointInTime, FCW query) {
 		boolean result = false;
 		if (timeline.containsKey(pointInTime)) {
 			for (FCW f : timeline.get(pointInTime)) {
 				if (f.getAddr() == query.getAddr()) {
 
-					String[] fActions = FCWLib.getInstance().reverseLookupData(
-							f);
-					String[] queryActions = FCWLib.getInstance()
-							.reverseLookupData(query);
+					String[] fActions = FCWLib.getInstance().reverseLookupData(f);
+					String[] queryActions = FCWLib.getInstance().reverseLookupData(query);
 					for (String fAction : fActions) {
 						for (String queryAction : queryActions) {
-							if (fAction.equals(queryAction)
-									&& !FCWLib.getInstance().isLevel(fAction)) {
+							if (fAction.equals(queryAction) && !FCWLib.getInstance().isLevel(fAction)) {
 								// query.setData(query.getData() + f.getData());
 								return true;
 							}
@@ -504,42 +476,11 @@ public class Timeline {
 	 * insertFcwsIntoTimeline(waterTimeline); timeline = result; }
 	 */
 
-	public void insertFcwsIntoTimeline(
-			SortedMap<Integer, ArrayList<FCW>> srcTimeline) {
+	public void insertFcwsIntoTimeline(SortedMap<Integer, ArrayList<FCW>> srcTimeline) {
 		for (Integer timeIndex : srcTimeline.keySet()) {
 			for (FCW f : srcTimeline.get(timeIndex)) {
 				insertIntoTimeline(timeline, timeIndex, f);
 			}
 		}
 	}
-
-	public static void main(String[] args) {
-		Timeline t = new Timeline();
-		FCW l = new FCW(17, 10);
-		FCW l2 = new FCW(18, 11);
-		FCW w = new FCW(5, 21);
-		System.out.println(l);
-		System.out.println(l2);
-		ConcurrentSkipListMap<Integer, ArrayList<FCW>> timeline = (ConcurrentSkipListMap<Integer, ArrayList<FCW>>) t
-				.getTimeline();
-		t.setLightFcw(l, 1, 10);
-		t.setLightFcw(l2, 3, 6);
-		t.setWaterFcwAtPoint(10, w);
-		SortedMap<Integer, SortedMap<Integer, Integer>> colors = t
-				.getChannelColorMap();
-		for (Integer i : colors.keySet()) {
-			System.out.println("ChannelKey: " + i);
-			for (Integer j : colors.get(new Integer(i)).keySet()) {
-				System.out.println("Time Key: " + j + " and color: "
-						+ colors.get(new Integer(i)).get(new Integer(j)));
-			}
-		}
-		System.out.println();
-		for (Integer i : timeline.keySet()) {
-			System.out.println("TIMELINE KEY: " + i + " w/val: "
-					+ timeline.get(new Integer(i)));
-		}
-
-	}
-
 }

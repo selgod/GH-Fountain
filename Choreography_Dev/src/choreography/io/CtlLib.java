@@ -1,11 +1,5 @@
 package choreography.io;
 
-import choreography.model.fcw.FCW;
-import choreography.view.ChoreographyController;
-import choreography.model.color.ColorPaletteModel;
-import choreography.view.music.MusicPaneController;
-import choreography.view.specialOperations.SpecialoperationsController;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -20,6 +14,9 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import choreography.model.fcw.FCW;
+import choreography.view.ChoreographyController;
+import choreography.view.music.MusicPaneController;
 
 /**
  *
@@ -77,8 +74,7 @@ public class CtlLib {
 	 */
 	public void openCtl(File file) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(file));
-		ChoreographyController.getInstance().setEventTimeline(
-				parseCTL(readFile(reader)));
+		ChoreographyController.getInstance().setEventTimeline(parseCTL(readFile(reader)));
 	}
 
 	/**
@@ -90,8 +86,7 @@ public class CtlLib {
 	 */
 	public void openCtl(InputStream is) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		ChoreographyController.getInstance().setEventTimeline(
-				parseCTL(readFile(reader)));
+		ChoreographyController.getInstance().setEventTimeline(parseCTL(readFile(reader)));
 	}
 
 	/**
@@ -102,8 +97,7 @@ public class CtlLib {
 	 *            A reader wrapped around the ctl data
 	 * @return the contents of the CTL file
 	 */
-	public synchronized String readFile(BufferedReader reader)
-			throws IOException {
+	public synchronized String readFile(BufferedReader reader) throws IOException {
 		StringBuilder stringBuffer = new StringBuilder();
 
 		// THe first line is the version of control file being used
@@ -120,7 +114,7 @@ public class CtlLib {
 				ChoreographyController.getInstance().getSaveCTLMenuItem().setDisable(false);
 				break;
 
-			// Non Time compensated file
+			// Non Time compensated file, Legacy File
 			default:
 				isTimeCompensated = false;
 				ChoreographyController.getInstance().getSaveCTLMenuItem().setDisable(true);
@@ -149,8 +143,7 @@ public class CtlLib {
 	 *            contents of the CTL file
 	 * @return A map containing <timeIndex, ArrayList<FCW>>
 	 */
-	public synchronized ConcurrentSkipListMap<Integer, ArrayList<FCW>> parseCTL(
-			String input) {
+	public synchronized ConcurrentSkipListMap<Integer, ArrayList<FCW>> parseCTL(String input) {
 		// Split file into tokens of lines
 		String[] lines = input.split(System.getProperty("line.separator"));
 		// Create an Event[] to hold all events
@@ -167,8 +160,7 @@ public class CtlLib {
 				// get the tenths
 				int tenths = Integer.parseInt(totalTime.substring(6, 7));
 				// find the total time in seconds
-				int totalTimeinTenthSecs = (minutes * 600) + (seconds * 10)
-						+ tenths;
+				int totalTimeinTenthSecs = (minutes * 600) + (seconds * 10) + tenths;
 				// get the commands section on the line
 				String commands = line.substring(7, line.length());
 				// break the commands into tokens
@@ -178,8 +170,7 @@ public class CtlLib {
 				ArrayList<FCW> fcws = new ArrayList<>();
 				for (String command : commandTokens) {
 					String[] tokens = command.split("-");
-					fcw = new FCW(Integer.parseInt(tokens[0]),
-							Integer.parseInt(tokens[1]));
+					fcw = new FCW(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]));
 
 					fcws.add(fcw);
 				}
@@ -189,8 +180,7 @@ public class CtlLib {
 				events = (ConcurrentSkipListMap<Integer, ArrayList<FCW>>) reversePostDate(events);
 			}
 		} catch (StringIndexOutOfBoundsException e) {
-			throw new IllegalArgumentException(
-					"Your CTL file may be corrupted..." + " Check the manual.");
+			throw new IllegalArgumentException("Your CTL file may be corrupted..." + " Check the manual.");
 		}
 		return events;
 	}
@@ -202,8 +192,7 @@ public class CtlLib {
 	 * @param content
 	 * @return
 	 */
-	public synchronized boolean saveFile(File file,
-			SortedMap<Integer, ArrayList<FCW>> content) {
+	public synchronized boolean saveFile(File file, SortedMap<Integer, ArrayList<FCW>> content) {
 		if (isTimeCompensated) {
 			try (FileWriter fileWriter = new FileWriter(file)) {
 				StringBuilder commandsOutput = createCtlData(content);
@@ -228,8 +217,7 @@ public class CtlLib {
 	 * @return a string holding that data in the ctl format
 	 * @throws IOException
 	 */
-	private StringBuilder createCtlData(
-			SortedMap<Integer, ArrayList<FCW>> content) throws IOException {
+	private StringBuilder createCtlData(SortedMap<Integer, ArrayList<FCW>> content) throws IOException {
 		StringBuilder commandsOutput = new StringBuilder();
 		commandsOutput.append("GHMF");
 		commandsOutput.append(System.lineSeparator());
@@ -259,8 +247,7 @@ public class CtlLib {
 			int tenths = Math.abs(timeIndex % 10);
 			int seconds = Math.abs(timeIndex / 10 % 60);
 			int minutes = Math.abs(((timeIndex / 10) - seconds) / 60);
-			totTime += String.format("%1$02d:%2$02d.%3$01d", minutes, seconds,
-					tenths);
+			totTime += String.format("%1$02d:%2$02d.%3$01d", minutes, seconds, tenths);
 			commandsOutput.append(totTime);
 			for (FCW f : content.get(i)) {
 				commandsOutput.append(f);
@@ -277,8 +264,7 @@ public class CtlLib {
 	 * @param content
 	 *            the CTLs to post date
 	 */
-	private synchronized void postDate(
-			SortedMap<Integer, ArrayList<FCW>> content) {
+	private synchronized void postDate(SortedMap<Integer, ArrayList<FCW>> content) {
 		for (Integer timeIndex : content.keySet()) {
 			Iterator<FCW> it = content.get(timeIndex).iterator();
 			while (it.hasNext()) {
@@ -305,8 +291,7 @@ public class CtlLib {
 	 *            the point at which the fcw currently exists
 	 * @return whether the fcw was moved or not
 	 */
-	public synchronized boolean postDateSingleFcw(FCW f,
-			SortedMap<Integer, ArrayList<FCW>> content, Integer timeIndex) {
+	public synchronized boolean postDateSingleFcw(FCW f, SortedMap<Integer, ArrayList<FCW>> content, Integer timeIndex) {
 		int lag = LagTimeLibrary.getInstance().getLagTimeInTenths(f);
 		int adjustedTime = timeIndex - lag;
 		if (adjustedTime >= 0) {
@@ -330,19 +315,19 @@ public class CtlLib {
 	 *            the timeline
 	 * @return whether the move was successful or not
 	 */
-	
-	//returned false at the very end, but returned true after the first modification...not sure why
+
+	// returned false at the very end, but returned true after the first
+	// modification...not sure why
 	private SortedMap<Integer, ArrayList<FCW>> reversePostDate(SortedMap<Integer, ArrayList<FCW>> content) {
-		
-		SortedMap<Integer, ArrayList<FCW>> results = new ConcurrentSkipListMap<Integer, ArrayList<FCW>>();		
+
+		SortedMap<Integer, ArrayList<FCW>> results = new ConcurrentSkipListMap<Integer, ArrayList<FCW>>();
 		for (Integer timeIndex : content.keySet()) {
 			Iterator<FCW> it = content.get(timeIndex).iterator();
 			while (it.hasNext()) {
 				FCW f = it.next();
 				if (f.getIsWater()) {
-					int lag = LagTimeLibrary.getInstance()
-							.getLagTimeInTenths(f);
-					
+					int lag = LagTimeLibrary.getInstance().getLagTimeInTenths(f);
+
 					if (lag != 0) {
 						if (results.containsKey(timeIndex + lag)) {
 							results.get(timeIndex + lag).add(f);
@@ -351,11 +336,8 @@ public class CtlLib {
 							results.get(timeIndex + lag).add(f);
 						}
 					}
-					
-					
-				}
-				else
-				{
+
+				} else {
 					if (results.containsKey(timeIndex)) {
 						results.get(timeIndex).add(f);
 					} else {
@@ -383,10 +365,8 @@ public class CtlLib {
 	 * @return FilePayload(songName, ctlData) containing the CTL data
 	 * @throws IOException
 	 */
-	public FilePayload createFilePayload(
-			SortedMap<Integer, ArrayList<FCW>> timeline) throws IOException {
+	public FilePayload createFilePayload(SortedMap<Integer, ArrayList<FCW>> timeline) throws IOException {
 		StringBuilder sb = createCtlData(timeline);
-		return new FilePayload(MusicPaneController.getInstance().getMusicName()
-				+ ".ctl", sb.toString().getBytes());
+		return new FilePayload(MusicPaneController.getInstance().getMusicName() + ".ctl", sb.toString().getBytes());
 	}
 }

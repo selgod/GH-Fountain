@@ -158,8 +158,7 @@ public class SlidersController {
 		assert swB != null : "fx:id=\"swB\" was not injected: check your FXML file 'Sliders.fxml'.";
 
 		configureModules();
-		allSliders = new Slider[] { r1A, r1B, r2A, r2B, r3A, r3B, r4A, r4B, r5A, r5B, mxA, mxB, candleA, candleB, swA,
-				swB, ftC, bkC, pk, bz, sp };
+		allSliders = new Slider[] { r1A, r1B, r2A, r2B, r3A, r3B, r4A, r4B, r5A, r5B, mxA, mxB, candleA, candleB, swA, swB, ftC, bkC, pk, bz, sp };
 		instance = this;
 
 		// // Listen for Slider value changes
@@ -2031,8 +2030,7 @@ public class SlidersController {
 	 * @param ce
 	 * @param s
 	 */
-	public void setupCannonSliderChangeListener(ArrayList<? extends Cannon> list, ModuleGroup aB, ModuleEnum me,
-			CannonEnum ce, Slider s, Slider paired) {
+	public void setupCannonSliderChangeListener(ArrayList<? extends Cannon> list, ModuleGroup aB, ModuleEnum me, CannonEnum ce, Slider s, Slider paired) {
 
 		list = aB.getCannonGroup(ce);
 		CannonSliderChangeListener<? extends Cannon> cs = new CannonSliderChangeListener<>(list, me.getModule());
@@ -2116,7 +2114,7 @@ public class SlidersController {
 				fcws.remove(f);
 			}
 		}
-		System.out.println(fcws);
+		// System.out.println(fcws);
 		// resetAllSliders();
 		Iterator<FCW> it = fcws.iterator();
 		while (it.hasNext()) {

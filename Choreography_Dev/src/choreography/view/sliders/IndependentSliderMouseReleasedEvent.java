@@ -48,39 +48,36 @@ import choreography.io.FCWLib;
 import choreography.model.cannon.CannonEnum;
 import choreography.model.fcw.FCW;
 import choreography.view.music.MusicPaneController;
-import choreography.view.sim.FountainSimController;
 import choreography.view.timeline.TimelineController;
 
 /**
  *
  * @author elementsking
  */
-public class IndependentSliderMouseReleasedEvent implements EventHandler<MouseEvent>{
-    
-    private final CannonEnum cannonType;
-    private final IndependentCannonSliderChangeListener icscl;
-    
-    /**
-     *
-     * @param type
-     * @param icscl
-     */
-    public IndependentSliderMouseReleasedEvent(CannonEnum type, IndependentCannonSliderChangeListener icscl) {
-        this.cannonType = type;
-        this.icscl = icscl;
-    }
+public class IndependentSliderMouseReleasedEvent implements EventHandler<MouseEvent> {
 
-    @Override
-    public void handle(MouseEvent event) {
-//        ChoreographyController.getInstance().stopSliderTimer();
-//        ChoreographyController.getInstance().stopTimelineTimer();
-        String[] actions = new String[]{Integer.toString(icscl.getLastNumber()), cannonType.name()};
-        System.out.println(cannonType);
-        FCW f = FCWLib.getInstance().getFCW(cannonType.name(), actions);
-        System.out.println(f.toString());
-        TimelineController.getInstance().getTimeline().setWaterFcwAtPoint(
-                MusicPaneController.getInstance().getTenthsTime(), f);
-        FountainSimController.getInstance().acceptFcw(f);
-    }
+	private final CannonEnum cannonType;
+	private final IndependentCannonSliderChangeListener icscl;
+
+	/**
+	 *
+	 * @param type
+	 * @param icscl
+	 */
+	public IndependentSliderMouseReleasedEvent(CannonEnum type, IndependentCannonSliderChangeListener icscl) {
+		this.cannonType = type;
+		this.icscl = icscl;
+	}
+
+	@Override
+	public void handle(MouseEvent event) {
+		// ChoreographyController.getInstance().stopSliderTimer();
+		// ChoreographyController.getInstance().stopTimelineTimer();
+		String[] actions = new String[] { Integer.toString(icscl.getLastNumber()), cannonType.name() };
+		System.out.println(cannonType);
+		FCW f = FCWLib.getInstance().getFCW(cannonType.name(), actions);
+		// System.out.println(f.toString());
+		TimelineController.getInstance().getTimeline().setWaterFcwAtPoint(MusicPaneController.getInstance().getTenthsTime(), f);
+		// FountainSimController.getInstance().acceptFcw(f);
+	}
 }
- 
