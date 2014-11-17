@@ -254,62 +254,21 @@ public class Timeline {
 		}
 	}
 
-	private void insertIntoTimeline(SortedMap<Integer, ArrayList<FCW>> srcTimeline, Integer time, FCW currentFcw) {
+	private void insertIntoTimeline(SortedMap<Integer, ArrayList<FCW>> srcTimeline, Integer i, FCW f) {
 
-		if (srcTimeline.containsKey(time)) {
+		if (srcTimeline.containsKey(i)) {
+			for (FCW currentF : srcTimeline.get(i)) {
+				if (currentF.equals(f)) {
 
-			// ArrayList<FCW> newFcwList = srcTimeline.get(time);
-			//
-			// for (int g = 0; g < newFcwList.size(); g++) {
-			// if ((newFcwList.get(g).getAddr() == currentFcw.getAddr()) &&
-			// fcwAlreadyAdded(newFcwList.get(g), currentFcw)) {
-			// System.out.println("removed");
-			// newFcwList.remove(g);
-			// newFcwList.add(currentFcw);
-			// break;
-			// }
-			// }
-
+				}
+			}
+			srcTimeline.get(i).add(f);
 		} else {
-			ArrayList<FCW> newFcwList = new ArrayList<FCW>();
-			newFcwList.add(currentFcw);
-
-			// // until time 1 is reached
-			// for (int j = time; j > 1; j--) {
-			//
-			// if (srcTimeline.containsKey(j)) {
-			// ArrayList<FCW> oldFcwList = srcTimeline.get(j);
-			// if (!oldFcwList.isEmpty()) {
-			// for (FCW oldFcw : oldFcwList) {
-			//
-			// if (!newFcwList.isEmpty()) {
-			//
-			// boolean lock = true;
-			// for (int g = 0; g < newFcwList.size(); g++) {
-			// if ((newFcwList.get(g).getAddr() == oldFcw.getAddr()) &&
-			// fcwAlreadyAdded(newFcwList.get(g), oldFcw)) {
-			//
-			// lock = false;
-			// break;
-			//
-			// }
-			// }
-			// // if loke == flase then this item is already in
-			// // the timeline
-			// if (lock) {
-			// newFcwList.add(oldFcw);
-			// }
-			// } else {
-			// newFcwList.add(oldFcw);
-			// }
-			// }
-			// }
-			// }
-			// }
-
-			srcTimeline.put(time, newFcwList);
-
+			ArrayList<FCW> newFcw = new ArrayList<FCW>();
+			newFcw.add(f);
+			srcTimeline.put(i, newFcw);
 		}
+
 	}
 
 	private boolean fcwAlreadyAdded(FCW newFcw, FCW oldFcw) {
@@ -385,9 +344,14 @@ public class Timeline {
 
 	public void sendTimelineInstanceToSliders(int time) {
 		// if(waterTimeline.containsKey(time)) {
+		int closestKey = 0;
 		ConcurrentSkipListMap<Integer, ArrayList<FCW>> waterTimeline = (ConcurrentSkipListMap<Integer, ArrayList<FCW>>) getWaterTimeline();
-		Integer closestKey = waterTimeline.floorKey(time);
-		SlidersController.getInstance().setSlidersWithFcw(waterTimeline.get(closestKey));
+		if (time == 0) {
+			closestKey = time;
+		} else if (!waterTimeline.isEmpty()) {
+			closestKey = waterTimeline.floorKey(time);
+			SlidersController.getInstance().setSlidersWithFcw(waterTimeline.get(closestKey));
+		}
 		// }
 
 	}
@@ -396,11 +360,12 @@ public class Timeline {
 		// if(waterTimeline.containsKey(time)) {
 		int closestKey = 0;
 		ConcurrentSkipListMap<Integer, ArrayList<FCW>> waterTimeline = (ConcurrentSkipListMap<Integer, ArrayList<FCW>>) getWaterTimeline();
-		closestKey = waterTimeline.floorKey(time);
 		if (time == 0) {
 			closestKey = time;
+		} else if (!waterTimeline.isEmpty()) {
+			closestKey = waterTimeline.floorKey(time);
+			FountainSimController.getInstance().drawFcw(waterTimeline.get(closestKey));
 		}
-		FountainSimController.getInstance().drawFcw(waterTimeline.get(closestKey));
 
 	}
 

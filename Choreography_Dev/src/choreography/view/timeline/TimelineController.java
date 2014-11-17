@@ -18,13 +18,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
-import javafx.scene.control.ComboBox;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
@@ -115,11 +115,9 @@ public class TimelineController implements Initializable {
 	MenuItem waterCopy = new MenuItem("Copy");
 	MenuItem waterPaste = new MenuItem("Paste");
 	MenuItem waterSelect = new MenuItem("Select");
-	
-	
-	
-	ObservableList<String> options1 = FXCollections.observableArrayList(".10",".20",".30",".40",".50",".60",".70",".80",".90","1.0");
-	ObservableList<String> options2 = FXCollections.observableArrayList(".90",".80",".70",".60",".50",".40",".30",".20",".10","0.0");
+
+	ObservableList<String> options1 = FXCollections.observableArrayList(".10", ".20", ".30", ".40", ".50", ".60", ".70", ".80", ".90", "1.0");
+	ObservableList<String> options2 = FXCollections.observableArrayList(".90", ".80", ".70", ".60", ".50", ".40", ".30", ".20", ".10", "0.0");
 	ComboBox<String> fadeUpComboBox = new ComboBox<String>(options1);
 	ComboBox<String> fadeDownComboBox = new ComboBox<String>(options2);
 
@@ -211,7 +209,7 @@ public class TimelineController implements Initializable {
 		// setWaterGridPane();
 		instance = this;
 		initializeTimelines();
-		
+
 		fadeUpMenuItem.setGraphic(fadeUpComboBox);
 		fadeDownMenuItem.setGraphic(fadeDownComboBox);
 		fadeUp.getItems().add(fadeUpMenuItem);
@@ -223,34 +221,11 @@ public class TimelineController implements Initializable {
 		lightCM.getItems().add(fadeUp);
 		lightCM.getItems().add(fadeDown);
 
-		// waterCM.getItems().add(waterCopy);
-		// waterCM.getItems().add(waterPaste);
-
 		lightCut.setDisable(true);
 		lightCopy.setDisable(true);
 		lightPaste.setDisable(true);
 		fadeUp.setDisable(true);
 		fadeDown.setDisable(true);
-
-		// waterCopy.setDisable(true);
-		// waterPaste.setDisable(true);
-		//
-		// waterCopy.setOnAction(new EventHandler<ActionEvent>() {
-		// @Override
-		// public void handle(ActionEvent event) {
-		// waterPaste.setDisable(false);
-		// System.out.println(copyAL.toString());
-		// waterCopy.setDisable(true);
-		// }
-		// });
-		//
-		// waterPaste.setOnAction(new EventHandler<ActionEvent>() {
-		// @Override
-		// public void handle(ActionEvent event) {
-		// copyWaterRec = oldRec;
-		// waterRecArray[copyWaterLocation].setFill(copyWaterRec.getFill());
-		// }
-		// });
 
 		lightCut.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -377,25 +352,25 @@ public class TimelineController implements Initializable {
 				 */
 			}
 		});
-		
+
 		fadeUpComboBox.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				double interval = Double.parseDouble((String)fadeUpComboBox.getValue()) / ((endTimeIndex - startTimeIndex) + 1);
-				for(int i = startTimeIndex; i <= endTimeIndex; i++){
-					for(int j = startLabelIndex; j <= endLabelIndex; j++){
+				double interval = Double.parseDouble((String) fadeUpComboBox.getValue()) / ((endTimeIndex - startTimeIndex) + 1);
+				for (int i = startTimeIndex; i <= endTimeIndex; i++) {
+					for (int j = startLabelIndex; j <= endLabelIndex; j++) {
 						lightRecArray[i][j].setOpacity(interval * ((i - startTimeIndex) + 1));
 					}
 				}
 			}
 		});
-		
+
 		fadeDownComboBox.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				double interval = (1 - Double.parseDouble((String)fadeDownComboBox.getValue())) / ((endTimeIndex - startTimeIndex) + 1);
-				for(int i = startTimeIndex; i <= endTimeIndex; i++){
-					for(int j = startLabelIndex; j <= endLabelIndex; j++){
+				double interval = (1 - Double.parseDouble((String) fadeDownComboBox.getValue())) / ((endTimeIndex - startTimeIndex) + 1);
+				for (int i = startTimeIndex; i <= endTimeIndex; i++) {
+					for (int j = startLabelIndex; j <= endLabelIndex; j++) {
 						lightRecArray[i][j].setOpacity(1 - (interval * (i - startTimeIndex)));
 					}
 				}
@@ -601,11 +576,11 @@ public class TimelineController implements Initializable {
 							pasteTimeIndex = timeIndexConst;
 							pasteLabelIndex = labelIndexConst;
 
-						}else if(ChoreographyController.getInstance().getShiftPressed()){
-							for(int i = startTimeIndex; i <= endTimeIndex; i++){
-								for(int j = startLabelIndex; j <= endLabelIndex; j++){
+						} else if (ChoreographyController.getInstance().getShiftPressed()) {
+							for (int i = startTimeIndex; i <= endTimeIndex; i++) {
+								for (int j = startLabelIndex; j <= endLabelIndex; j++) {
 									lightRecArray[i][j].setStroke(null);
-									//lightRecArray[i][j].setOpacity(1);
+									// lightRecArray[i][j].setOpacity(1);
 								}
 							}
 							lightCut.setDisable(true);
@@ -614,15 +589,15 @@ public class TimelineController implements Initializable {
 							fadeDown.setDisable(true);
 							lightRecArray[timeIndexConst][labelIndexConst].setStroke(Color.BLACK);
 							lightRecArray[timeIndexConst][labelIndexConst].setStrokeWidth(2);
-							//lightRecArray[timeIndexConst][labelIndexConst].setOpacity(.50);
-							
+							// lightRecArray[timeIndexConst][labelIndexConst].setOpacity(.50);
+
 							startTimeIndex = timeIndexConst;
 							startLabelIndex = labelIndexConst;
-						}else{
-							for(int i = startTimeIndex; i <= endTimeIndex; i++){
-								for(int j = startLabelIndex; j <= endLabelIndex; j++){
+						} else {
+							for (int i = startTimeIndex; i <= endTimeIndex; i++) {
+								for (int j = startLabelIndex; j <= endLabelIndex; j++) {
 									lightRecArray[i][j].setStroke(null);
-									//lightRecArray[i][j].setOpacity(1);
+									// lightRecArray[i][j].setOpacity(1);
 								}
 							}
 							lightCut.setDisable(true);
@@ -637,11 +612,11 @@ public class TimelineController implements Initializable {
 				});
 
 				lightRecArray[timeIndex][labelIndex].setOnDragDetected((MouseEvent e) -> {
-					if(ChoreographyController.getInstance().getShiftPressed()){
-						//lightRecArray[timeIndexConst][labelIndexConst].setOpacity(.50);
+					if (ChoreographyController.getInstance().getShiftPressed()) {
+						// lightRecArray[timeIndexConst][labelIndexConst].setOpacity(.50);
 						lightRecArray[timeIndexConst][labelIndexConst].setStroke(Color.BLACK);
 						lightRecArray[timeIndexConst][labelIndexConst].setStrokeWidth(2);
-						//lightRecArray[i][j].setOpacity(1);
+						// lightRecArray[i][j].setOpacity(1);
 					}
 
 					lightRecArray[timeIndexConst][labelIndexConst].startFullDrag();
@@ -650,36 +625,39 @@ public class TimelineController implements Initializable {
 				// continues and ends the drag event
 				lightRecArray[timeIndex][labelIndex].setOnMouseDragOver((MouseEvent e) -> {
 					if (ChoreographyController.getInstance().getShiftPressed()) {
-						if(timeIndexConst >= startTimeIndex && labelIndexConst >= startLabelIndex){
-							if(timeIndexConst < endTimeIndex){
-								for(int i = 0; i <= endLabelIndex - startLabelIndex; i++){
-									//lightRecArray[endTimeIndex][startLabelIndex + i].setOpacity(1);
-									lightRecArray[endTimeIndex][startLabelIndex + i].setStroke(null);
-								}
-							}
-							if(labelIndexConst < endLabelIndex){
-								for(int i = 0; i <= endTimeIndex - startTimeIndex; i++){
-									//lightRecArray[startTimeIndex + i][endLabelIndex].setOpacity(1);
-									lightRecArray[startTimeIndex + i][endLabelIndex].setStroke(null);
-								}
-							}
-							endTimeIndex = timeIndexConst;
-							endLabelIndex= labelIndexConst;
-							for(int i = 0; i <= endTimeIndex - startTimeIndex; i++){
-								for(int j = 0; j <= endLabelIndex - startLabelIndex; j++){
-									//lightRecArray[startTimeIndex + i][startLabelIndex + j].setOpacity(.50);
-									lightRecArray[startTimeIndex + i][startLabelIndex + j].setStroke(Color.BLACK);
-									lightRecArray[startTimeIndex + i][startLabelIndex + j].setStrokeWidth(2);
-								}
-							}
-						}
-					} else {
-						if (labelIndexConst == startRow) {
-							// lightRecArray[timeIndexConst][labelIndexConst].setOpacity(1);
-						lightRecArray[timeIndexConst][labelIndexConst].setFill(ColorPaletteModel.getInstance().getSelectedColor());
+						if (timeIndexConst >= startTimeIndex && labelIndexConst >= startLabelIndex) {
+							if (timeIndexConst < endTimeIndex) {
+								for (int i = 0; i <= endLabelIndex - startLabelIndex; i++) {
+									// lightRecArray[endTimeIndex][startLabelIndex
+									// + i].setOpacity(1);
+						lightRecArray[endTimeIndex][startLabelIndex + i].setStroke(null);
 					}
 				}
-			})	;
+				if (labelIndexConst < endLabelIndex) {
+					for (int i = 0; i <= endTimeIndex - startTimeIndex; i++) {
+						// lightRecArray[startTimeIndex +
+						// i][endLabelIndex].setOpacity(1);
+						lightRecArray[startTimeIndex + i][endLabelIndex].setStroke(null);
+					}
+				}
+				endTimeIndex = timeIndexConst;
+				endLabelIndex = labelIndexConst;
+				for (int i = 0; i <= endTimeIndex - startTimeIndex; i++) {
+					for (int j = 0; j <= endLabelIndex - startLabelIndex; j++) {
+						// lightRecArray[startTimeIndex + i][startLabelIndex +
+						// j].setOpacity(.50);
+						lightRecArray[startTimeIndex + i][startLabelIndex + j].setStroke(Color.BLACK);
+						lightRecArray[startTimeIndex + i][startLabelIndex + j].setStrokeWidth(2);
+					}
+				}
+			}
+		} else {
+			if (labelIndexConst == startRow) {
+				// lightRecArray[timeIndexConst][labelIndexConst].setOpacity(1);
+				lightRecArray[timeIndexConst][labelIndexConst].setFill(ColorPaletteModel.getInstance().getSelectedColor());
+			}
+		}
+	})			;
 
 				lightRecArray[timeIndex][labelIndex].setOnMouseDragReleased((MouseEvent e) -> {
 					if (!ChoreographyController.getInstance().getShiftPressed()) {
@@ -746,12 +724,10 @@ public class TimelineController implements Initializable {
 						waterCM.show(waterRecArray[testI], me.getScreenX(), me.getScreenY());
 					}
 
-					// System.out.println("Col " + (testI));
 					Duration duration = MusicPaneController.getInstance().getMediaPlayer().getTotalDuration();
 					MusicPaneController.getInstance().getMediaPlayer().seek(Duration.seconds((((double) testI + 1) / 10)));
 
 					// waterRecArray[testI].setFill(Color.LIGHTBLUE);
-					// System.out.println(timeline.getActionsAtTime(testI));
 
 					// if (!oldRecHasValue){ //aka oldRed does not have a value
 					// oldRec = waterRecArray[testI];

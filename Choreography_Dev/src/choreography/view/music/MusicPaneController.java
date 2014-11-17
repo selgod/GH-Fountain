@@ -148,9 +148,7 @@ public class MusicPaneController {
 	// Handler for Button[Button[id=null, styleClass=button]] onAction
 	@FXML
 	void playSong(ActionEvent event) {
-		if (mediaPlayer.statusProperty().getValue() == Status.PAUSED
-				|| mediaPlayer.statusProperty().getValue() == Status.STOPPED
-				|| mediaPlayer.statusProperty().getValue() == Status.READY) {
+		if (mediaPlayer.statusProperty().getValue() == Status.PAUSED || mediaPlayer.statusProperty().getValue() == Status.STOPPED || mediaPlayer.statusProperty().getValue() == Status.READY) {
 			mediaPlayer.play();
 			FountainSimController.getInstance().playLeftSweep();
 			FountainSimController.getInstance().playRightSweep();
@@ -305,8 +303,7 @@ public class MusicPaneController {
 			// songProgress.setText(
 			// f.format((mediaPlayer.getTotalDuration().toSeconds() -
 			// mediaPlayer.getCurrentTime().toSeconds())) + "s");
-			songProgress.setText(f.format(mediaPlayer.getCurrentTime().toSeconds()) + "/"
-					+ f.format(mediaPlayer.getTotalDuration().toSeconds()));
+			songProgress.setText(f.format(mediaPlayer.getCurrentTime().toSeconds()) + "/" + f.format(mediaPlayer.getTotalDuration().toSeconds()));
 			duration = mediaPlayer.getMedia().getDuration();
 			// int currTime = (int)mediaPlayer.getCurrentTime().toSeconds()*10;
 			// FountainSimController.getInstance().updateColors(currTime);
@@ -384,7 +381,6 @@ public class MusicPaneController {
 		// double inter = wholeTime * 10;
 		// int seconds = (int) inter;
 		int tenths = (int) wholeTime;
-		// System.out.println(wholeTime + " " + tenths);
 		return tenths;
 	}
 

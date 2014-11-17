@@ -76,7 +76,6 @@ public class IndependentSliderMouseReleasedEvent implements EventHandler<MouseEv
 		String[] actions = new String[] { Integer.toString(icscl.getLastNumber()), cannonType.name() };
 		System.out.println(cannonType);
 		FCW f = FCWLib.getInstance().getFCW(cannonType.name(), actions);
-		// System.out.println(f.toString());
 		TimelineController.getInstance().getTimeline().setWaterFcwAtPoint(MusicPaneController.getInstance().getTenthsTime(), f);
 		// FountainSimController.getInstance().acceptFcw(f);
 	}

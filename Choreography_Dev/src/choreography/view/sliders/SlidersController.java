@@ -253,7 +253,6 @@ public class SlidersController {
 		// kv29, kv30, kv31, kv32);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 
@@ -328,7 +327,6 @@ public class SlidersController {
 		// kv14, kv15, kv16, kv17, kv18, kv19, kv20);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 
@@ -559,7 +557,6 @@ public class SlidersController {
 		// kv41, kv42, kv43, kv44, kv45, kv46, kv47, kv48);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 		//
@@ -736,7 +733,6 @@ public class SlidersController {
 		// kv41, kv42);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 
@@ -765,7 +761,6 @@ public class SlidersController {
 		// kv3, kv4);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 		//
@@ -794,7 +789,6 @@ public class SlidersController {
 		// kv3);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 		//
@@ -823,7 +817,6 @@ public class SlidersController {
 		// kv3, kv4);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 		//
@@ -852,7 +845,6 @@ public class SlidersController {
 		// kv3);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 		//
@@ -881,7 +873,6 @@ public class SlidersController {
 		// kv3, kv4);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 		//
@@ -910,7 +901,6 @@ public class SlidersController {
 		// kv3);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 		//
@@ -939,7 +929,6 @@ public class SlidersController {
 		// kv3, kv4);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 		//
@@ -968,7 +957,6 @@ public class SlidersController {
 		// kv3);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 		//
@@ -997,7 +985,6 @@ public class SlidersController {
 		// kv3, kv4);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 		//
@@ -1023,7 +1010,6 @@ public class SlidersController {
 		// kv3);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 
@@ -1330,7 +1316,6 @@ public class SlidersController {
 		// final KeyFrame kf = new KeyFrame(Duration.millis(1000), kv1);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 
@@ -1348,7 +1333,6 @@ public class SlidersController {
 		// final KeyFrame kf = new KeyFrame(Duration.millis(1000), kv1);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 
@@ -1721,7 +1705,6 @@ public class SlidersController {
 		// kv17, kv18, kv19, kv20);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 		//
@@ -2003,7 +1986,6 @@ public class SlidersController {
 		// kv17, kv18, kv19);
 		// timeline.getKeyFrames().add(kf);
 		// timeline.play();
-		// System.out.println(newValue);
 		// }
 		// });
 
@@ -2114,7 +2096,6 @@ public class SlidersController {
 				fcws.remove(f);
 			}
 		}
-		// System.out.println(fcws);
 		// resetAllSliders();
 		Iterator<FCW> it = fcws.iterator();
 		while (it.hasNext()) {

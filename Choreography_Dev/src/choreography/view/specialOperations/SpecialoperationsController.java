@@ -105,10 +105,8 @@ public class SpecialoperationsController implements Initializable {
 
 	private RangeSlider aSweeps;
 	private RangeSlider bSweeps;
-	private String cannon;
 	private SweepsEventHandlerImpl aSweepsEventHandler;
 	private SweepsEventHandlerImpl bSweepsEventHandler;
-	private int selectedHZ;
 
 	/**
 	 * Initializes the controller class.
@@ -147,21 +145,6 @@ public class SpecialoperationsController implements Initializable {
 		ObservableList<Integer> observableList = FXCollections.observableList(list);
 		strobeFrequency.setItems(observableList);
 		strobeFrequency.getSelectionModel().select(0);
-
-		// strobeFrequency.selectionModelProperty().addListener(new
-		// ChangeListener<SingleSelectionModel<Integer>>() {
-		//
-		// @Override
-		// public void changed(
-		// ObservableValue<? extends SingleSelectionModel<Integer>> observable,
-		// SingleSelectionModel<Integer> oldValue,
-		// SingleSelectionModel<Integer> newValue) {
-		//
-		// selectedHZ = ;
-		//
-		// }
-		//
-		// });
 
 		fadeUpButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -224,48 +207,6 @@ public class SpecialoperationsController implements Initializable {
 				int mid = 3;
 				int high = 2;
 
-				// Stop[] stops1 = new Stop[] { new Stop(0, Color.BLACK), new
-				// Stop(.65, (Color)
-				// ColorPaletteController.getInstance().getSelectedColor())};
-				// RadialGradient rad1 = new RadialGradient(0, .1, 12.5, 12.5,
-				// 20, false, CycleMethod.NO_CYCLE, stops1);
-
-				// Stop[] stops = new Stop[] { new Stop(.5, Color.LIGHTGRAY),
-				// new Stop(1, (Color)
-				// ColorPaletteController.getInstance().getSelectedColor())};
-				// LinearGradient linearGradient_Med
-				// = LinearGradientBuilder.create()
-				// .startX(7)
-				// .startY(7)
-				// .endX(0)
-				// .endY(7)
-				// .proportional(false)
-				// .cycleMethod(CycleMethod.REPEAT)
-				// .stops(stops)
-				// .build();
-				//
-				// LinearGradient linearGradient_Low
-				// = LinearGradientBuilder.create()
-				// .startX(13)
-				// .startY(13)
-				// .endX(0)
-				// .endY(13)
-				// .proportional(false)
-				// .cycleMethod(CycleMethod.REPEAT)
-				// .stops(stops)
-				// .build();
-				//
-				// LinearGradient linearGradient_High
-				// = LinearGradientBuilder.create()
-				// .startX(6)
-				// .startY(6)
-				// .endX(0)
-				// .endY(6)
-				// .proportional(false)
-				// .cycleMethod(CycleMethod.REPEAT)
-				// .stops(stops)
-				// .build();
-
 				if (strobeFrequency.getSelectionModel().getSelectedItem() <= 85) {
 					for (int i = 0; i < colAL.size(); i++) {
 						if (i % low == 0) {
@@ -296,17 +237,6 @@ public class SpecialoperationsController implements Initializable {
 				ArrayList<Integer> colAL = TimelineController.getInstance().getColAL();
 				ArrayList<Integer> rowAL = TimelineController.getInstance().getRowAL();
 
-				// ArrayList<Integer> colALcopy = new ArrayList<>();
-				// colALcopy.addAll(colAL);
-				// ArrayList<Integer> rowALcopy = new ArrayList<>();
-				// rowALcopy.addAll(rowAL);
-				//
-				// TimelineController.getInstance().clearAllAL();
-				//
-				// double size = colALcopy.size();
-				// double opScale = 1/size;
-				// double opacity = 1;
-				//
 				if (ChoreographyController.getInstance().getIsSelected()) { // if
 																			// deleting
 																			// light
@@ -323,12 +253,6 @@ public class SpecialoperationsController implements Initializable {
 					int time = MusicPaneController.getInstance().getTenthsTime();
 					TimelineController.getInstance().delete(time);
 				}
-				// if(MusicPaneController.getInstance().getWaterPane().isFocused()){
-				// // double time =
-				// MusicPaneController.getInstance().getMediaPlayer().getCurrentTime();
-				//
-				// }
-
 			}
 		});
 
@@ -437,32 +361,27 @@ public class SpecialoperationsController implements Initializable {
 				TimelineController.getInstance().getTimeline().setWaterFcwAtPoint(tenths, f);
 				TimelineController.getInstance().rePaintWaterTimeline();
 				ChoreographyController.getInstance().setfcwOutput(f.toString());
-				System.out.println("Here");
 			}
 		});
 
 		initializeSweepSpeedSelectors();
 
 		instance = this;
-
-		// TODO Add Fadeup
-		// TODO Add Fadedown
-		// TODO Add Strobe
-		// TODO Modify
 	}
 
 	public void initializeSweepSpeedSelectors() {
 		aSpeedSelector.getItems().clear();
 		bSpeedSelector.getItems().clear();
 		aSpeedSelector.getItems().addAll(FCWLib.getInstance().getSweepSpeeds());
+		aSpeedSelector.getSelectionModel().select(4);
 		bSpeedSelector.setVisible(false);
 		bSpeedSelector.getItems().addAll(FCWLib.getInstance().getSweepSpeeds());
+		bSpeedSelector.getSelectionModel().select(4);
 	}
 
 	public void setSweeps(FCW f) {
 		String[] actions = FCWLib.getInstance().reverseLookupData(f);
 
-		// System.out.println(Arrays.toString(actions));
 		switch (f.getAddr()) {
 		case 33:
 			parallelSweeps.setSelected(true);
@@ -588,30 +507,6 @@ public class SpecialoperationsController implements Initializable {
 		} else {
 			c.getSelectionModel().select(s);
 		}
-		// if(s.equals("LARGO")) {
-		// c.getSelectionModel().select(s);
-		// }
-		// if(s.equals("ADAGIO")) {
-		//
-		// }
-		// if(s.equals("ANDANTE")) {
-		//
-		// }
-		// if(s.equals("MODERATO")) {
-		//
-		// }
-		// if(s.equals("ALLEGRETO")) {
-		//
-		// }
-		// if(s.equals("ALLEGRO")) {
-		//
-		// }
-		// if(s.equals("PRESTO")) {
-		//
-		// }
-		// if(s.equals("PLAYPAUSE")) {
-		//
-		// }
 	}
 
 	private void setSweeps(RangeSlider slider, int low, int high) {
@@ -676,9 +571,7 @@ public class SpecialoperationsController implements Initializable {
 			FCW f;
 			int low = (int) slider.getLowValue();
 			int high = (int) slider.getHighValue();
-			// System.out.println(low + " " + high);
 			action = buildSweepLimitString(low, actions, high);
-			// System.out.println(action);
 			if (opposed) {
 				f = FCWLib.getInstance().getFCW("SWEEPLIMITAB", new String[] { action });
 			} else
