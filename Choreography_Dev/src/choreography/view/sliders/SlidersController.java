@@ -158,7 +158,8 @@ public class SlidersController {
 		assert swB != null : "fx:id=\"swB\" was not injected: check your FXML file 'Sliders.fxml'.";
 
 		configureModules();
-		allSliders = new Slider[] { r1A, r1B, r2A, r2B, r3A, r3B, r4A, r4B, r5A, r5B, mxA, mxB, candleA, candleB, swA, swB, ftC, bkC, pk, bz, sp };
+		allSliders = new Slider[] { r1A, r1B, r2A, r2B, r3A, r3B, r4A, r4B, r5A, r5B, mxA, mxB, candleA, candleB, swA,
+				swB, ftC, bkC, pk, bz, sp };
 		instance = this;
 
 		// // Listen for Slider value changes
@@ -2012,7 +2013,8 @@ public class SlidersController {
 	 * @param ce
 	 * @param s
 	 */
-	public void setupCannonSliderChangeListener(ArrayList<? extends Cannon> list, ModuleGroup aB, ModuleEnum me, CannonEnum ce, Slider s, Slider paired) {
+	public void setupCannonSliderChangeListener(ArrayList<? extends Cannon> list, ModuleGroup aB, ModuleEnum me,
+			CannonEnum ce, Slider s, Slider paired) {
 
 		list = aB.getCannonGroup(ce);
 		CannonSliderChangeListener<? extends Cannon> cs = new CannonSliderChangeListener<>(list, me.getModule());
@@ -2091,7 +2093,16 @@ public class SlidersController {
 	}
 
 	public synchronized void setSlidersWithFcw(ArrayList<FCW> fcws) {
-		for (FCW f : fcws) {
+		// for (FCW f : fcws) {
+		// if (!f.getIsWater()) {
+		// fcws.remove(f);
+		// }
+		// }
+
+		// Concurrency issues with for each loops -> therefore must use normal
+		// for loop
+		for (int g = 0; g < fcws.size(); g++) {
+			FCW f = fcws.get(g);
 			if (!f.getIsWater()) {
 				fcws.remove(f);
 			}

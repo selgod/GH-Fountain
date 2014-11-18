@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map.Entry;
+import java.util.NavigableSet;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 //import java.util.logging.Logger;
@@ -28,6 +29,7 @@ public class Timeline {
 	private int time;
 	private int numChannels;
 	private ConcurrentSkipListMap<Integer, ArrayList<FCW>> timeline;
+	private ConcurrentSkipListMap<Integer, ArrayList<FCW>> timelineStateful;
 	// private final ConcurrentSkipListMap<Integer, ArrayList<FCW>>
 	// waterTimeline;
 	// private ConcurrentSkipListMap<Integer, ArrayList<FCW>> lightTimeline;
@@ -37,6 +39,7 @@ public class Timeline {
 
 	public Timeline() {
 		timeline = new ConcurrentSkipListMap<Integer, ArrayList<FCW>>();
+		timelineStateful = new ConcurrentSkipListMap<Integer, ArrayList<FCW>>();
 		// waterTimeline = new ConcurrentSkipListMap<>();
 		// lightTimeline = new ConcurrentSkipListMap<>();
 		channelColorMap = new ConcurrentSkipListMap<Integer, SortedMap<Integer, Integer>>();
@@ -123,12 +126,59 @@ public class Timeline {
 		return lightTimeline;
 	}
 
+	private void fillStatefulTimeline() {
+		NavigableSet<Integer> keySet = timeline.keySet();
+		Iterator<Integer> iterator = keySet.iterator();
+		while (iterator.hasNext()) {
+			Integer next = iterator.next();
+			ArrayList<FCW> statelessFcwList = timeline.get(next);
+			ArrayList<FCW> statefulFCWList = new ArrayList<FCW>(statelessFcwList);
+			checkStatefulTimeline(next, statefulFCWList);
+
+		}
+	}
+
+	private void checkStatefulTimeline(Integer time, ArrayList<FCW> newFcwList) {
+
+		if (timelineStateful.isEmpty()) {
+			timelineStateful.put(time, newFcwList);
+		} else {
+			// until time 1 is reached
+			for (int j = time; j > 1; j--) {
+
+				if (timelineStateful.containsKey(j)) {
+					ArrayList<FCW> oldFcwList = timelineStateful.get(j);
+
+					for (FCW oldFcw : oldFcwList) {
+
+						boolean lock = true;
+						for (int g = 0; g < newFcwList.size(); g++) {
+							if ((newFcwList.get(g).getAddr() == oldFcw.getAddr())
+									&& fcwAlreadyAdded(newFcwList.get(g), oldFcw)) {
+								lock = false;
+								break;
+
+							}
+						}
+						// if loke == flase then this item is already in
+						// the timeline
+						if (lock) {
+							newFcwList.add(oldFcw);
+						}
+					}
+				}
+			}
+			timelineStateful.put(time, newFcwList);
+		}
+	}
+
 	/**
 	 * @param timeline
 	 *            the timeline to set
 	 */
 	public void setTimeline(ConcurrentSkipListMap<Integer, ArrayList<FCW>> timeline) {
 		this.timeline = timeline;
+		fillStatefulTimeline();
 		/*
 		 * timeline.keySet().stream().forEach((i) -> {
 		 * timeline.get(i).stream().forEach((f) -> { if (f.getIsWater()) {
@@ -214,6 +264,8 @@ public class Timeline {
 				}
 			}
 		}
+
+		insertIntoTimelineStateful(timelineStateful, pointInTime, f);
 		insertIntoTimeline(timeline, pointInTime, f);
 
 		TimelineController.getInstance().rePaintWaterTimeline();
@@ -235,7 +287,8 @@ public class Timeline {
 				if (channelMap.get(channel).get(tenth) != 0) {
 					start = tenth;
 					color = channelMap.get(channel).get(tenth);
-					Iterator<Entry<Integer, Integer>> it = channelMap.get(channel).tailMap(start + 1).entrySet().iterator();
+					Iterator<Entry<Integer, Integer>> it = channelMap.get(channel).tailMap(start + 1).entrySet()
+							.iterator();
 					while (it.hasNext()) {
 						Entry<Integer, Integer> timeColor = it.next();
 						if (timeColor.getValue() == 0 && timeColor.getKey() != start) {
@@ -269,6 +322,63 @@ public class Timeline {
 			srcTimeline.put(i, newFcw);
 		}
 
+	}
+
+	private void insertIntoTimelineStateful(SortedMap<Integer, ArrayList<FCW>> srcTimeline, Integer time, FCW currentFcw) {
+
+		if (srcTimeline.containsKey(time)) {
+
+			ArrayList<FCW> newFcwList = srcTimeline.get(time);
+
+			for (int g = 0; g < newFcwList.size(); g++) {
+				if ((newFcwList.get(g).getAddr() == currentFcw.getAddr())
+						&& fcwAlreadyAdded(newFcwList.get(g), currentFcw)) {
+					System.out.println("removed");
+					newFcwList.remove(g);
+					newFcwList.add(currentFcw);
+					break;
+				}
+			}
+
+		} else {
+			ArrayList<FCW> newFcwList = new ArrayList<FCW>();
+			newFcwList.add(currentFcw);
+
+			// until time 1 is reached
+			for (int j = time; j > 1; j--) {
+
+				if (srcTimeline.containsKey(j)) {
+					ArrayList<FCW> oldFcwList = srcTimeline.get(j);
+					if (!oldFcwList.isEmpty()) {
+						for (FCW oldFcw : oldFcwList) {
+
+							if (!newFcwList.isEmpty()) {
+
+								boolean lock = true;
+								for (int g = 0; g < newFcwList.size(); g++) {
+									if ((newFcwList.get(g).getAddr() == oldFcw.getAddr())
+											&& fcwAlreadyAdded(newFcwList.get(g), oldFcw)) {
+
+										lock = false;
+										break;
+
+									}
+								}
+								// if loke == flase then this item is already in
+								// the timeline
+								if (lock) {
+									newFcwList.add(oldFcw);
+								}
+							} else {
+								newFcwList.add(oldFcw);
+							}
+						}
+					}
+				}
+			}
+
+			srcTimeline.put(time, newFcwList);
+		}
 	}
 
 	private boolean fcwAlreadyAdded(FCW newFcw, FCW oldFcw) {
@@ -350,7 +460,8 @@ public class Timeline {
 			closestKey = time;
 		} else if (!waterTimeline.isEmpty()) {
 			closestKey = waterTimeline.floorKey(time);
-			SlidersController.getInstance().setSlidersWithFcw(waterTimeline.get(closestKey));
+			// SlidersController.getInstance().setSlidersWithFcw(waterTimeline.get(closestKey));
+			SlidersController.getInstance().setSlidersWithFcw(timelineStateful.get(closestKey));
 		}
 		// }
 
