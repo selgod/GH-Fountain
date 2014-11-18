@@ -8,15 +8,15 @@ package choreography.model.cannon;
  *
  */
 public class FtCurt extends IndependentCannon {
-    /**
-    * @param level
-     */
-    public FtCurt(int level) {
-            super(level);
-    }
+	/**
+	 * @param level
+	 */
+	public FtCurt(int level) {
+		super(level);
+	}
 
-    public FtCurt(int level, String name) {
-        super(level, name);
-    }
+	public FtCurt(int level, String name) {
+		super(level, name);
+	}
 
 }

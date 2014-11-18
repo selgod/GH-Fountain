@@ -56,21 +56,8 @@ public class MusicPaneController {
 	Music music2;
 	private boolean notFirst = false;
 	final DecimalFormat f = new DecimalFormat("0.0");
-
-	/**
-     *
-     */
 	public static final int H_PIXEL_SIZE = 15;
-
-	/**
-     *
-     */
 	public static final int V_PIXEL_SIZE = 15;
-	// public static final double SONG_TIME = 10;
-
-	/**
-     *
-     */
 	public static int SONG_TIME = 0;
 
 	@FXML
@@ -104,6 +91,7 @@ public class MusicPaneController {
 	@FXML
 	private ScrollPane waterTimeline, timeLabel;
 
+	@SuppressWarnings("rawtypes")
 	@FXML
 	private LineChart labelChart;
 
@@ -132,7 +120,11 @@ public class MusicPaneController {
 		resetAll();
 	}
 
-	// Handler for Button[Button[id=null, styleClass=button]] onAction
+	/**
+	 * Pauses all of the necessary elements when the pause button is pressed
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void pauseSong(ActionEvent event) {
 
@@ -145,32 +137,38 @@ public class MusicPaneController {
 		// FountainSimController.getInstance().disposeBuffer();
 	}
 
-	// Handler for Button[Button[id=null, styleClass=button]] onAction
+	/**
+	 * Resumes music playback and resumes the simulation
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void playSong(ActionEvent event) {
+
+		// Makes sure the music is noat already playing
 		if (mediaPlayer.statusProperty().getValue() == Status.PAUSED || mediaPlayer.statusProperty().getValue() == Status.STOPPED || mediaPlayer.statusProperty().getValue() == Status.READY) {
 			mediaPlayer.play();
 			FountainSimController.getInstance().playLeftSweep();
 			FountainSimController.getInstance().playRightSweep();
 			playButton.setText("Pause");
 			ChoreographyController.getInstance().startPollingTimeSliderAlgorithm();
-			// ChoreographyController.getInstance().startPollingSlidersAlgorithm();
 			ChoreographyController.getInstance().startPollingSimAlgorithm();
 			ChoreographyController.getInstance().startPollingColorAlgorithm();
-			// ChoreographyController.getInstance().startPlayingSim();
 			SlidersController.getInstance().resetAllSliders();
 		}
 
+		// Calls the pause method and updates the button text
 		if (mediaPlayer.statusProperty().getValue() == Status.PLAYING) {
 			pauseSong(event);
 			playButton.setText("Play");
-
-			// ChoreographyController.getInstance().stopSliderTimer();
-			// ChoreographyController.getInstance().stopTimelineTimer();
 		}
 	}
 
-	// Handler for Button[Button[id=null, styleClass=button]] onAction
+	/**
+	 * Stops music and simulation
+	 * 
+	 * @param event
+	 */
 	@FXML
 	private void stopSong(ActionEvent event) {
 		stopMusic();
@@ -181,12 +179,16 @@ public class MusicPaneController {
 		mediaPlayer.seek(Duration.ZERO);
 		timeSlider.setValue(0.0);
 		TimelineController.getInstance().fireSimClearEvent();
-		// FountainSimController.getInstance().disposeBuffer();
 		SlidersController.getInstance().resetAllSliders();
 		FountainSimController.getInstance().clearSweeps();
 		playButton.setText("Play");
 	}
 
+	/**
+	 * Gets needed information from the music
+	 * 
+	 * @param fileChosen
+	 */
 	private void getAllMusic(File fileChosen) {
 		music2.setName(fileChosen.getName());
 		music2.setDirectoryFile(fileChosen.getAbsolutePath());
@@ -210,9 +212,12 @@ public class MusicPaneController {
 	}
 
 	/**
-     *
-     */
+	 * Opens a music file and sets up the screen
+	 * 
+	 * @param file
+	 */
 	public void selectMusic(File file) {
+		// Checks to make sure music has not already been loaded
 		if (notFirst) {
 			mediaPlayer.dispose();
 		}
@@ -242,6 +247,12 @@ public class MusicPaneController {
 		resetButton.setDisable(true);
 	}
 
+	/**
+	 * Takes in a music file and loads it into the program. It then calculates
+	 * times and sets up the light timeline
+	 * 
+	 * @param file2
+	 */
 	public void loadMusicFile(File file2) {
 		URL url = null;
 		try {
@@ -289,8 +300,6 @@ public class MusicPaneController {
 		songName.setText(music2.getName());
 		mediaPlayer.play();
 		mediaPlayer.pause();
-		// updateProgressTimer();
-		// ChoreographyController.getInstance().startPollingTimeSliderAlgorithm();
 	}
 
 	/**
@@ -299,14 +308,8 @@ public class MusicPaneController {
 	public void updateProgress() {
 		final DecimalFormat f = new DecimalFormat("0.0");
 		try {
-			// songProgress.setText(time + "s");
-			// songProgress.setText(
-			// f.format((mediaPlayer.getTotalDuration().toSeconds() -
-			// mediaPlayer.getCurrentTime().toSeconds())) + "s");
 			songProgress.setText(f.format(mediaPlayer.getCurrentTime().toSeconds()) + "/" + f.format(mediaPlayer.getTotalDuration().toSeconds()));
 			duration = mediaPlayer.getMedia().getDuration();
-			// int currTime = (int)mediaPlayer.getCurrentTime().toSeconds()*10;
-			// FountainSimController.getInstance().updateColors(currTime);
 
 			double totalTime = mediaPlayer.getTotalDuration().toSeconds();
 			double currentTime = mediaPlayer.getCurrentTime().toSeconds();
@@ -342,7 +345,6 @@ public class MusicPaneController {
 					mediaPlayer.pause();
 					playButton.setText("Play");
 					mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100.0));
-					// mediaPlayer.play();
 				}
 			}
 		});
@@ -378,8 +380,6 @@ public class MusicPaneController {
 
 	public int getTenthsTime() {
 		double wholeTime = timeSlider.getValue() / 100 * time;
-		// double inter = wholeTime * 10;
-		// int seconds = (int) inter;
 		int tenths = (int) wholeTime;
 		return tenths;
 	}
@@ -392,6 +392,13 @@ public class MusicPaneController {
 		return music2.getName().substring(0, music2.getName().length() - 4).replaceAll("\\d*$", "");
 	}
 
+	/**
+	 * Packages the music into a file for it to be saved into a .ghmf/zip file
+	 * The only thing it does to the music is compresses it and renames it to
+	 * the same name as all of the other files contained in the archive
+	 * 
+	 * @return
+	 */
 	public FilePayload createFilePayload() {
 		try {
 			File musicFile = new File(music2.getDirectoryFile());

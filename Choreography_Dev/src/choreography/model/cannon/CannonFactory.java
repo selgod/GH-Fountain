@@ -15,9 +15,6 @@ import choreography.model.fountain.ModuleGroup;
  */
 public class CannonFactory {
 
-	/**
-     *
-     */
 	public CannonFactory() {
 
 	}
@@ -46,7 +43,7 @@ public class CannonFactory {
 		case SWEEP:
 			return new Sweep(0, "SWEEP");
 		default:
-			throw new IllegalArgumentException("e must be a Cannon subtype");
+			throw new IllegalArgumentException("Must be a Cannon subtype");
 		}
 	}
 
@@ -73,6 +70,8 @@ public class CannonFactory {
 	}
 
 	/**
+	 * Creates a module, which is a group of all lights and water. The fountain
+	 * is split into seven of these
 	 *
 	 * @param number
 	 * @return
@@ -82,6 +81,8 @@ public class CannonFactory {
 	}
 
 	/**
+	 * The seven modules are then grouped into 2 groups: A and B The modules are
+	 * grouped as follows. A, B, A, B, A, B, A
 	 *
 	 * @param aB
 	 * @return
@@ -93,7 +94,7 @@ public class CannonFactory {
 		case "B":
 			return new ModuleGroup(new Module[] { createModule(2), createModule(4), createModule(6) });
 		default:
-			throw new IllegalArgumentException("aB must be A or B");
+			throw new IllegalArgumentException("Must be A or B");
 		}
 	}
 

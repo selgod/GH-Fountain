@@ -20,111 +20,106 @@ import choreography.io.FCWLib;
 import choreography.view.timeline.TimelineController;
 
 /**
+ * Allows for custom psuedo-modules. The user can create groups of lights and
+ * water that they can use to allow easier access to features Example: Have 2
+ * light channels that control every other light
  *
  * @author cdea
  */
 public class CustomChannel {
 
-    public static void start(Stage primaryStage) {
-        primaryStage.setTitle("Select Channels to Add");
-        Group root = new Group();
-        Scene scene = new Scene(root, 400, 450, Color.WHITE);
+	public static void start(Stage primaryStage) {
 
-        // create a grid pane
-        GridPane gridpane = new GridPane();
-        gridpane.setPadding(new Insets(5));
-        gridpane.setHgap(10);
-        gridpane.setVgap(10);
+		// Creates a new window
+		primaryStage.setTitle("Select Channels to Add");
+		Group root = new Group();
+		Scene scene = new Scene(root, 400, 450, Color.WHITE);
 
-        // selectable module label
-        Label candidatesLbl = new Label("Selectable Channels");
-        GridPane.setHalignment(candidatesLbl, HPos.CENTER);
-        gridpane.add(candidatesLbl, 0, 0);
+		// create a grid pane
+		GridPane gridpane = new GridPane();
+		gridpane.setPadding(new Insets(5));
+		gridpane.setHgap(10);
+		gridpane.setVgap(10);
 
-        Label heroesLbl = new Label("Selected Channels");
-        gridpane.add(heroesLbl, 2, 0);
-        GridPane.setHalignment(heroesLbl, HPos.CENTER);
+		// selectable module label
+		Label candidatesLbl = new Label("Selectable Channels");
+		GridPane.setHalignment(candidatesLbl, HPos.CENTER);
+		gridpane.add(candidatesLbl, 0, 0);
 
-        // modules
-        final ObservableList<String> moduleList = FXCollections.observableArrayList(FCWLib.getInstance().getLightTable());
-        final ListView<String> moduleListView = new ListView<>(moduleList);
-        moduleListView.setPrefWidth(150);
-        moduleListView.setPrefHeight(350);
+		Label heroesLbl = new Label("Selected Channels");
+		gridpane.add(heroesLbl, 2, 0);
+		GridPane.setHalignment(heroesLbl, HPos.CENTER);
 
-        gridpane.add(moduleListView, 0, 1);
+		// modules
+		final ObservableList<String> moduleList = FXCollections.observableArrayList(FCWLib.getInstance().getLightTable());
+		final ListView<String> moduleListView = new ListView<>(moduleList);
+		moduleListView.setPrefWidth(150);
+		moduleListView.setPrefHeight(350);
 
-        // selected
-        final ObservableList<String> selectedList = FXCollections.observableArrayList(
-        		TimelineController.getInstance().getLabelNames());
-        final ListView<String> selectedListView = new ListView<>(selectedList);
-        selectedListView.setPrefWidth(150);
-        selectedListView.setPrefHeight(350);
+		gridpane.add(moduleListView, 0, 1);
 
-        gridpane.add(selectedListView, 2, 1);
+		// selected
+		final ObservableList<String> selectedList = FXCollections.observableArrayList(TimelineController.getInstance().getLabelNames());
+		final ListView<String> selectedListView = new ListView<>(selectedList);
+		selectedListView.setPrefWidth(150);
+		selectedListView.setPrefHeight(350);
 
+		gridpane.add(selectedListView, 2, 1);
 
-        // selected modules
-        Button sendRightButton = new Button(">");
-        sendRightButton.setOnAction(new EventHandler<ActionEvent>() {
+		// selected modules
+		Button sendRightButton = new Button(">");
+		sendRightButton.setOnAction(new EventHandler<ActionEvent>() {
 
-            public void handle(ActionEvent event) {
-                String potential = moduleListView.getSelectionModel().getSelectedItem();
-                if (potential != null) {
-                    moduleListView.getSelectionModel().clearSelection();
-                    moduleList.remove(potential);
-                    selectedList.add(potential);
-                }
-            }
-        });
+			public void handle(ActionEvent event) {
+				String potential = moduleListView.getSelectionModel().getSelectedItem();
+				if (potential != null) {
+					moduleListView.getSelectionModel().clearSelection();
+					moduleList.remove(potential);
+					selectedList.add(potential);
+				}
+			}
+		});
 
-        // deselect modules
-        Button sendLeftButton = new Button("<");
-        sendLeftButton.setOnAction(new EventHandler<ActionEvent>() {
+		// deselect modules
+		Button sendLeftButton = new Button("<");
+		sendLeftButton.setOnAction(new EventHandler<ActionEvent>() {
 
-            public void handle(ActionEvent event) {
-                String notHero = selectedListView.getSelectionModel().getSelectedItem();
-                if (notHero != null) {
-                    selectedListView.getSelectionModel().clearSelection();
-                    selectedList.remove(notHero);
-                    moduleList.add(notHero);
-                }
-            }
-        });
-        
-        Button finishButton = new Button("Finish");
-        gridpane.add(finishButton, 2, 3);
-        
-        // Finish button
-        finishButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                String[] selectedArray;
-                selectedArray = selectedListView.getItems().toArray(new String[1]);
-                
-                for(int i = 0; i < selectedArray.length;i++ ){
-                    TimelineController.getInstance().setLabelGridPane(selectedArray);
-                }
-                try {
-                    //Node  source = (Node)  ActionEvent.getSource(); 
-                    //Stage stage  = (Stage) source.getScene().getWindow();
-                    //stage.close();
-                } catch (Exception e) {
-                }
-                
-                primaryStage.close();
-            }
-        });
-        
-        
+			public void handle(ActionEvent event) {
+				String notHero = selectedListView.getSelectionModel().getSelectedItem();
+				if (notHero != null) {
+					selectedListView.getSelectionModel().clearSelection();
+					selectedList.remove(notHero);
+					moduleList.add(notHero);
+				}
+			}
+		});
 
-        VBox vbox = new VBox(5);
-        vbox.getChildren().addAll(sendRightButton,sendLeftButton);
+		Button finishButton = new Button("Finish");
+		gridpane.add(finishButton, 2, 3);
 
-        gridpane.add(vbox, 1, 1);
-        GridPane.setConstraints(vbox, 1, 1, 1, 2,HPos.CENTER, VPos.CENTER);
+		// Finish button
+		finishButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				String[] selectedArray;
+				selectedArray = selectedListView.getItems().toArray(new String[1]);
 
-        root.getChildren().add(gridpane);        
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
+				for (int i = 0; i < selectedArray.length; i++) {
+					TimelineController.getInstance().setLabelGridPane(selectedArray);
+				}
+				primaryStage.close();
+			}
+		});
+
+		// Displays the scene onto the screen
+		VBox vbox = new VBox(5);
+		vbox.getChildren().addAll(sendRightButton, sendLeftButton);
+
+		gridpane.add(vbox, 1, 1);
+		GridPane.setConstraints(vbox, 1, 1, 1, 2, HPos.CENTER, VPos.CENTER);
+
+		root.getChildren().add(gridpane);
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
 }

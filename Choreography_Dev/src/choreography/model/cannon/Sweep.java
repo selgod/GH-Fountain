@@ -9,16 +9,16 @@ package choreography.model.cannon;
  */
 public class Sweep extends Cannon {
 
-    /**
-     *
-     * @param level
-     */
-    public Sweep(int level) {
+	/**
+	 *
+	 * @param level
+	 */
+	public Sweep(int level) {
 		super(level);
 	}
 
-    Sweep(int level, String name) {
-        super(level, name);
-    }
+	Sweep(int level, String name) {
+		super(level, name);
+	}
 
 }

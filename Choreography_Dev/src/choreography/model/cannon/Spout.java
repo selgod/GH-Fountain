@@ -9,20 +9,20 @@ package choreography.model.cannon;
  */
 public class Spout extends IndependentCannon {
 
-    /**
-     * @param level
-     */
-    public Spout(int level) {
-            super(level);
-    }
+	/**
+	 * @param level
+	 */
+	public Spout(int level) {
+		super(level);
+	}
 
-    /**
-     *
-     * @param level
-     * @param name
-     */
-    public Spout(int level, String name){
-        super(level, name);
-    }
+	/**
+	 *
+	 * @param level
+	 * @param name
+	 */
+	public Spout(int level, String name) {
+		super(level, name);
+	}
 
 }

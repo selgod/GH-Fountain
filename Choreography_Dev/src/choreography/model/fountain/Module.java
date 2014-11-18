@@ -3,15 +3,15 @@
  */
 package choreography.model.fountain;
 
-import choreography.model.cannon.Sweep;
+import choreography.model.cannon.Candelabra;
+import choreography.model.cannon.Cannon;
 import choreography.model.cannon.Multi;
 import choreography.model.cannon.Ring;
-import choreography.model.cannon.Cannon;
-import choreography.model.cannon.Candelabra;
-
+import choreography.model.cannon.Sweep;
 
 /**
- * 
+ * Contains all of the water features in each module Note: Ring 5 is the most
+ * narrow ring decrementing to ring 1 being the widest
  * 
  * @author madridf
  *
@@ -26,21 +26,22 @@ public class Module {
 	private Sweep sw;
 	private Multi mx;
 	private Candelabra candle;
-	
 
 	/**
-	 * @param number A number that identifies this Module
+	 * @param number
+	 *            A number that identifies this Module
 	 * @param r1
 	 * @param r2
 	 * @param r3
 	 * @param r4
-     * @param r5
+	 * @param r5
 	 * @param sw
+	 *            Sweep
 	 * @param mx
+	 *            Multi
 	 * @param candle
 	 */
-	public Module(int number, Ring r1, Ring r2, Ring r3,
-			Ring r4, Ring r5, Multi mx, Candelabra candle, Sweep sw) {
+	public Module(int number, Ring r1, Ring r2, Ring r3, Ring r4, Ring r5, Multi mx, Candelabra candle, Sweep sw) {
 		super();
 		this.number = number;
 		this.r1 = r1;
@@ -53,15 +54,15 @@ public class Module {
 		this.candle = candle;
 	}
 
-    /**
-     *
-     * @param number
-     * @param rings
-     * @param m1
-     * @param c1
-     * @param s1
-     */
-    public Module(int number, Ring[] rings, Multi m1, Candelabra c1, Sweep s1){
+	/**
+	 *
+	 * @param number
+	 * @param rings
+	 * @param m1
+	 * @param c1
+	 * @param s1
+	 */
+	public Module(int number, Ring[] rings, Multi m1, Candelabra c1, Sweep s1) {
 		this.mx = m1;
 		this.candle = c1;
 		this.sw = s1;
@@ -72,36 +73,35 @@ public class Module {
 		r5 = rings[4];
 	}
 
-    /**
-     *
-     * @param number
-     * @param r1
-     * @param r2
-     * @param r3
-     * @param r4
-     * @param r5
-     * @param mx
-     * @param c
-     * @param sw
-     */
-    public Module(int number, Cannon r1, Cannon r2, Cannon r3, Cannon r4, 
-                Cannon r5, Cannon mx, Cannon c, Cannon sw){
-            this.number = number;
-		this.r1 = (Ring)r1;
-		this.r2 = (Ring)r2;
-		this.r3 = (Ring)r3;
-		this.r4 = (Ring)r4;
-		this.r5 = (Ring)r5;
-		this.sw = (Sweep)sw;
-		this.mx = (Multi)mx;
-		this.candle = (Candelabra)c;
-        }
+	/**
+	 *
+	 * @param number
+	 * @param r1
+	 * @param r2
+	 * @param r3
+	 * @param r4
+	 * @param r5
+	 * @param mx
+	 * @param c
+	 * @param sw
+	 */
+	public Module(int number, Cannon r1, Cannon r2, Cannon r3, Cannon r4, Cannon r5, Cannon mx, Cannon c, Cannon sw) {
+		this.number = number;
+		this.r1 = (Ring) r1;
+		this.r2 = (Ring) r2;
+		this.r3 = (Ring) r3;
+		this.r4 = (Ring) r4;
+		this.r5 = (Ring) r5;
+		this.sw = (Sweep) sw;
+		this.mx = (Multi) mx;
+		this.candle = (Candelabra) c;
+	}
 
-    /**
+	/**
      *
      */
-    public Module() {
-		
+	public Module() {
+
 	}
 
 	/**
@@ -112,7 +112,8 @@ public class Module {
 	}
 
 	/**
-	 * @param number the number to set
+	 * @param number
+	 *            the number to set
 	 */
 	protected void setNumber(int number) {
 		this.number = number;
@@ -126,7 +127,8 @@ public class Module {
 	}
 
 	/**
-	 * @param r1 the r1 to set
+	 * @param r1
+	 *            the r1 to set
 	 */
 	protected void setR1(Ring r1) {
 		this.r1 = r1;
@@ -140,7 +142,8 @@ public class Module {
 	}
 
 	/**
-	 * @param r2 the r2 to set
+	 * @param r2
+	 *            the r2 to set
 	 */
 	protected void setR2(Ring r2) {
 		this.r2 = r2;
@@ -154,7 +157,8 @@ public class Module {
 	}
 
 	/**
-	 * @param r3 the r3 to set
+	 * @param r3
+	 *            the r3 to set
 	 */
 	protected void setR3(Ring r3) {
 		this.r3 = r3;
@@ -168,12 +172,13 @@ public class Module {
 	}
 
 	/**
-	 * @param r4 the r4 to set
+	 * @param r4
+	 *            the r4 to set
 	 */
 	protected void setR4(Ring r4) {
 		this.r4 = r4;
 	}
-	
+
 	/**
 	 * @return the r4
 	 */
@@ -182,7 +187,7 @@ public class Module {
 	}
 
 	/**
-     * @param r5
+	 * @param r5
 	 */
 	protected void setR5(Ring r5) {
 		this.r5 = r5;
@@ -196,7 +201,8 @@ public class Module {
 	}
 
 	/**
-	 * @param sw the sw to set
+	 * @param sw
+	 *            the sw to set
 	 */
 	protected void setSw(Sweep sw) {
 		this.sw = sw;
@@ -210,7 +216,8 @@ public class Module {
 	}
 
 	/**
-	 * @param mx the mx to set
+	 * @param mx
+	 *            the mx to set
 	 */
 	protected void setMx(Multi mx) {
 		this.mx = mx;
@@ -224,19 +231,20 @@ public class Module {
 	}
 
 	/**
-	 * @param candle the candle to set
+	 * @param candle
+	 *            the candle to set
 	 */
 	protected void setCandle(Candelabra candle) {
 		this.candle = candle;
 	}
 
-    /**
-     *
-     * @return
-     */
-    public String toString() {
+	/**
+	 *
+	 * @return
+	 */
+	public String toString() {
 		return number + " " + r1 + " " + r2 + " " + r3;
-		
+
 	}
 
 }
