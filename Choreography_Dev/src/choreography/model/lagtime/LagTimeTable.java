@@ -14,12 +14,6 @@ import choreography.model.fcw.FCW;
  */
 public class LagTimeTable {
 	private static LagTimeTable instance;
-	private static final int closeValve = 0;
-	private static final double level1 = .2;
-	private static final double level2 = .4;
-	private static final double level3 = .6;
-	private static final double level4 = .8;
-	private static final double level5 = 1.0;
 	private static ArrayList<LagTime> delays;
 
 	/**
@@ -52,48 +46,7 @@ public class LagTimeTable {
 		LagTimeTable.delays = delayTimes;
 	}
 
-	/**
-	 * @return the closeValve
-	 */
-	public static synchronized int getCloseValve() {
-		return closeValve;
-	}
-
-	/**
-	 * @return the level1
-	 */
-	public static synchronized double getLevel1() {
-		return level1;
-	}
-
-	/**
-	 * @return the level2
-	 */
-	public static synchronized double getLevel2() {
-		return level2;
-	}
-
-	/**
-	 * @return the level3
-	 */
-	public static synchronized double getLevel3() {
-		return level3;
-	}
-
-	/**
-	 * @return the level4
-	 */
-	public static synchronized double getLevel4() {
-		return level4;
-	}
-
-	/**
-	 * @return the level5
-	 */
-	public static synchronized double getLevel5() {
-		return level5;
-	}
-
+	
 	/**
 	 *
 	 * @param f
@@ -102,16 +55,6 @@ public class LagTimeTable {
 	public static synchronized double getLagTime(FCW f) {
 		double lagTime = 1;
 		String[] actions = FCWLib.getInstance().reverseLookupData(f);
-		/*
-		 * String cannon =
-		 * FCWLib.getInstance().reverseLookupAddress(f.getAddr());
-		 * if(cannon.contains("OFF")){ return 0; } if(cannon.contains("SWEEP"))
-		 * { return 0; }
-		 * 
-		 * if(cannon.contains("VOICE")) { for(LagTime lt: delays) {
-		 * if(lt.getDelayName().equalsIgnoreCase(cannon)) { return
-		 * lt.getDelayTime(); } } }
-		 */
 		for (String a : actions) {
 			for (LagTime lt : delays) {
 				if (lt.getDelayName().equalsIgnoreCase(a)) {
@@ -121,14 +64,6 @@ public class LagTimeTable {
 			}
 
 		}
-		/*
-		 * for(String action: actions) { switch(action) { case "0": return 0.4;
-		 * case "1": return lagTime *= level1; case "2": return lagTime *=
-		 * level2; case "3": return lagTime *= level3; case "4": return lagTime
-		 * *= level4; case "5": return lagTime *= level5; case "6": return
-		 * lagTime *= level5; } }
-		 */
-		// throw new IllegalArgumentException("Invalid lag time! " + f);
 		return lagTime;
 	}
 }

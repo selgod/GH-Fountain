@@ -51,9 +51,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/resources/ghmf_cs_logo.png")));
-			// primaryStage.setIconified(true);
 			this.setPrimaryStage(primaryStage);
-
 			Main.primaryStage = primaryStage;
 			primaryStage.setTitle("GHMF Choreography Studio");
 			fountain = Fountain.getInstance();

@@ -21,8 +21,7 @@ import choreography.view.music.MusicPaneController;
 /**
  *
  * This class is responsible for reading and writing CTL files in the format
- * <Time Signature><FCW>...<FCW> Upon reading the CTL, it sets a number of
- * options
+ * <Time Signature><FCW>...<FCW> 
  * 
  * @author Frank Madrid
  */
@@ -32,7 +31,7 @@ public class CtlLib {
 
 	/**
 	 * Returns an instance of CtlLib. Controls instantiation and access to the
-	 * class
+	 * class. The class is intended to be a of singleton design.
 	 * 
 	 * @return CtlLib
 	 */
@@ -51,10 +50,13 @@ public class CtlLib {
 	}
 
 	/**
-	 * Method throws up a Open File dialog to select a CTL file
+	 * Method throws up a Open File dialog to select a CTL file.
+	 * Calls the openCtl method if a file was chosen.
 	 * 
 	 * @throws java.io.IOException
 	 */
+	
+	
 	public synchronized void openCtl() throws IOException {
 		FileChooser fc = new FileChooser();
 		fc.setTitle("Open CTL File");
@@ -90,8 +92,8 @@ public class CtlLib {
 	}
 
 	/**
-	 * Reads the CTL contents from the file into memory and sets options based
-	 * on its contents.
+	 * Reads the CTL contents from the file into memory and returns a 
+	 * string for the parseCTL method to take as a parameter.
 	 * 
 	 * @param reader
 	 *            A reader wrapped around the ctl data
@@ -100,7 +102,10 @@ public class CtlLib {
 	public synchronized String readFile(BufferedReader reader) throws IOException {
 		StringBuilder stringBuffer = new StringBuilder();
 
-		// THe first line is the version of control file being used
+		// The first line will indicate whether or not it is a legacy file.
+		// Legacy files will not have "GHMF" as the first line. If the file
+		// does have "GHMF" as the first line, it will allow the ctl file
+		// to be saved with time compensated (particularly water commands).
 		try {
 			String version = reader.readLine();
 			switch (version) {
@@ -108,9 +113,6 @@ public class CtlLib {
 			// Time compensated file
 			case "GHMF":
 				isTimeCompensated = true;
-				// TODO ColorPaletteModel.getInstance().setClassicColors(true);
-				// FCWLib.getInstance().usesClassicColors(true);
-				// SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
 				ChoreographyController.getInstance().getSaveCTLMenuItem().setDisable(false);
 				break;
 
@@ -146,8 +148,8 @@ public class CtlLib {
 	public synchronized ConcurrentSkipListMap<Integer, ArrayList<FCW>> parseCTL(String input) {
 		// Split file into tokens of lines
 		String[] lines = input.split(System.getProperty("line.separator"));
-		// Create an Event[] to hold all events
-		ConcurrentSkipListMap<Integer, ArrayList<FCW>> events = new ConcurrentSkipListMap<>();
+		// Create a list to hold all events
+		ConcurrentSkipListMap<Integer, ArrayList<FCW>> events = new ConcurrentSkipListMap<Integer, ArrayList<FCW>>();
 		try {
 			// For each line,
 			for (String line : lines) {
@@ -176,6 +178,9 @@ public class CtlLib {
 				}
 				events.put(totalTimeinTenthSecs, fcws);
 			}
+			// checks to see if time is to be compensated based on checking the first line in the file.
+			// If it is, call reversePostDate to "reverse" the modification by moving up the water
+			// commands by the desired amount.
 			if (isTimeCompensated) {
 				events = (ConcurrentSkipListMap<Integer, ArrayList<FCW>>) reversePostDate(events);
 			}
@@ -195,9 +200,9 @@ public class CtlLib {
 	public synchronized boolean saveFile(File file, SortedMap<Integer, ArrayList<FCW>> content) {
 		if (isTimeCompensated) {
 			try (FileWriter fileWriter = new FileWriter(file)) {
+				// actual call to the creation of the content to write to file is here
 				StringBuilder commandsOutput = createCtlData(content);
 				fileWriter.write(commandsOutput.toString());
-				// ChoreographyController.getInstance().setfcwOutput("Finished saving CTL!");
 				return true;
 			} catch (IOException ex) {
 				ex.printStackTrace();
@@ -219,12 +224,15 @@ public class CtlLib {
 	 */
 	private StringBuilder createCtlData(SortedMap<Integer, ArrayList<FCW>> content) throws IOException {
 		StringBuilder commandsOutput = new StringBuilder();
+		//note that saving is disabled for legacy files, so saving will always need the
+		//GHMF line at the top to indicate that the lag time will be compensated.
 		commandsOutput.append("GHMF");
 		commandsOutput.append(System.lineSeparator());
 		for (Integer timeIndex : content.keySet()) {
 			Iterator<FCW> it = content.get(timeIndex).iterator();
 			while (it.hasNext()) {
 				FCW f = it.next();
+				// if it is a water command, save it with a "lag time" using postDateSingelFcw
 				if (f.getIsWater()) {
 					if (postDateSingleFcw(f, content, timeIndex)) {
 						it.remove();
@@ -236,6 +244,8 @@ public class CtlLib {
 			}
 		}
 
+		//this part converts the data into actual data that can be saved.
+		//i.e. MM:SS.sADR-DDD ADR-DDD.......ADR-DDD
 		for (Iterator<Integer> it = content.keySet().iterator(); it.hasNext();) {
 			Integer i = it.next();
 			String totTime = "";
@@ -257,29 +267,7 @@ public class CtlLib {
 		}
 		return commandsOutput;
 	}
-
-	/**
-	 * Moves water CTLs back by timeIndex before exporting
-	 * 
-	 * @param content
-	 *            the CTLs to post date
-	 */
-	private synchronized void postDate(SortedMap<Integer, ArrayList<FCW>> content) {
-		for (Integer timeIndex : content.keySet()) {
-			Iterator<FCW> it = content.get(timeIndex).iterator();
-			while (it.hasNext()) {
-				FCW f = it.next();
-				if (f.getIsWater()) {
-					if (postDateSingleFcw(f, content, timeIndex))
-						it.remove();
-				}
-			}
-			if (content.get(timeIndex).isEmpty()) {
-				content.remove(timeIndex);
-			}
-		}
-	}
-
+	
 	/**
 	 * post dates a single FCW by lag time
 	 * 
@@ -291,6 +279,9 @@ public class CtlLib {
 	 *            the point at which the fcw currently exists
 	 * @return whether the fcw was moved or not
 	 */
+	
+	//NOTE - DOES NOT WORK CURRENTLY AS IT DOES NOT GET THE CORRECT LAG TIME IN TENTHS.
+	//       THE ERROR IS IN LAGTIMELIBRARY
 	public synchronized boolean postDateSingleFcw(FCW f, SortedMap<Integer, ArrayList<FCW>> content, Integer timeIndex) {
 		int lag = LagTimeLibrary.getInstance().getLagTimeInTenths(f);
 		int adjustedTime = timeIndex - lag;
@@ -309,15 +300,15 @@ public class CtlLib {
 	}
 
 	/**
-	 * moves FCWs forward when opening a file
+	 * moves FCWs forward when opening a file.
+	 * 
 	 * 
 	 * @param content
-	 *            the timeline
-	 * @return whether the move was successful or not
+	 *            the timeline to adjust
+	 * @return a lag time - modified version of the timeline
 	 */
-
-	// returned false at the very end, but returned true after the first
-	// modification...not sure why
+	//NOTE - DOES NOT WORK CURRENTLY AS IT DOES NOT GET THE CORRECT LAG TIME IN TENTHS.
+	//       THE ERROR IS IN LAGTIMELIBRARY
 	private SortedMap<Integer, ArrayList<FCW>> reversePostDate(SortedMap<Integer, ArrayList<FCW>> content) {
 
 		SortedMap<Integer, ArrayList<FCW>> results = new ConcurrentSkipListMap<Integer, ArrayList<FCW>>();
@@ -325,6 +316,8 @@ public class CtlLib {
 			Iterator<FCW> it = content.get(timeIndex).iterator();
 			while (it.hasNext()) {
 				FCW f = it.next();
+				// if the FCW is a water event, it needs to be adjusted before added
+				// to results.
 				if (f.getIsWater()) {
 					int lag = LagTimeLibrary.getInstance().getLagTimeInTenths(f);
 
@@ -336,7 +329,7 @@ public class CtlLib {
 							results.get(timeIndex + lag).add(f);
 						}
 					}
-
+				// otherwise, just add it to results (creating an arraylist if necessary)
 				} else {
 					if (results.containsKey(timeIndex)) {
 						results.get(timeIndex).add(f);
@@ -350,10 +343,17 @@ public class CtlLib {
 		return results;
 	}
 
+	/**
+	 * @return whether or not the time is compensated for the current ctl file
+	 */
 	public boolean isTimeCompensated() {
 		return isTimeCompensated;
 	}
 
+	/**
+	 * 
+	 * @param isTimeCompensated whether time should be compensated (non-legacy files)
+	 */
 	public void setTimeCompensated(boolean isTimeCompensated) {
 		this.isTimeCompensated = isTimeCompensated;
 	}

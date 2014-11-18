@@ -21,6 +21,9 @@ import choreography.model.lagtime.LagTime;
 import choreography.model.lagtime.LagTimeTable;
 
 /**
+ * This class is essentially a wrapper for the LagTimeTable.
+ * It manages the LagTimeTable class, setting and reading from
+ * it as necessary. 
  * @author elementsking
  *
  */
@@ -33,6 +36,8 @@ public class LagTimeLibrary {
      *
      * @return
      */
+    
+    // Designed to be used as a singleton instance.
     public static LagTimeLibrary getInstance() {
             if(instance == null) {
                 try {
@@ -69,6 +74,10 @@ public class LagTimeLibrary {
             this.getClass().getResourceAsStream(filename))));
     }
 
+    /**
+     * loads lagtimes in from the reader/file and sets the 
+     * LagTimeTable (singleton design) to values read.
+     */
     private void loadTimesFromFile(BufferedReader reader) throws IllegalArgumentException, FileNotFoundException {
         try (Scanner fileIn = new Scanner(reader)){
             ArrayList<LagTime> delayTimes = new ArrayList<>();
@@ -90,7 +99,7 @@ public class LagTimeLibrary {
     /**
      *
      * @param f
-     * @return
+     * @return the lag time in tenths of seconds
      */
     public int getLagTimeInTenths(FCW f) {
        double lag = LagTimeTable.getLagTime(f);
@@ -109,6 +118,9 @@ public class LagTimeLibrary {
      * @throws IllegalArgumentException
      * @throws FileNotFoundException
      */
+    
+    //Not thoroughly tested as editing lag times in the program wasn't an option that we saw.
+    //May or may not work.
     public void saveLagTimes(ArrayList<LagTime> dataTable) throws IllegalArgumentException, FileNotFoundException {
         try(FileWriter fileOut = new FileWriter(new File(filename))) {
             Collections.sort(dataTable, new Comparator<LagTime>() {

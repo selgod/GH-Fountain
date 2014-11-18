@@ -57,6 +57,11 @@ public class GhmfLibrary {
      * @param ghmfFile
      * @throws IOException 
      */
+    
+    //Reading of the zip file is not reliable. Functions to read in data themselves
+    //are believed to work, but appropriately changing the MusicPaneController, 
+    //choreographycontroller, and basically updating all of the appropriate information
+    //in the GUI/model, in the correct order and way, is sketchy at best.
     public static void readGhmfZip(ZipFile ghmfFile) throws IOException {
         Enumeration<? extends ZipEntry> entries = ghmfFile.entries();
         InputStream ctl = null, map = null, music = null, marks = null;

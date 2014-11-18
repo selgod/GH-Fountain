@@ -25,31 +25,40 @@ import choreography.view.timeline.TimelineController;
  * @author Frank Madrid
  *
  */
+
+//This class was developed to be used in a singleton format
 public final class FCWLib {
 	// An instance of the fcwLib
 	private static FCWLib fcwLib;
-	// Logger used for an old implementation of an event logger
-	private static final Logger LOG = Logger.getLogger(FCWLib.class.getName());
 	// The input stream used for the reading of the CTL files
 	private InputStream fcwInfo;
+	
 	// Used to store the water addresses <name of address, channel # of address>
 	private HashMap<String, Integer> waterAddress;
+	
 	// Used to store the light addresses <name of address, channel # of address>
 	private HashMap<String, Integer> lightAddress;
+	
 	// Used to store the function addresses <name of address, channel # of
 	// address>
 	private HashMap<String, Integer> functionAddress;
+	
 	// Used to store the light timeline names
 	private String[] lightNames;
+	
 	// Used to store the water timeline names
 	private String[] waterNames;
+	
 	// Used to store the function names
 	private String[] functionNames;
+	
 	// Used to store the function tables
 	private HashMap<HashSet<Integer>, String> functionTables;
+	
 	// Used to store the table commands <Name of table, <Command name, Command
 	// address>>
 	private HashMap<String, HashMap<String, Integer>> tableCommands;
+	
 	// Used to check if classic colors are used (legacy colors)
 	private boolean usesClassicColors;
 
@@ -98,7 +107,7 @@ public final class FCWLib {
 	}
 
 	/**
-	 * Searches for and reads fcw info from the file.
+	 * Searches for and reads FCW address and data info from the file.
 	 * 
 	 * @param fcwInfo
 	 */
@@ -141,11 +150,7 @@ public final class FCWLib {
 				return; // Exit
 			} else {
 				String[] tokens = line.split(", "); // split into components
-				functionAddress.put(tokens[0].trim(), new Integer(tokens[1].trim())); // add
-																						// them
-																						// to
-																						// the
-																						// map
+				functionAddress.put(tokens[0].trim(), new Integer(tokens[1].trim())); // add them to the map
 			}
 		}
 
@@ -218,25 +223,15 @@ public final class FCWLib {
 		while (fileIn.hasNextLine()) {
 			String line = fileIn.nextLine(); // pull in the first line
 			if (line.startsWith("| ")) { // if the line is a new table...
-				HashMap<String, Integer> commands = new HashMap<>(); // create
-																		// something
-																		// to
-																		// store
-																		// them
-																		// in...
+				HashMap<String, Integer> commands = new HashMap<>(); // create something to store them in...
 				String[] tokens = line.split(" "); // break it into pieces
-				String table = tokens[1].trim(); // take the table name and
-													// store it
+				String table = tokens[1].trim(); // take the table name and store it
 
 				do { // while I have commands...
 					String command = fileIn.nextLine().trim(); // read the next
 																// in
 					if (!command.equals("|EndTable|")) {
-						String[] commandTokens = command.split(", "); // split
-																		// into
-																		// command
-																		// and
-																		// number
+						String[] commandTokens = command.split(", "); // split into command and number
 						commands.put(commandTokens[0].trim(), new Integer(commandTokens[1].trim()));
 					} else {
 						tableCommands.put(table, commands);

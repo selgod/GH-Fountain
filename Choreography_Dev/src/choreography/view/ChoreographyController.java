@@ -343,6 +343,8 @@ public class ChoreographyController implements Initializable {
 				fc.setInitialDirectory(new File(System.getProperty("user.dir")));
 				saveLocation = fc.showSaveDialog(null);
 				if (saveLocation != null) {
+					//saves with .ctl extension, but this does so even if it already has
+					//a .ctl extension. need to fix this somehow.
 					saveLocation = new File(saveLocation.getAbsoluteFile() + ".ctl");
 					isSaved = true;
 				}
