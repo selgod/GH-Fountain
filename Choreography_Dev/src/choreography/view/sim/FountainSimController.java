@@ -32,12 +32,13 @@ import choreography.io.FCWLib;
 import choreography.io.LagTimeLibrary;
 import choreography.model.fcw.FCW;
 import choreography.view.music.MusicPaneController;
-import choreography.view.timeline.TimelineController;
 
 public class FountainSimController implements Initializable {
 
 	private static FountainSimController instance;
-	// private Timeline timeline;
+
+	// These timelines are for the animations of the sweepers, not to be
+	// confused with timeline.java
 	Timeline leftSweepTimeline = new Timeline();
 	Timeline rightSweepTimeline = new Timeline();
 	int sweepLevel = 0;
@@ -493,11 +494,19 @@ public class FountainSimController implements Initializable {
 
 	@FXML
 	private Rectangle spoutRec;
+
+	// Used to keep track of what the current motion is for the sweepers
 	private String sweepCommand = "None";
+
+	/*
+	 * Tracks the synchonization of the sweeps. 0 = Independant 1 = Together 2 =
+	 * Opposite
+	 */
 	private int sweepType = 1;
+
+	// Speed factors for the sweeper motions
 	private double leftSweepSpeed = 1;
 	private double rightSweepSpeed = 1;
-	Timeline timelineRing1;
 
 	private ConcurrentNavigableMap<Integer, ArrayList<FCW>> bufferedFcws = new ConcurrentSkipListMap<Integer, ArrayList<FCW>>();
 
@@ -507,12 +516,21 @@ public class FountainSimController implements Initializable {
 		return instance;
 	}
 
+	// The method that is used to animate the simulation
 	public void playSim() {
 		for (Integer i : bufferedFcws.keySet()) {
 			drawFcw(bufferedFcws.get(i));
 		}
 	}
 
+	/**
+	 * This method is used to redraw the simulation given the current fcw at a
+	 * moment of time. There is a switch statement where each case is a
+	 * different address. This switch statement is extremely long, 1000's of
+	 * lines. It could use a lot of refactoring, but it does work correctly.
+	 * 
+	 * @param fcws
+	 */
 	public void drawFcw(ArrayList<FCW> fcws) {
 		if (fcws != null) {
 			Iterator<FCW> it = fcws.iterator();
@@ -535,6 +553,7 @@ public class FountainSimController implements Initializable {
 				}
 				switch (f.getAddr()) {
 
+				// Draws Ring 5
 				case 5:
 					if (actionsList.contains("MODULEA")) {
 						int level = FCWLib.getInstance().reverseGetLevel(f);
@@ -545,6 +564,8 @@ public class FountainSimController implements Initializable {
 						drawRing5B(level, lagTime);
 					}
 					break;
+
+				// Draws Ring 4
 				case 4:
 					if (actionsList.contains("MODULEA")) {
 						int level = FCWLib.getInstance().reverseGetLevel(f);
@@ -555,6 +576,8 @@ public class FountainSimController implements Initializable {
 						drawRing4B(level, lagTime);
 					}
 					break;
+
+				// Draws Ring 3
 				case 3:
 					if (actionsList.contains("MODULEA")) {
 						int level = FCWLib.getInstance().reverseGetLevel(f);
@@ -565,6 +588,8 @@ public class FountainSimController implements Initializable {
 						drawRing3B(level, lagTime);
 					}
 					break;
+
+				// Draws Ring 2
 				case 2:
 					if (actionsList.contains("MODULEA")) {
 						int level = FCWLib.getInstance().reverseGetLevel(f);
@@ -575,6 +600,8 @@ public class FountainSimController implements Initializable {
 						drawRing2B(level, lagTime);
 					}
 					break;
+
+				// Draws Ring 1
 				case 1:
 					if (actionsList.contains("MODULEA")) {
 						int level = FCWLib.getInstance().reverseGetLevel(f);
@@ -585,6 +612,8 @@ public class FountainSimController implements Initializable {
 						drawRing1B(level, lagTime);
 					}
 					break;
+
+				// Draws Sweeps, does not do any animations
 				case 6:
 					if (actionsList.contains("MODULEA")) {
 						int level = FCWLib.getInstance().reverseGetLevel(f);
@@ -595,6 +624,10 @@ public class FountainSimController implements Initializable {
 						drawSweepsB(level, lagTime);
 					}
 					break;
+
+				// Draws Spoud/Voice and Bazooka
+				// Apex has these two water features on the same address for
+				// some odd reason
 				case 7:
 					if (actionsList.contains("SPOUT")) {
 						int level = FCWLib.getInstance().reverseGetLevel(f);
@@ -605,6 +638,8 @@ public class FountainSimController implements Initializable {
 						drawBazooka(level, lagTime);
 					}
 					break;
+
+				// Draws the Candelabras
 				case 8:
 					if (actionsList.contains("MODULEA")) {
 						int level = FCWLib.getInstance().reverseGetLevel(f);
@@ -615,6 +650,8 @@ public class FountainSimController implements Initializable {
 						drawCandlesB(level, lagTime);
 					}
 					break;
+
+				// Draws the Front and Back Curtain, and the Peacock
 				case 9:
 					if (actionsList.contains("FTCURT")) {
 						int level = FCWLib.getInstance().reverseGetLevel(f);
@@ -629,7 +666,13 @@ public class FountainSimController implements Initializable {
 						drawBkCurtain(level, lagTime);
 					}
 					break;
+
+				// Legacy command for the sweeper animations
+				// Controls both of the sweeper sets with speed and motion and
+				// has them moving together
 				case 33:
+
+					// Stops all motions
 					if (actionsList.contains("OFFRESET")) {
 						mod1sweep1.getTransforms().clear();
 						mod2sweep1.getTransforms().clear();
@@ -646,6 +689,9 @@ public class FountainSimController implements Initializable {
 						mod6sweep2.getTransforms().clear();
 						mod7sweep2.getTransforms().clear();
 					}
+
+					// Animates the sweepers if the are paused or pauses them if
+					// they are moving
 					if (actionsList.contains("PLAYPAUSE")) {
 
 						if (leftSweepTimeline.getStatus() == Animation.Status.PAUSED) {
@@ -698,6 +744,9 @@ public class FountainSimController implements Initializable {
 						rightSweepTimeline.setRate(1.8);
 						rightSweepSpeed = 1.5;
 					}
+
+					// Animates the sweepers in a sweeping motion from -30 to 30
+					// degrees
 					if (actionsList.contains("SHORT")) {
 						if (sweepCommand != "SHORT") {
 							sweepCommand = "SHORT";
@@ -705,6 +754,9 @@ public class FountainSimController implements Initializable {
 							sweepRightSweeps(ls, rs);
 						}
 					}
+
+					// Animates the sweepers in a sweeping motion from -45 to 45
+					// degrees
 					if (actionsList.contains("LONG")) {
 						if (sweepCommand != "LONG") {
 							sweepCommand = "LONG";
@@ -713,6 +765,8 @@ public class FountainSimController implements Initializable {
 						}
 					}
 					break;
+
+				// Same as case 33 except sweepers move against each other.
 				case 34:
 					if (actionsList.contains("OFFRESET")) {
 						mod1sweep1.getTransforms().clear();
@@ -797,11 +851,34 @@ public class FountainSimController implements Initializable {
 						}
 					}
 					break;
+
+				/*
+				 * New sweep commands that animates both left and right sweeps
+				 * Sweep type 1 is together and 2 is opposed Oscillating
+				 * sweepers are like a fan. -30...0...30...0...-30 repeat
+				 * Sweeping sweepers work from left to right.
+				 * -30...0...30...-30...0...30 repeat They only known problem is
+				 * that the sweepers jump from command to command. Say the
+				 * sweeper is at 17 degrees and it gets a command to sweep from
+				 * -45 t0 45. The line will just jump to -45 from wherever it is
+				 * at and start sweeping. We looked at fixing the problem but
+				 * could not find a working solution since java keeps no record
+				 * of the current state of an animation since it uses keyframes.
+				 * Maybe there is a workaround we couldn't find or something
+				 * will be implemented in a new javafx update. One possible
+				 * option is creating a virtual line. Given the complexity of
+				 * this option we did not implement it.
+				 */
 				case 35:
+					// Action list contains what sweeper action is supposed to
+					// be occuring at each tenth of a second.
 					if (actionsList.contains("RIGHTSHORTLEFTLONG")) { // 39
+						// Checks to make sure the most recent command is not
+						// rs,ll. If true, then nothing, else make current
+						// command rs, ll and animate sweepers accordingly
 						if (sweepCommand != "RIGHTSHORTLEFTLONG") {
 							sweepCommand = "RIGHTSHORTLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								sweepLeftSweeps(rs, ll);
 								sweepRightSweeps(rs, ll);
 							}
@@ -814,7 +891,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("RIGHTSHORTLEFTSHORT")) { // 38
 						if (sweepCommand != "RIGHTSHORTLEFTSHORT") {
 							sweepCommand = "RIGHTSHORTLEFTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								sweepLeftSweeps(rs, ls);
 								sweepRightSweeps(rs, ls);
 							}
@@ -827,7 +904,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("RIGHTLONGLEFTLONG")) { // 23
 						if (sweepCommand != "RIGHTLONGLEFTLONG") {
 							sweepCommand = "RIGHTLONGLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								sweepLeftSweeps(rl, ll);
 								sweepRightSweeps(rl, ll);
 							}
@@ -868,7 +945,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("RIGHTLONGRIGHTVERYSHORT")) { // 19
 						if (sweepCommand != "RIGHTLONGRIGHTVERYSHORT") {
 							sweepCommand = "RIGHTLONGRIGHTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								sweepLeftSweeps(rl, rv);
 								sweepRightSweeps(rl, rv);
 							}
@@ -881,7 +958,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("RIGHTLONGCENTER")) { // 20
 						if (sweepCommand != "RIGHTLONGCENTER") {
 							sweepCommand = "RIGHTLONGCENTER";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								sweepLeftSweeps(rl, 0);
 								sweepRightSweeps(rl, 0);
 							}
@@ -894,7 +971,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("RIGHTSHORTCENTER")) { // 36
 						if (sweepCommand != "RIGHTSHORTCENTER") {
 							sweepCommand = "RIGHTSHORTCENTER";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								sweepLeftSweeps(rs, 0);
 								sweepRightSweeps(rs, 0);
 							}
@@ -940,7 +1017,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("OSCLEFTVERYSHORT")) { // 69
 						if (sweepCommand != "OSCLEFTVERYSHORT") {
 							sweepCommand = "OSCLEFTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								oscillateLeftSweeps(lv, 0);
 								oscillateRightSweeps(lv, 0);
 							}
@@ -953,7 +1030,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("RIGHTLONGLEFTVERYSHORT")) { // 21
 						if (sweepCommand != "RIGHTLONGLEFTVERYSHORT") {
 							sweepCommand = "RIGHTLONGLEFTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								sweepLeftSweeps(rl, lv);
 								sweepRightSweeps(rl, lv);
 							}
@@ -966,7 +1043,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("RIGHTSHORTLEFTVERYSHORT")) { // 37
 						if (sweepCommand != "RIGHTSHORTLEFTVERYSHORT") {
 							sweepCommand = "RIGHTSHORTLEFTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								sweepLeftSweeps(rs, lv);
 								sweepRightSweeps(rs, lv);
 							}
@@ -979,7 +1056,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("RIGHTVERYSHORTLEFTSHORT")) { // 54
 						if (sweepCommand != "RIGHTVERYSHORTLEFTSHORT") {
 							sweepCommand = "RIGHTVERYSHORTLEFTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								sweepLeftSweeps(rv, ls);
 								sweepRightSweeps(rv, ls);
 							}
@@ -992,7 +1069,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("RIGHTVERYSHORTLEFTLONG")) { // 55
 						if (sweepCommand != "RIGHTVERYSHORTLEFTLONG") {
 							sweepCommand = "RIGHTVERYSHORTLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								sweepLeftSweeps(rv, ll);
 								sweepRightSweeps(rv, ll);
 							}
@@ -1005,7 +1082,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("CENTERLEFTLONG")) { // 71
 						if (sweepCommand != "CENTERLEFTLONG") {
 							sweepCommand = "CENTERLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								sweepLeftSweeps(0, ll);
 								sweepRightSweeps(0, ll);
 							}
@@ -1018,7 +1095,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("LEFTVERYSHORTLEFTLONG")) { // 87
 						if (sweepCommand != "LEFTVERYSHORTLEFTLONG") {
 							sweepCommand = "LEFTVERYSHORTLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								sweepLeftSweeps(lv, ll);
 								sweepRightSweeps(lv, ll);
 							}
@@ -1031,7 +1108,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("HOLDRIGHTVERYSHORT")) { // 51
 						if (sweepCommand != "HOLDRIGHTVERYSHORT") {
 							sweepCommand = "HOLDRIGHTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								oscillateLeftSweeps(rv, rv);
 								sweepRightSweeps(rv, rv);
 							}
@@ -1044,7 +1121,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("HOLDLEFTVERYSHORT")) { // 85
 						if (sweepCommand != "HOLDLEFTVERYSHORT") {
 							sweepCommand = "HOLDLEFTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								oscillateLeftSweeps(lv, lv);
 								oscillateRightSweeps(lv, lv);
 							}
@@ -1057,7 +1134,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("OSCRIGHTLONG")) { // 18
 						if (sweepCommand != "OSCRIGHTLONG") {
 							sweepCommand = "OSCRIGHTLONG";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								oscillateLeftSweeps(rl, rs);
 								oscillateRightSweeps(rl, rs);
 							}
@@ -1070,7 +1147,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("OSCRIGHTSHORT")) { // 35
 						if (sweepCommand != "OSCRIGHTSHORT") {
 							sweepCommand = "OSCRIGHTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								oscillateLeftSweeps(rs, rv);
 								oscillateRightSweeps(rs, rv);
 							}
@@ -1083,7 +1160,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("OSCRIGHTVERYSHORT")) { // 52
 						if (sweepCommand != "OSCRIGHTVERYSHORT") {
 							sweepCommand = "OSCRIGHTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								oscillateLeftSweeps(rv, 0);
 								oscillateRightSweeps(rv, 0);
 							}
@@ -1096,7 +1173,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("OSCCENTER")) { // 53
 						if (sweepCommand != "OSCCENTER") {
 							sweepCommand = "OSCCENTER";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								oscillateLeftSweeps(lv, rv);
 								oscillateRightSweeps(lv, rv);
 							}
@@ -1109,7 +1186,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("OSCLEFTSHORT")) { // 86
 						if (sweepCommand != "OSCLEFTSHORT") {
 							sweepCommand = "OSCLEFTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								oscillateLeftSweeps(ls, lv);
 								oscillateRightSweeps(ls, lv);
 							}
@@ -1122,7 +1199,7 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("OSCLEFTLONG")) { // 103
 						if (sweepCommand != "OSCLEFTLONG") {
 							sweepCommand = "OSCLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
+							if (sweepType == 1) {
 								oscillateLeftSweeps(ll, ls);
 								oscillateRightSweeps(ll, ls);
 							}
@@ -1134,38 +1211,25 @@ public class FountainSimController implements Initializable {
 					}
 
 					break;
+				// Same as case 36 but used for independent sweeping of the left
+				// sweepers
 				case 36:
 					if (actionsList.contains("RIGHTSHORTLEFTLONG")) { // 39
 						if (sweepCommand != "RIGHTSHORTLEFTLONG") {
 							sweepCommand = "RIGHTSHORTLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepLeftSweeps(rs, ll);
-							}
-							if (sweepType == 2) {
-								sweepLeftSweeps(rs, ll);
-							}
+							sweepLeftSweeps(rs, ll);
 						}
 					}
 					if (actionsList.contains("RIGHTSHORTLEFTSHORT")) { // 38
 						if (sweepCommand != "RIGHTSHORTLEFTSHORT") {
 							sweepCommand = "RIGHTSHORTLEFTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepLeftSweeps(rs, ls);
-							}
-							if (sweepType == 2) {
-								sweepLeftSweeps(rs, ls);
-							}
+							sweepLeftSweeps(rs, ls);
 						}
 					}
 					if (actionsList.contains("RIGHTLONGLEFTLONG")) { // 23
 						if (sweepCommand != "RIGHTLONGLEFTLONG") {
 							sweepCommand = "RIGHTLONGLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepLeftSweeps(rl, ll);
-							}
-							if (sweepType == 2) {
-								sweepLeftSweeps(rl, ll);
-							}
+							sweepLeftSweeps(rl, ll);
 						}
 					}
 					if (actionsList.contains("HOLDRIGHTLONG")) { // 17
@@ -1195,45 +1259,25 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("RIGHTLONGRIGHTVERYSHORT")) { // 19
 						if (sweepCommand != "RIGHTLONGRIGHTVERYSHORT") {
 							sweepCommand = "RIGHTLONGRIGHTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepLeftSweeps(rl, rv);
-							}
-							if (sweepType == 2) {
-								sweepLeftSweeps(rl, rv);
-							}
+							sweepLeftSweeps(rl, rv);
 						}
 					}
 					if (actionsList.contains("RIGHTLONGCENTER")) { // 20
 						if (sweepCommand != "RIGHTLONGCENTER") {
 							sweepCommand = "RIGHTLONGCENTER";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepLeftSweeps(rl, 0);
-							}
-							if (sweepType == 2) {
-								sweepLeftSweeps(rl, 0);
-							}
+							sweepLeftSweeps(rl, 0);
 						}
 					}
 					if (actionsList.contains("RIGHTSHORTCENTER")) { // 36
 						if (sweepCommand != "RIGHTSHORTCENTER") {
 							sweepCommand = "RIGHTSHORTCENTER";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepLeftSweeps(rs, 0);
-							}
-							if (sweepType == 2) {
-								sweepLeftSweeps(rs, 0);
-							}
+							sweepLeftSweeps(rs, 0);
 						}
 					}
 					if (actionsList.contains("RIGHTLONGLEFTSHORT")) { // 22
 						if (sweepCommand != "RIGHTLONGLEFTSHORT") {
 							sweepCommand = "RIGHTLONGLEFTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepLeftSweeps(rl, ls);
-							}
-							if (sweepType == 2) {
-								sweepLeftSweeps(rl, ls);
-							}
+							sweepLeftSweeps(rl, ls);
 						}
 					}
 					if (actionsList.contains("HOLDCENTER")) { // 0,68
@@ -1245,213 +1289,120 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("CENTERLEFTSHORT")) { // 70
 						if (sweepCommand != "CENTERLEFTSHORT") {
 							sweepCommand = "CENTERLEFTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepLeftSweeps(0, ls);
-							}
-							if (sweepType == 2) {
-								sweepLeftSweeps(0, ls);
-							}
+							sweepLeftSweeps(0, ls);
 						}
 					}
 					if (actionsList.contains("OSCLEFTVERYSHORT")) { // 69
 						if (sweepCommand != "OSCLEFTVERYSHORT") {
 							sweepCommand = "OSCLEFTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateLeftSweeps(lv, 0);
-							}
-							if (sweepType == 2) {
-								oscillateLeftSweeps(lv, 0);
-							}
+							oscillateLeftSweeps(lv, 0);
 						}
 					}
 					if (actionsList.contains("RIGHTLONGLEFTVERYSHORT")) { // 21
 						if (sweepCommand != "RIGHTLONGLEFTVERYSHORT") {
 							sweepCommand = "RIGHTLONGLEFTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepLeftSweeps(rl, lv);
-							}
-							if (sweepType == 2) {
-								sweepLeftSweeps(rl, lv);
-							}
+							sweepLeftSweeps(rl, lv);
 						}
 					}
 					if (actionsList.contains("RIGHTSHORTLEFTVERYSHORT")) { // 37
 						if (sweepCommand != "RIGHTSHORTLEFTVERYSHORT") {
 							sweepCommand = "RIGHTSHORTLEFTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepLeftSweeps(rs, lv);
-							}
-							if (sweepType == 2) {
-								sweepLeftSweeps(rs, lv);
-							}
+							sweepLeftSweeps(rs, lv);
 						}
 					}
 					if (actionsList.contains("RIGHTVERYSHORTLEFTSHORT")) { // 54
 						if (sweepCommand != "RIGHTVERYSHORTLEFTSHORT") {
 							sweepCommand = "RIGHTVERYSHORTLEFTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepLeftSweeps(rv, ls);
-							}
-							if (sweepType == 2) {
-								sweepLeftSweeps(rv, ls);
-							}
+							sweepLeftSweeps(rv, ls);
 						}
 					}
 					if (actionsList.contains("RIGHTVERYSHORTLEFTLONG")) { // 55
 						if (sweepCommand != "RIGHTVERYSHORTLEFTLONG") {
 							sweepCommand = "RIGHTVERYSHORTLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepLeftSweeps(rv, ll);
-							}
-							if (sweepType == 2) {
-								sweepLeftSweeps(rv, ll);
-							}
+							sweepLeftSweeps(rv, ll);
 						}
 					}
 					if (actionsList.contains("CENTERLEFTLONG")) { // 71
 						if (sweepCommand != "CENTERLEFTLONG") {
 							sweepCommand = "CENTERLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepLeftSweeps(0, ll);
-							}
-							if (sweepType == 2) {
-								sweepLeftSweeps(0, ll);
-							}
+							sweepLeftSweeps(0, ll);
 						}
 					}
 					if (actionsList.contains("LEFTVERYSHORTLEFTLONG")) { // 87
 						if (sweepCommand != "LEFTVERYSHORTLEFTLONG") {
 							sweepCommand = "LEFTVERYSHORTLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepLeftSweeps(lv, ll);
-							}
-							if (sweepType == 2) {
-								sweepLeftSweeps(lv, ll);
-							}
+							sweepLeftSweeps(lv, ll);
 						}
 					}
 					if (actionsList.contains("HOLDRIGHTVERYSHORT")) { // 51
 						if (sweepCommand != "HOLDRIGHTVERYSHORT") {
 							sweepCommand = "HOLDRIGHTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateLeftSweeps(rv, rv);
-							}
-							if (sweepType == 2) {
-								oscillateLeftSweeps(rv, rv);
-							}
+							oscillateLeftSweeps(rv, rv);
 						}
 					}
 					if (actionsList.contains("HOLDLEFTVERYSHORT")) { // 85
 						if (sweepCommand != "HOLDLEFTVERYSHORT") {
 							sweepCommand = "HOLDLEFTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateLeftSweeps(lv, lv);
-							}
-							if (sweepType == 2) {
-								oscillateLeftSweeps(lv, lv);
-							}
+							oscillateLeftSweeps(lv, lv);
 						}
 					}
 					if (actionsList.contains("OSCRIGHTLONG")) { // 18
 						if (sweepCommand != "OSCRIGHTLONG") {
 							sweepCommand = "OSCRIGHTLONG";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateLeftSweeps(rl, rs);
-							}
-							if (sweepType == 2) {
-								oscillateLeftSweeps(rl, rs);
-							}
+							oscillateLeftSweeps(rl, rs);
 						}
 					}
 					if (actionsList.contains("OSCRIGHTSHORT")) { // 35
 						if (sweepCommand != "OSCRIGHTSHORT") {
 							sweepCommand = "OSCRIGHTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateLeftSweeps(rs, rv);
-							}
-							if (sweepType == 2) {
-								oscillateLeftSweeps(rs, rv);
-							}
+							oscillateLeftSweeps(rs, rv);
 						}
 					}
 					if (actionsList.contains("OSCRIGHTVERYSHORT")) { // 52
 						if (sweepCommand != "OSCRIGHTVERYSHORT") {
 							sweepCommand = "OSCRIGHTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateLeftSweeps(rv, 0);
-							}
-							if (sweepType == 2) {
-								oscillateLeftSweeps(rv, 0);
-							}
+							oscillateLeftSweeps(rv, 0);
 						}
 					}
 					if (actionsList.contains("OSCCENTER")) { // 53
 						if (sweepCommand != "OSCCENTER") {
 							sweepCommand = "OSCCENTER";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateLeftSweeps(lv, rv);
-							}
-							if (sweepType == 2) {
-								oscillateLeftSweeps(lv, rv);
-							}
+							oscillateLeftSweeps(lv, rv);
 						}
 					}
 					if (actionsList.contains("OSCLEFTSHORT")) { // 86
 						if (sweepCommand != "OSCLEFTSHORT") {
 							sweepCommand = "OSCLEFTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateLeftSweeps(ls, lv);
-							}
-							if (sweepType == 2) {
-								oscillateLeftSweeps(ls, lv);
-							}
+							oscillateLeftSweeps(ls, lv);
 						}
 					}
 					if (actionsList.contains("OSCLEFTLONG")) { // 103
 						if (sweepCommand != "OSCLEFTLONG") {
 							sweepCommand = "OSCLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateLeftSweeps(ll, ls);
-							}
-							if (sweepType == 2) {
-								oscillateLeftSweeps(ll, ls);
-							}
+							oscillateLeftSweeps(ll, ls);
 						}
 					}
 
 					break;
+				// Same as case 36 but used for independent sweeping of the
+				// right sweepers
 				case 37:
 					if (actionsList.contains("RIGHTSHORTLEFTLONG")) { // 39
 						if (sweepCommand != "RIGHTSHORTLEFTLONG") {
 							sweepCommand = "RIGHTSHORTLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepRightSweeps(rs, ll);
-							}
-							if (sweepType == 2) {
-								sweepRightSweeps(ll, rs);
-							}
+							sweepRightSweeps(rs, ll);
 						}
 					}
 					if (actionsList.contains("RIGHTSHORTLEFTSHORT")) { // 38
 						if (sweepCommand != "RIGHTSHORTLEFTSHORT") {
 							sweepCommand = "RIGHTSHORTLEFTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepRightSweeps(rs, ls);
-							}
-							if (sweepType == 2) {
-								sweepRightSweeps(ls, rs);
-							}
+							sweepRightSweeps(rs, ls);
 						}
 					}
 					if (actionsList.contains("RIGHTLONGLEFTLONG")) { // 23
 						if (sweepCommand != "RIGHTLONGLEFTLONG") {
 							sweepCommand = "RIGHTLONGLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepRightSweeps(rl, ll);
-							}
-							if (sweepType == 2) {
-								sweepRightSweeps(ll, rs);
-							}
+							sweepRightSweeps(rl, ll);
 						}
 					}
 					if (actionsList.contains("HOLDRIGHTLONG")) { // 17
@@ -1481,45 +1432,25 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("RIGHTLONGRIGHTVERYSHORT")) { // 19
 						if (sweepCommand != "RIGHTLONGRIGHTVERYSHORT") {
 							sweepCommand = "RIGHTLONGRIGHTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepRightSweeps(rl, rv);
-							}
-							if (sweepType == 2) {
-								sweepRightSweeps(rv, rl);
-							}
+							sweepRightSweeps(rl, rv);
 						}
 					}
 					if (actionsList.contains("RIGHTLONGCENTER")) { // 20
 						if (sweepCommand != "RIGHTLONGCENTER") {
 							sweepCommand = "RIGHTLONGCENTER";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepRightSweeps(rl, 0);
-							}
-							if (sweepType == 2) {
-								sweepRightSweeps(0, rl);
-							}
+							sweepRightSweeps(rl, 0);
 						}
 					}
 					if (actionsList.contains("RIGHTSHORTCENTER")) { // 36
 						if (sweepCommand != "RIGHTSHORTCENTER") {
 							sweepCommand = "RIGHTSHORTCENTER";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepRightSweeps(rs, 0);
-							}
-							if (sweepType == 2) {
-								sweepRightSweeps(0, rs);
-							}
+							sweepRightSweeps(rs, 0);
 						}
 					}
 					if (actionsList.contains("RIGHTLONGLEFTSHORT")) { // 22
 						if (sweepCommand != "RIGHTLONGLEFTSHORT") {
 							sweepCommand = "RIGHTLONGLEFTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepRightSweeps(rl, ls);
-							}
-							if (sweepType == 2) {
-								sweepRightSweeps(ls, rl);
-							}
+							sweepRightSweeps(rl, ls);
 						}
 					}
 					if (actionsList.contains("HOLDCENTER")) { // 0,68
@@ -1531,181 +1462,103 @@ public class FountainSimController implements Initializable {
 					if (actionsList.contains("CENTERLEFTSHORT")) { // 70
 						if (sweepCommand != "CENTERLEFTSHORT") {
 							sweepCommand = "CENTERLEFTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepRightSweeps(0, ls);
-							}
-							if (sweepType == 2) {
-								sweepRightSweeps(ls, 0);
-							}
+							sweepRightSweeps(0, ls);
 						}
 					}
 					if (actionsList.contains("OSCLEFTVERYSHORT")) { // 69
 						if (sweepCommand != "OSCLEFTVERYSHORT") {
 							sweepCommand = "OSCLEFTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateRightSweeps(lv, 0);
-							}
-							if (sweepType == 2) {
-								oscillateRightSweeps(0, lv);
-							}
+							oscillateRightSweeps(lv, 0);
 						}
 					}
 					if (actionsList.contains("RIGHTLONGLEFTVERYSHORT")) { // 21
 						if (sweepCommand != "RIGHTLONGLEFTVERYSHORT") {
 							sweepCommand = "RIGHTLONGLEFTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepRightSweeps(rl, lv);
-							}
-							if (sweepType == 2) {
-								sweepRightSweeps(lv, rl);
-							}
+							sweepRightSweeps(rl, lv);
+
 						}
 					}
 					if (actionsList.contains("RIGHTSHORTLEFTVERYSHORT")) { // 37
 						if (sweepCommand != "RIGHTSHORTLEFTVERYSHORT") {
 							sweepCommand = "RIGHTSHORTLEFTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepRightSweeps(rs, lv);
-							}
-							if (sweepType == 2) {
-								sweepRightSweeps(lv, rs);
-							}
+							sweepRightSweeps(rs, lv);
 						}
 					}
 					if (actionsList.contains("RIGHTVERYSHORTLEFTSHORT")) { // 54
 						if (sweepCommand != "RIGHTVERYSHORTLEFTSHORT") {
 							sweepCommand = "RIGHTVERYSHORTLEFTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepRightSweeps(rv, ls);
-							}
-							if (sweepType == 2) {
-								sweepRightSweeps(ls, rv);
-							}
+							sweepRightSweeps(rv, ls);
 						}
 					}
 					if (actionsList.contains("RIGHTVERYSHORTLEFTLONG")) { // 55
 						if (sweepCommand != "RIGHTVERYSHORTLEFTLONG") {
 							sweepCommand = "RIGHTVERYSHORTLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepRightSweeps(rv, ll);
-							}
-							if (sweepType == 2) {
-								sweepRightSweeps(ll, rv);
-							}
+							sweepRightSweeps(rv, ll);
 						}
 					}
 					if (actionsList.contains("CENTERLEFTLONG")) { // 71
 						if (sweepCommand != "CENTERLEFTLONG") {
 							sweepCommand = "CENTERLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepRightSweeps(0, ll);
-							}
-							if (sweepType == 2) {
-								sweepRightSweeps(ll, 0);
-							}
+							sweepRightSweeps(0, ll);
 						}
 					}
 					if (actionsList.contains("LEFTVERYSHORTLEFTLONG")) { // 87
 						if (sweepCommand != "LEFTVERYSHORTLEFTLONG") {
 							sweepCommand = "LEFTVERYSHORTLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
-								sweepRightSweeps(lv, ll);
-							}
-							if (sweepType == 2) {
-								sweepRightSweeps(ll, lv);
-							}
+							sweepRightSweeps(lv, ll);
 						}
 					}
 					if (actionsList.contains("HOLDRIGHTVERYSHORT")) { // 51
 						if (sweepCommand != "HOLDRIGHTVERYSHORT") {
 							sweepCommand = "HOLDRIGHTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateRightSweeps(rv, rv);
-							}
-							if (sweepType == 2) {
-								oscillateRightSweeps(rv, rv);
-							}
+							oscillateRightSweeps(rv, rv);
 						}
 					}
 					if (actionsList.contains("HOLDLEFTVERYSHORT")) { // 85
 						if (sweepCommand != "HOLDLEFTVERYSHORT") {
 							sweepCommand = "HOLDLEFTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateRightSweeps(lv, lv);
-							}
-							if (sweepType == 2) {
-								oscillateRightSweeps(lv, lv);
-							}
+							oscillateRightSweeps(lv, lv);
 						}
 					}
 					if (actionsList.contains("OSCRIGHTLONG")) { // 18
 						if (sweepCommand != "OSCRIGHTLONG") {
 							sweepCommand = "OSCRIGHTLONG";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateRightSweeps(rl, rs);
-							}
-							if (sweepType == 2) {
-								oscillateRightSweeps(rs, rl);
-							}
+							oscillateRightSweeps(rl, rs);
 						}
 					}
 					if (actionsList.contains("OSCRIGHTSHORT")) { // 35
 						if (sweepCommand != "OSCRIGHTSHORT") {
 							sweepCommand = "OSCRIGHTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateRightSweeps(rs, rv);
-							}
-							if (sweepType == 2) {
-								oscillateRightSweeps(rv, rs);
-							}
+							oscillateRightSweeps(rs, rv);
 						}
 					}
 					if (actionsList.contains("OSCRIGHTVERYSHORT")) { // 52
 						if (sweepCommand != "OSCRIGHTVERYSHORT") {
 							sweepCommand = "OSCRIGHTVERYSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateRightSweeps(rv, 0);
-							}
-							if (sweepType == 2) {
-								oscillateRightSweeps(0, rv);
-							}
+							oscillateRightSweeps(rv, 0);
 						}
 					}
 					if (actionsList.contains("OSCCENTER")) { // 53
 						if (sweepCommand != "OSCCENTER") {
 							sweepCommand = "OSCCENTER";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateRightSweeps(lv, rv);
-							}
-							if (sweepType == 2) {
-								oscillateRightSweeps(rv, lv);
-							}
+							oscillateRightSweeps(lv, rv);
 						}
 					}
 					if (actionsList.contains("OSCLEFTSHORT")) { // 86
 						if (sweepCommand != "OSCLEFTSHORT") {
 							sweepCommand = "OSCLEFTSHORT";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateRightSweeps(ls, lv);
-							}
-							if (sweepType == 2) {
-								oscillateRightSweeps(lv, ls);
-							}
+							oscillateRightSweeps(ls, lv);
 						}
 					}
 					if (actionsList.contains("OSCLEFTLONG")) { // 103
 						if (sweepCommand != "OSCLEFTLONG") {
 							sweepCommand = "OSCLEFTLONG";
-							if (sweepType == 1 || sweepType == 0) {
-								oscillateRightSweeps(ll, ls);
-							}
-							if (sweepType == 2) {
-								oscillateRightSweeps(ls, ll);
-							}
+							oscillateRightSweeps(ll, ls);
 						}
 					}
 
 					break;
+				// Controls the speed of the left sweepers
 				case 38:
 					if (actionsList.contains("LARGO")) {
 						leftSweepTimeline.setRate(0.2);
@@ -1741,6 +1594,8 @@ public class FountainSimController implements Initializable {
 						}
 					}
 					break;
+
+				// Controls the speed of the right sweepers
 				case 39:
 					if (actionsList.contains("LARGO")) {
 						rightSweepTimeline.setRate(0.2);
@@ -1776,6 +1631,7 @@ public class FountainSimController implements Initializable {
 						}
 					}
 					break;
+				// Controls the speeds of both sweepers
 				case 40:
 					if (actionsList.contains("OFFRESET")) {
 						mod1sweep1.getTransforms().clear();
@@ -1845,6 +1701,8 @@ public class FountainSimController implements Initializable {
 						rightSweepSpeed = 1.5;
 					}
 					break;
+				// Each case says what mode that the sweepers are supposed to be
+				// in
 				case 42:
 					if (actionsList.contains("TOGETHER")) {
 						setSweepType(1);
@@ -1856,9 +1714,12 @@ public class FountainSimController implements Initializable {
 						setSweepType(0);
 					}
 					break;
+				// Legacy Command
+				// Water Modules W1-W6 & Wedding Cake formation
 				case 48:
 					if (actionsList.contains("MODULEA")) {
 						int level = FCWLib.getInstance().reverseGetLevel(f);
+						// Left over code from first group, not sure if needed
 						if (level == 6) {
 							drawMultiA(level - 1, lagTime);
 							drawSweepsA(level - 1, lagTime);
@@ -1876,8 +1737,10 @@ public class FountainSimController implements Initializable {
 						}
 					}
 					break;
+				// Clears fountain/simulation
+				// Used only for debugging and testing purposes
 				case 99:
-					clearSim();
+					resetAll();
 					clearSweeps();
 					break;
 				}
@@ -1885,55 +1748,63 @@ public class FountainSimController implements Initializable {
 		}
 	}
 
-	public void updateColors(int colNum) {
-		TimelineController.getInstance().getTimeline().getChannelColorMap();
-		// lookup colors for for all existing channels at given time...
-
-		// update the sim objects to those colors
-	}
-
+	/*
+	 * Animation controller for the front curtain. All of the following methods
+	 * have the same concept with the exception of the sweeper classes since
+	 * they have more complex movements. These methods are animations written in
+	 * java, so experience with blender or the likes is helpful
+	 */
 	public void drawFtCurtain(int level, double lagTime) {
-		final Timeline timeline = new Timeline();
-		timeline.setCycleCount(1);
-		final KeyValue kv1 = new KeyValue(frontCurtain1.heightProperty(), ((40 * level)));
-		final KeyValue kv2 = new KeyValue(frontCurtain2.heightProperty(), ((40 * level)));
-		final KeyValue kv3 = new KeyValue(frontCurtain3.heightProperty(), ((40 * level)));
-		final KeyValue kv4 = new KeyValue(frontCurtain4.heightProperty(), ((40 * level)));
-		final KeyValue kv5 = new KeyValue(frontCurtain5.heightProperty(), ((40 * level)));
-		final KeyValue kv6 = new KeyValue(frontCurtain6.heightProperty(), ((40 * level)));
-		final KeyValue kv7 = new KeyValue(frontCurtain7.heightProperty(), ((40 * level)));
-		final KeyValue kv8 = new KeyValue(frontCurtain8.heightProperty(), ((40 * level)));
-		final KeyValue kv9 = new KeyValue(frontCurtain9.heightProperty(), ((40 * level)));
-		final KeyValue kv10 = new KeyValue(frontCurtain10.heightProperty(), ((40 * level)));
-		final KeyValue kv11 = new KeyValue(frontCurtain11.heightProperty(), ((40 * level)));
-		final KeyValue kv12 = new KeyValue(frontCurtain12.heightProperty(), ((40 * level)));
-		final KeyValue kv13 = new KeyValue(frontCurtain13.heightProperty(), ((40 * level)));
-		final KeyValue kv14 = new KeyValue(frontCurtain14.heightProperty(), ((40 * level)));
 
+		// Holds all of the animation information
+		final Timeline timeline = new Timeline();
+
+		// How many times the animation happens
+		timeline.setCycleCount(1);
+
+		// Each of these the end value for the animation, which in this and most
+		// cases is just a height change
+		final KeyValue kv1 = new KeyValue(frontCurtain1.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(frontCurtain2.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv3 = new KeyValue(frontCurtain3.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv4 = new KeyValue(frontCurtain4.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv5 = new KeyValue(frontCurtain5.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv6 = new KeyValue(frontCurtain6.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv7 = new KeyValue(frontCurtain7.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv8 = new KeyValue(frontCurtain8.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv9 = new KeyValue(frontCurtain9.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv10 = new KeyValue(frontCurtain10.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv11 = new KeyValue(frontCurtain11.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv12 = new KeyValue(frontCurtain12.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv13 = new KeyValue(frontCurtain13.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv14 = new KeyValue(frontCurtain14.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+
+		// Adds all of the movements to the keyframe with a duration as given by
+		// lagtime
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11, kv12, kv13, kv14);
 		timeline.getKeyFrames().add(kf);
+
+		// Starts the animation
 		timeline.play();
 	}
 
 	public void drawBkCurtain(int level, double lagTime) {
 		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(1);
-		// final KeyValue kv1 = new KeyValue(backCurtain.heightProperty(),
-		// ((40*level)));
-		final KeyValue kv1 = new KeyValue(backCurtain1.heightProperty(), ((40 * level)));
-		final KeyValue kv2 = new KeyValue(backCurtain2.heightProperty(), ((40 * level)));
-		final KeyValue kv3 = new KeyValue(backCurtain3.heightProperty(), ((40 * level)));
-		final KeyValue kv4 = new KeyValue(backCurtain4.heightProperty(), ((40 * level)));
-		final KeyValue kv5 = new KeyValue(backCurtain5.heightProperty(), ((40 * level)));
-		final KeyValue kv6 = new KeyValue(backCurtain6.heightProperty(), ((40 * level)));
-		final KeyValue kv7 = new KeyValue(backCurtain7.heightProperty(), ((40 * level)));
-		final KeyValue kv8 = new KeyValue(backCurtain8.heightProperty(), ((40 * level)));
-		final KeyValue kv9 = new KeyValue(backCurtain9.heightProperty(), ((40 * level)));
-		final KeyValue kv10 = new KeyValue(backCurtain10.heightProperty(), ((40 * level)));
-		final KeyValue kv11 = new KeyValue(backCurtain11.heightProperty(), ((40 * level)));
-		final KeyValue kv12 = new KeyValue(backCurtain12.heightProperty(), ((40 * level)));
-		final KeyValue kv13 = new KeyValue(backCurtain13.heightProperty(), ((40 * level)));
-		final KeyValue kv14 = new KeyValue(backCurtain14.heightProperty(), ((40 * level)));
+		final KeyValue kv1 = new KeyValue(backCurtain1.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(backCurtain2.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv3 = new KeyValue(backCurtain3.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv4 = new KeyValue(backCurtain4.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv5 = new KeyValue(backCurtain5.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv6 = new KeyValue(backCurtain6.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv7 = new KeyValue(backCurtain7.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv8 = new KeyValue(backCurtain8.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv9 = new KeyValue(backCurtain9.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv10 = new KeyValue(backCurtain10.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv11 = new KeyValue(backCurtain11.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv12 = new KeyValue(backCurtain12.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv13 = new KeyValue(backCurtain13.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv14 = new KeyValue(backCurtain14.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11, kv12, kv13, kv14);
 		timeline.getKeyFrames().add(kf);
@@ -1943,10 +1814,10 @@ public class FountainSimController implements Initializable {
 	public void drawRing1A(int level, double lagTime) {
 		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(1);
-		final KeyValue kv1 = new KeyValue(mod1ring1.heightProperty(), ((35 * level)));
-		final KeyValue kv2 = new KeyValue(mod3ring1.heightProperty(), ((35 * level)));
-		final KeyValue kv3 = new KeyValue(mod5ring1.heightProperty(), ((35 * level)));
-		final KeyValue kv4 = new KeyValue(mod7ring1.heightProperty(), ((35 * level)));
+		final KeyValue kv1 = new KeyValue(mod1ring1.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(mod3ring1.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv3 = new KeyValue(mod5ring1.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv4 = new KeyValue(mod7ring1.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4);
 		timeline.getKeyFrames().add(kf);
@@ -1956,9 +1827,9 @@ public class FountainSimController implements Initializable {
 	public void drawRing1B(int level, double lagTime) {
 		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(1);
-		final KeyValue kv1 = new KeyValue(mod2ring1.heightProperty(), ((35 * level)));
-		final KeyValue kv2 = new KeyValue(mod4ring1.heightProperty(), ((35 * level)));
-		final KeyValue kv3 = new KeyValue(mod6ring1.heightProperty(), ((35 * level)));
+		final KeyValue kv1 = new KeyValue(mod2ring1.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(mod4ring1.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv3 = new KeyValue(mod6ring1.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3);
 		timeline.getKeyFrames().add(kf);
@@ -1968,10 +1839,10 @@ public class FountainSimController implements Initializable {
 	public void drawRing2A(int level, double lagTime) {
 		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(1);
-		final KeyValue kv1 = new KeyValue(mod1ring2.heightProperty(), ((35 * level)));
-		final KeyValue kv2 = new KeyValue(mod3ring2.heightProperty(), ((35 * level)));
-		final KeyValue kv3 = new KeyValue(mod5ring2.heightProperty(), ((35 * level)));
-		final KeyValue kv4 = new KeyValue(mod7ring2.heightProperty(), ((35 * level)));
+		final KeyValue kv1 = new KeyValue(mod1ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(mod3ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv3 = new KeyValue(mod5ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv4 = new KeyValue(mod7ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4);
 		timeline.getKeyFrames().add(kf);
@@ -1981,9 +1852,9 @@ public class FountainSimController implements Initializable {
 	public void drawRing2B(int level, double lagTime) {
 		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(1);
-		final KeyValue kv1 = new KeyValue(mod2ring2.heightProperty(), ((35 * level)));
-		final KeyValue kv2 = new KeyValue(mod4ring2.heightProperty(), ((35 * level)));
-		final KeyValue kv3 = new KeyValue(mod6ring2.heightProperty(), ((35 * level)));
+		final KeyValue kv1 = new KeyValue(mod2ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(mod4ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv3 = new KeyValue(mod6ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3);
 		timeline.getKeyFrames().add(kf);
@@ -1993,10 +1864,10 @@ public class FountainSimController implements Initializable {
 	public void drawRing3A(int level, double lagTime) {
 		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(1);
-		final KeyValue kv1 = new KeyValue(mod1ring3.heightProperty(), ((35 * level)));
-		final KeyValue kv2 = new KeyValue(mod3ring3.heightProperty(), ((35 * level)));
-		final KeyValue kv3 = new KeyValue(mod5ring3.heightProperty(), ((35 * level)));
-		final KeyValue kv4 = new KeyValue(mod7ring3.heightProperty(), ((35 * level)));
+		final KeyValue kv1 = new KeyValue(mod1ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(mod3ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv3 = new KeyValue(mod5ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv4 = new KeyValue(mod7ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4);
 		timeline.getKeyFrames().add(kf);
@@ -2006,9 +1877,9 @@ public class FountainSimController implements Initializable {
 	public void drawRing3B(int level, double lagTime) {
 		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(1);
-		final KeyValue kv1 = new KeyValue(mod2ring3.heightProperty(), ((35 * level)));
-		final KeyValue kv2 = new KeyValue(mod4ring3.heightProperty(), ((35 * level)));
-		final KeyValue kv3 = new KeyValue(mod6ring3.heightProperty(), ((35 * level)));
+		final KeyValue kv1 = new KeyValue(mod2ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(mod4ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv3 = new KeyValue(mod6ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3);
 		timeline.getKeyFrames().add(kf);
@@ -2018,10 +1889,10 @@ public class FountainSimController implements Initializable {
 	public void drawRing4A(int level, double lagTime) {
 		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(1);
-		final KeyValue kv1 = new KeyValue(mod1ring4.heightProperty(), ((35 * level)));
-		final KeyValue kv2 = new KeyValue(mod3ring4.heightProperty(), ((35 * level)));
-		final KeyValue kv3 = new KeyValue(mod5ring4.heightProperty(), ((35 * level)));
-		final KeyValue kv4 = new KeyValue(mod7ring4.heightProperty(), ((35 * level)));
+		final KeyValue kv1 = new KeyValue(mod1ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(mod3ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv3 = new KeyValue(mod5ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv4 = new KeyValue(mod7ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4);
 		timeline.getKeyFrames().add(kf);
@@ -2031,9 +1902,9 @@ public class FountainSimController implements Initializable {
 	public void drawRing4B(int level, double lagTime) {
 		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(1);
-		final KeyValue kv1 = new KeyValue(mod2ring4.heightProperty(), ((35 * level)));
-		final KeyValue kv2 = new KeyValue(mod4ring4.heightProperty(), ((35 * level)));
-		final KeyValue kv3 = new KeyValue(mod6ring4.heightProperty(), ((35 * level)));
+		final KeyValue kv1 = new KeyValue(mod2ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(mod4ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv3 = new KeyValue(mod6ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3);
 		timeline.getKeyFrames().add(kf);
@@ -2043,10 +1914,10 @@ public class FountainSimController implements Initializable {
 	public void drawRing5A(int level, double lagTime) {
 		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(1);
-		final KeyValue kv1 = new KeyValue(mod1ring5.heightProperty(), ((35 * level)));
-		final KeyValue kv2 = new KeyValue(mod3ring5.heightProperty(), ((35 * level)));
-		final KeyValue kv3 = new KeyValue(mod5ring5.heightProperty(), ((35 * level)));
-		final KeyValue kv4 = new KeyValue(mod7ring5.heightProperty(), ((35 * level)));
+		final KeyValue kv1 = new KeyValue(mod1ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(mod3ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv3 = new KeyValue(mod5ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv4 = new KeyValue(mod7ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4);
 		timeline.getKeyFrames().add(kf);
@@ -2056,9 +1927,9 @@ public class FountainSimController implements Initializable {
 	public void drawRing5B(int level, double lagTime) {
 		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(1);
-		final KeyValue kv1 = new KeyValue(mod2ring5.heightProperty(), ((35 * level)));
-		final KeyValue kv2 = new KeyValue(mod4ring5.heightProperty(), ((35 * level)));
-		final KeyValue kv3 = new KeyValue(mod6ring5.heightProperty(), ((35 * level)));
+		final KeyValue kv1 = new KeyValue(mod2ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(mod4ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv3 = new KeyValue(mod6ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3);
 		timeline.getKeyFrames().add(kf);
 		timeline.play();
@@ -2067,7 +1938,7 @@ public class FountainSimController implements Initializable {
 	public void drawSpout(int level, double lagTime) {
 		final Timeline timeline = new Timeline();
 		timeline.setCycleCount(1);
-		final KeyValue kv1 = new KeyValue(spoutRec.heightProperty(), ((40 * level)));
+		final KeyValue kv1 = new KeyValue(spoutRec.heightProperty(), ((40 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1);
 		timeline.getKeyFrames().add(kf);
@@ -2098,15 +1969,15 @@ public class FountainSimController implements Initializable {
 		timeline.setCycleCount(1);
 		if (level == 0) {
 
-			kv2 = new KeyValue(bazooka1.endXProperty(), (10 + (100 * level)));
-			kv3 = new KeyValue(bazooka1.endYProperty(), (5 + (47 * level)));
-			kv4 = new KeyValue(bazooka2.endXProperty(), (10 + 1320 - (100 * level)));
-			kv5 = new KeyValue(bazooka2.endYProperty(), (5 + (47 * level)));
+			kv2 = new KeyValue(bazooka1.endXProperty(), (10 + (100 * level)), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(bazooka1.endYProperty(), (5 + (47 * level)), Interpolator.EASE_BOTH);
+			kv4 = new KeyValue(bazooka2.endXProperty(), (10 + 1320 - (100 * level)), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(bazooka2.endYProperty(), (5 + (47 * level)), Interpolator.EASE_BOTH);
 
-			kv7 = new KeyValue(bazooka3.endXProperty(), (10 + (100 * level)));
-			kv8 = new KeyValue(bazooka3.endYProperty(), (5 + (47 * level)));
-			kv9 = new KeyValue(bazooka4.endXProperty(), (10 + 1320 - (100 * level)));
-			kv10 = new KeyValue(bazooka4.endYProperty(), (5 + (47 * level)));
+			kv7 = new KeyValue(bazooka3.endXProperty(), (10 + (100 * level)), Interpolator.EASE_BOTH);
+			kv8 = new KeyValue(bazooka3.endYProperty(), (5 + (47 * level)), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(bazooka4.endXProperty(), (10 + 1320 - (100 * level)), Interpolator.EASE_BOTH);
+			kv10 = new KeyValue(bazooka4.endYProperty(), (5 + (47 * level)), Interpolator.EASE_BOTH);
 
 			kv11 = new KeyValue(bazooka1.visibleProperty(), false);
 			kv12 = new KeyValue(bazooka2.visibleProperty(), false);
@@ -2119,15 +1990,15 @@ public class FountainSimController implements Initializable {
 			bazooka3.setVisible(true);
 			bazooka4.setVisible(true);
 
-			kv2 = new KeyValue(bazooka1.endXProperty(), (10 + (100 * level)));
-			kv3 = new KeyValue(bazooka1.endYProperty(), (10 + (47 * level)));
-			kv4 = new KeyValue(bazooka2.endXProperty(), (1310 - (100 * level)));
-			kv5 = new KeyValue(bazooka2.endYProperty(), (10 + (47 * level)));
+			kv2 = new KeyValue(bazooka1.endXProperty(), (10 + (100 * level)), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(bazooka1.endYProperty(), (10 + (47 * level)), Interpolator.EASE_BOTH);
+			kv4 = new KeyValue(bazooka2.endXProperty(), (1310 - (100 * level)), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(bazooka2.endYProperty(), (10 + (47 * level)), Interpolator.EASE_BOTH);
 
-			kv8 = new KeyValue(bazooka3.endXProperty(), (10 + (100 * level)));
-			kv9 = new KeyValue(bazooka3.endYProperty(), (10 + (47 * level)));
-			kv10 = new KeyValue(bazooka4.endXProperty(), (1310 - (100 * level)));
-			kv11 = new KeyValue(bazooka4.endYProperty(), (10 + (47 * level)));
+			kv8 = new KeyValue(bazooka3.endXProperty(), (10 + (100 * level)), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(bazooka3.endYProperty(), (10 + (47 * level)), Interpolator.EASE_BOTH);
+			kv10 = new KeyValue(bazooka4.endXProperty(), (1310 - (100 * level)), Interpolator.EASE_BOTH);
+			kv11 = new KeyValue(bazooka4.endYProperty(), (10 + (47 * level)), Interpolator.EASE_BOTH);
 
 		}
 
@@ -2137,15 +2008,15 @@ public class FountainSimController implements Initializable {
 			bazooka2.setVisible(true);
 			bazooka3.setVisible(true);
 			bazooka4.setVisible(true);
-			kv2 = new KeyValue(bazooka1.endXProperty(), (10 + (100 * 2)));
-			kv3 = new KeyValue(bazooka1.endYProperty(), (10 + (47 * 2)));
-			kv4 = new KeyValue(bazooka2.endXProperty(), (1310 - (100 * 2)));
-			kv5 = new KeyValue(bazooka2.endYProperty(), (12 + (47 * 2)));
+			kv2 = new KeyValue(bazooka1.endXProperty(), (10 + (100 * 2)), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(bazooka1.endYProperty(), (10 + (47 * 2)), Interpolator.EASE_BOTH);
+			kv4 = new KeyValue(bazooka2.endXProperty(), (1310 - (100 * 2)), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(bazooka2.endYProperty(), (12 + (47 * 2)), Interpolator.EASE_BOTH);
 
-			kv8 = new KeyValue(bazooka3.endXProperty(), (10 + (100 * level)));
-			kv9 = new KeyValue(bazooka3.endYProperty(), (10 + (47 * level)));
-			kv10 = new KeyValue(bazooka4.endXProperty(), (1310 - (100 * level)));
-			kv11 = new KeyValue(bazooka4.endYProperty(), (10 + (47 * level)));
+			kv8 = new KeyValue(bazooka3.endXProperty(), (10 + (100 * level)), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(bazooka3.endYProperty(), (10 + (47 * level)), Interpolator.EASE_BOTH);
+			kv10 = new KeyValue(bazooka4.endXProperty(), (1310 - (100 * level)), Interpolator.EASE_BOTH);
+			kv11 = new KeyValue(bazooka4.endYProperty(), (10 + (47 * level)), Interpolator.EASE_BOTH);
 		}
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11, kv12, kv13, kv14, kv15, kv16, kv17, kv18, kv19);
@@ -2197,53 +2068,53 @@ public class FountainSimController implements Initializable {
 			peacock8.setVisible(true);
 			peacock9.setVisible(true);
 
-			kv2 = new KeyValue(peacock1.endXProperty(), (689 + (102.2 * level)));
-			kv3 = new KeyValue(peacock1.endYProperty(), (5 + (26 * level)));
+			kv2 = new KeyValue(peacock1.endXProperty(), (689 + (102.2 * level)), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(peacock1.endYProperty(), (5 + (26 * level)), Interpolator.EASE_BOTH);
 
-			kv4 = new KeyValue(peacock2.endXProperty(), (688 + (66.4 * level)));
-			kv5 = new KeyValue(peacock2.endYProperty(), (17 + (36.6 * level)));
+			kv4 = new KeyValue(peacock2.endXProperty(), (688 + (66.4 * level)), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(peacock2.endYProperty(), (17 + (36.6 * level)), Interpolator.EASE_BOTH);
 
-			kv6 = new KeyValue(peacock3.endXProperty(), (683 + (38.4 * level)));
-			kv7 = new KeyValue(peacock3.endYProperty(), (28 + (39.4 * level)));
+			kv6 = new KeyValue(peacock3.endXProperty(), (683 + (38.4 * level)), Interpolator.EASE_BOTH);
+			kv7 = new KeyValue(peacock3.endYProperty(), (28 + (39.4 * level)), Interpolator.EASE_BOTH);
 
-			kv8 = new KeyValue(peacock4.endXProperty(), (675 + (18 * level)));
-			kv9 = new KeyValue(peacock4.endYProperty(), (37 + (39.6 * level)));
+			kv8 = new KeyValue(peacock4.endXProperty(), (675 + (18 * level)), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(peacock4.endYProperty(), (37 + (39.6 * level)), Interpolator.EASE_BOTH);
 
-			kv10 = new KeyValue(peacock5.endXProperty(), (665 + (0 * level)));
-			kv11 = new KeyValue(peacock5.endYProperty(), (40 + (40 * level)));
+			kv10 = new KeyValue(peacock5.endXProperty(), (665 + (0 * level)), Interpolator.EASE_BOTH);
+			kv11 = new KeyValue(peacock5.endYProperty(), (40 + (40 * level)), Interpolator.EASE_BOTH);
 
-			kv12 = new KeyValue(peacock6.endXProperty(), (655 + (-18 * level)));
-			kv13 = new KeyValue(peacock6.endYProperty(), (37 + (39.6 * level)));
+			kv12 = new KeyValue(peacock6.endXProperty(), (655 + (-18 * level)), Interpolator.EASE_BOTH);
+			kv13 = new KeyValue(peacock6.endYProperty(), (37 + (39.6 * level)), Interpolator.EASE_BOTH);
 
-			kv14 = new KeyValue(peacock7.endXProperty(), (647 + (-39.4 * level)));
-			kv15 = new KeyValue(peacock7.endYProperty(), (28 + (39.4 * level)));
+			kv14 = new KeyValue(peacock7.endXProperty(), (647 + (-39.4 * level)), Interpolator.EASE_BOTH);
+			kv15 = new KeyValue(peacock7.endYProperty(), (28 + (39.4 * level)), Interpolator.EASE_BOTH);
 
-			kv16 = new KeyValue(peacock8.endXProperty(), (643 + (-66.6 * level)));
-			kv17 = new KeyValue(peacock8.endYProperty(), (17 + (36.6 * level)));
+			kv16 = new KeyValue(peacock8.endXProperty(), (643 + (-66.6 * level)), Interpolator.EASE_BOTH);
+			kv17 = new KeyValue(peacock8.endYProperty(), (17 + (36.6 * level)), Interpolator.EASE_BOTH);
 
-			kv18 = new KeyValue(peacock9.endXProperty(), (642 + (-101.4 * level)));
-			kv19 = new KeyValue(peacock9.endYProperty(), (5 + (26 * level)));
+			kv18 = new KeyValue(peacock9.endXProperty(), (642 + (-101.4 * level)), Interpolator.EASE_BOTH);
+			kv19 = new KeyValue(peacock9.endYProperty(), (5 + (26 * level)), Interpolator.EASE_BOTH);
 
 		} else {
 
-			kv2 = new KeyValue(peacock1.endXProperty(), (689 + (102.2 * level)));
-			kv3 = new KeyValue(peacock1.endYProperty(), (5 + (26 * level)));
-			kv4 = new KeyValue(peacock2.endXProperty(), (688 + (66.4 * level)));
-			kv5 = new KeyValue(peacock2.endYProperty(), (17 + (36.6 * level)));
-			kv6 = new KeyValue(peacock3.endXProperty(), (683 + (38.4 * level)));
-			kv7 = new KeyValue(peacock3.endYProperty(), (28 + (39.4 * level)));
-			kv8 = new KeyValue(peacock4.endXProperty(), (675 + (18 * level)));
-			kv9 = new KeyValue(peacock4.endYProperty(), (37 + (39.6 * level)));
-			kv10 = new KeyValue(peacock5.endXProperty(), (665 + (0 * level)));
-			kv11 = new KeyValue(peacock5.endYProperty(), (40 + (40 * level)));
-			kv12 = new KeyValue(peacock6.endXProperty(), (655 + (-18 * level)));
-			kv13 = new KeyValue(peacock6.endYProperty(), (37 + (39.6 * level)));
-			kv14 = new KeyValue(peacock7.endXProperty(), (647 + (-39.4 * level)));
-			kv15 = new KeyValue(peacock7.endYProperty(), (28 + (39.4 * level)));
-			kv16 = new KeyValue(peacock8.endXProperty(), (643 + (-66.6 * level)));
-			kv17 = new KeyValue(peacock8.endYProperty(), (17 + (36.6 * level)));
-			kv18 = new KeyValue(peacock9.endXProperty(), (642 + (-101.4 * level)));
-			kv19 = new KeyValue(peacock9.endYProperty(), (5 + (26 * level)));
+			kv2 = new KeyValue(peacock1.endXProperty(), (689 + (102.2 * level)), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(peacock1.endYProperty(), (5 + (26 * level)), Interpolator.EASE_BOTH);
+			kv4 = new KeyValue(peacock2.endXProperty(), (688 + (66.4 * level)), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(peacock2.endYProperty(), (17 + (36.6 * level)), Interpolator.EASE_BOTH);
+			kv6 = new KeyValue(peacock3.endXProperty(), (683 + (38.4 * level)), Interpolator.EASE_BOTH);
+			kv7 = new KeyValue(peacock3.endYProperty(), (28 + (39.4 * level)), Interpolator.EASE_BOTH);
+			kv8 = new KeyValue(peacock4.endXProperty(), (675 + (18 * level)), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(peacock4.endYProperty(), (37 + (39.6 * level)), Interpolator.EASE_BOTH);
+			kv10 = new KeyValue(peacock5.endXProperty(), (665 + (0 * level)), Interpolator.EASE_BOTH);
+			kv11 = new KeyValue(peacock5.endYProperty(), (40 + (40 * level)), Interpolator.EASE_BOTH);
+			kv12 = new KeyValue(peacock6.endXProperty(), (655 + (-18 * level)), Interpolator.EASE_BOTH);
+			kv13 = new KeyValue(peacock6.endYProperty(), (37 + (39.6 * level)), Interpolator.EASE_BOTH);
+			kv14 = new KeyValue(peacock7.endXProperty(), (647 + (-39.4 * level)), Interpolator.EASE_BOTH);
+			kv15 = new KeyValue(peacock7.endYProperty(), (28 + (39.4 * level)), Interpolator.EASE_BOTH);
+			kv16 = new KeyValue(peacock8.endXProperty(), (643 + (-66.6 * level)), Interpolator.EASE_BOTH);
+			kv17 = new KeyValue(peacock8.endYProperty(), (17 + (36.6 * level)), Interpolator.EASE_BOTH);
+			kv18 = new KeyValue(peacock9.endXProperty(), (642 + (-101.4 * level)), Interpolator.EASE_BOTH);
+			kv19 = new KeyValue(peacock9.endYProperty(), (5 + (26 * level)), Interpolator.EASE_BOTH);
 
 			kv20 = new KeyValue(peacock1.visibleProperty(), false);
 			kv21 = new KeyValue(peacock2.visibleProperty(), false);
@@ -2300,17 +2171,17 @@ public class FountainSimController implements Initializable {
 			kv32 = new KeyValue(mod7sweep2.visibleProperty(), false);
 		}
 
-		final KeyValue kv1 = new KeyValue(mod1sweep1.endYProperty(), ((35 * level)));
-		final KeyValue kv2 = new KeyValue(mod1sweep2.endYProperty(), ((35 * level)));
+		final KeyValue kv1 = new KeyValue(mod1sweep1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(mod1sweep2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
-		final KeyValue kv7 = new KeyValue(mod3sweep1.endYProperty(), ((35 * level)));
-		final KeyValue kv8 = new KeyValue(mod3sweep2.endYProperty(), ((35 * level)));
+		final KeyValue kv7 = new KeyValue(mod3sweep1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv8 = new KeyValue(mod3sweep2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
-		final KeyValue kv13 = new KeyValue(mod5sweep1.endYProperty(), ((35 * level)));
-		final KeyValue kv14 = new KeyValue(mod5sweep2.endYProperty(), ((35 * level)));
+		final KeyValue kv13 = new KeyValue(mod5sweep1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv14 = new KeyValue(mod5sweep2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
-		final KeyValue kv19 = new KeyValue(mod7sweep1.endYProperty(), ((35 * level)));
-		final KeyValue kv20 = new KeyValue(mod7sweep2.endYProperty(), ((35 * level)));
+		final KeyValue kv19 = new KeyValue(mod7sweep1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv20 = new KeyValue(mod7sweep2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(.5), kv1, kv2, kv7, kv8, kv13, kv14, kv14, kv19, kv20, kv25, kv26, kv27, kv28, kv29, kv30, kv31, kv32);
 		timeline.getKeyFrames().add(kf);
@@ -2346,14 +2217,14 @@ public class FountainSimController implements Initializable {
 			kv20 = new KeyValue(mod6sweep2.visibleProperty(), false);
 		}
 
-		final KeyValue kv1 = new KeyValue(mod2sweep1.endYProperty(), ((35 * level)));
-		final KeyValue kv2 = new KeyValue(mod2sweep2.endYProperty(), ((35 * level)));
+		final KeyValue kv1 = new KeyValue(mod2sweep1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(mod2sweep2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
-		final KeyValue kv7 = new KeyValue(mod4sweep1.endYProperty(), ((35 * level)));
-		final KeyValue kv8 = new KeyValue(mod4sweep2.endYProperty(), ((35 * level)));
+		final KeyValue kv7 = new KeyValue(mod4sweep1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv8 = new KeyValue(mod4sweep2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
-		final KeyValue kv13 = new KeyValue(mod6sweep1.endYProperty(), ((35 * level)));
-		final KeyValue kv14 = new KeyValue(mod6sweep2.endYProperty(), ((35 * level)));
+		final KeyValue kv13 = new KeyValue(mod6sweep1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv14 = new KeyValue(mod6sweep2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(.5), kv1, kv2, kv7, kv8, kv13, kv14, kv15, kv16, kv17, kv18, kv19, kv20);
 		timeline.getKeyFrames().add(kf);
@@ -2362,11 +2233,15 @@ public class FountainSimController implements Initializable {
 
 	public void sweepLeftSweeps(double leftLimit, double rightLimit) {
 		leftSweepTimeline = new Timeline();
+
+		// Pauses/resumes the animation
 		if (MusicPaneController.getInstance().getMediaPlayer().statusProperty().getValue() == Status.PLAYING) {
 			leftSweepTimeline.setCycleCount(Animation.INDEFINITE);
 		} else {
 			leftSweepTimeline.setCycleCount(1);
 		}
+
+		// Using this replays the animation
 		leftSweepTimeline.setAutoReverse(true);
 
 		// These are for the animations and hold time values
@@ -2417,7 +2292,7 @@ public class FountainSimController implements Initializable {
 
 		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		final KeyFrame kf = new KeyFrame(Duration.seconds(leftSweepSpeed), kv1, kv2, kv7, kv8, kv13, kv14, kv14, kv19);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(leftSweepSpeed), kv1, kv2, kv7, kv8, kv13, kv14, kv19);
 		leftSweepTimeline.getKeyFrames().add(kf);
 		leftSweepTimeline.play();
 	}
@@ -2545,7 +2420,7 @@ public class FountainSimController implements Initializable {
 
 		kv19 = new KeyValue(rotate7.angleProperty(), rightLimit, Interpolator.EASE_BOTH);
 
-		final KeyFrame kf = new KeyFrame(Duration.seconds(leftSweepSpeed), kv1, kv2, kv7, kv8, kv13, kv14, kv14, kv19);
+		final KeyFrame kf = new KeyFrame(Duration.seconds(leftSweepSpeed), kv1, kv2, kv7, kv8, kv13, kv14, kv19);
 		leftSweepTimeline.getKeyFrames().add(kf);
 		leftSweepTimeline.play();
 	}
@@ -2791,118 +2666,118 @@ public class FountainSimController implements Initializable {
 		KeyValue kv20 = null;
 
 		if (level == 1.0 || level == 0.0) {
-			kv1 = new KeyValue(mod1ring1.heightProperty(), ((35 * level)));
-			kv2 = new KeyValue(mod3ring1.heightProperty(), ((35 * level)));
-			kv3 = new KeyValue(mod5ring1.heightProperty(), ((35 * level)));
-			kv4 = new KeyValue(mod7ring1.heightProperty(), ((35 * level)));
-			kv5 = new KeyValue(mod1ring2.heightProperty(), ((35 * level)));
-			kv6 = new KeyValue(mod3ring2.heightProperty(), ((35 * level)));
-			kv7 = new KeyValue(mod5ring2.heightProperty(), ((35 * level)));
-			kv8 = new KeyValue(mod7ring2.heightProperty(), ((35 * level)));
-			kv9 = new KeyValue(mod1ring3.heightProperty(), ((35 * level)));
-			kv10 = new KeyValue(mod3ring3.heightProperty(), ((35 * level)));
-			kv11 = new KeyValue(mod5ring3.heightProperty(), ((35 * level)));
-			kv12 = new KeyValue(mod7ring3.heightProperty(), ((35 * level)));
-			kv13 = new KeyValue(mod1ring4.heightProperty(), ((35 * level)));
-			kv14 = new KeyValue(mod3ring4.heightProperty(), ((35 * level)));
-			kv15 = new KeyValue(mod5ring4.heightProperty(), ((35 * level)));
-			kv16 = new KeyValue(mod7ring4.heightProperty(), ((35 * level)));
-			kv17 = new KeyValue(mod1ring5.heightProperty(), ((35 * level)));
-			kv18 = new KeyValue(mod3ring5.heightProperty(), ((35 * level)));
-			kv19 = new KeyValue(mod5ring5.heightProperty(), ((35 * level)));
-			kv20 = new KeyValue(mod7ring5.heightProperty(), ((35 * level)));
+			kv1 = new KeyValue(mod1ring1.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv2 = new KeyValue(mod3ring1.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(mod5ring1.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv4 = new KeyValue(mod7ring1.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(mod1ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv6 = new KeyValue(mod3ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv7 = new KeyValue(mod5ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv8 = new KeyValue(mod7ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(mod1ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv10 = new KeyValue(mod3ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv11 = new KeyValue(mod5ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv12 = new KeyValue(mod7ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv13 = new KeyValue(mod1ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv14 = new KeyValue(mod3ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv15 = new KeyValue(mod5ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv16 = new KeyValue(mod7ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv17 = new KeyValue(mod1ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv18 = new KeyValue(mod3ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv19 = new KeyValue(mod5ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv20 = new KeyValue(mod7ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 		}
 
 		if (level == 2.0) {
-			kv1 = new KeyValue(mod1ring1.heightProperty(), ((35 * (level - 1))));
-			kv2 = new KeyValue(mod3ring1.heightProperty(), ((35 * (level - 1))));
-			kv3 = new KeyValue(mod5ring1.heightProperty(), ((35 * (level - 1))));
-			kv4 = new KeyValue(mod7ring1.heightProperty(), ((35 * (level - 1))));
-			kv5 = new KeyValue(mod1ring2.heightProperty(), ((35 * level)));
-			kv6 = new KeyValue(mod3ring2.heightProperty(), ((35 * level)));
-			kv7 = new KeyValue(mod5ring2.heightProperty(), ((35 * level)));
-			kv8 = new KeyValue(mod7ring2.heightProperty(), ((35 * level)));
-			kv9 = new KeyValue(mod1ring3.heightProperty(), ((35 * level)));
-			kv10 = new KeyValue(mod3ring3.heightProperty(), ((35 * level)));
-			kv11 = new KeyValue(mod5ring3.heightProperty(), ((35 * level)));
-			kv12 = new KeyValue(mod7ring3.heightProperty(), ((35 * level)));
-			kv13 = new KeyValue(mod1ring4.heightProperty(), ((35 * level)));
-			kv14 = new KeyValue(mod3ring4.heightProperty(), ((35 * level)));
-			kv15 = new KeyValue(mod5ring4.heightProperty(), ((35 * level)));
-			kv16 = new KeyValue(mod7ring4.heightProperty(), ((35 * level)));
-			kv17 = new KeyValue(mod1ring5.heightProperty(), ((35 * level)));
-			kv18 = new KeyValue(mod3ring5.heightProperty(), ((35 * level)));
-			kv19 = new KeyValue(mod5ring5.heightProperty(), ((35 * level)));
-			kv20 = new KeyValue(mod7ring5.heightProperty(), ((35 * level)));
+			kv1 = new KeyValue(mod1ring1.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv2 = new KeyValue(mod3ring1.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(mod5ring1.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv4 = new KeyValue(mod7ring1.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(mod1ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv6 = new KeyValue(mod3ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv7 = new KeyValue(mod5ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv8 = new KeyValue(mod7ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(mod1ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv10 = new KeyValue(mod3ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv11 = new KeyValue(mod5ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv12 = new KeyValue(mod7ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv13 = new KeyValue(mod1ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv14 = new KeyValue(mod3ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv15 = new KeyValue(mod5ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv16 = new KeyValue(mod7ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv17 = new KeyValue(mod1ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv18 = new KeyValue(mod3ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv19 = new KeyValue(mod5ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv20 = new KeyValue(mod7ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 		}
 
 		if (level == 3.0) {
-			kv1 = new KeyValue(mod1ring1.heightProperty(), ((35 * (level - 2))));
-			kv2 = new KeyValue(mod3ring1.heightProperty(), ((35 * (level - 2))));
-			kv3 = new KeyValue(mod5ring1.heightProperty(), ((35 * (level - 2))));
-			kv4 = new KeyValue(mod7ring1.heightProperty(), ((35 * (level - 2))));
-			kv5 = new KeyValue(mod1ring2.heightProperty(), ((35 * (level - 1))));
-			kv6 = new KeyValue(mod3ring2.heightProperty(), ((35 * (level - 1))));
-			kv7 = new KeyValue(mod5ring2.heightProperty(), ((35 * (level - 1))));
-			kv8 = new KeyValue(mod7ring2.heightProperty(), ((35 * (level - 1))));
-			kv9 = new KeyValue(mod1ring3.heightProperty(), ((35 * (level - 0))));
-			kv10 = new KeyValue(mod3ring3.heightProperty(), ((35 * (level - 0))));
-			kv11 = new KeyValue(mod5ring3.heightProperty(), ((35 * (level - 0))));
-			kv12 = new KeyValue(mod7ring3.heightProperty(), ((35 * (level - 0))));
-			kv13 = new KeyValue(mod1ring4.heightProperty(), ((35 * (level - 0))));
-			kv14 = new KeyValue(mod3ring4.heightProperty(), ((35 * (level - 0))));
-			kv15 = new KeyValue(mod5ring4.heightProperty(), ((35 * (level - 0))));
-			kv16 = new KeyValue(mod7ring4.heightProperty(), ((35 * (level - 0))));
-			kv17 = new KeyValue(mod1ring5.heightProperty(), ((35 * (level - 0))));
-			kv18 = new KeyValue(mod3ring5.heightProperty(), ((35 * (level - 0))));
-			kv19 = new KeyValue(mod5ring5.heightProperty(), ((35 * (level - 0))));
-			kv20 = new KeyValue(mod7ring5.heightProperty(), ((35 * (level - 0))));
+			kv1 = new KeyValue(mod1ring1.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv2 = new KeyValue(mod3ring1.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(mod5ring1.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv4 = new KeyValue(mod7ring1.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(mod1ring2.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv6 = new KeyValue(mod3ring2.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv7 = new KeyValue(mod5ring2.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv8 = new KeyValue(mod7ring2.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(mod1ring3.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv10 = new KeyValue(mod3ring3.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv11 = new KeyValue(mod5ring3.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv12 = new KeyValue(mod7ring3.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv13 = new KeyValue(mod1ring4.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv14 = new KeyValue(mod3ring4.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv15 = new KeyValue(mod5ring4.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv16 = new KeyValue(mod7ring4.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv17 = new KeyValue(mod1ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv18 = new KeyValue(mod3ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv19 = new KeyValue(mod5ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv20 = new KeyValue(mod7ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
 		}
 
 		if (level == 4.0) {
-			kv1 = new KeyValue(mod1ring1.heightProperty(), ((35 * (level - 3))));
-			kv2 = new KeyValue(mod3ring1.heightProperty(), ((35 * (level - 3))));
-			kv3 = new KeyValue(mod5ring1.heightProperty(), ((35 * (level - 3))));
-			kv4 = new KeyValue(mod7ring1.heightProperty(), ((35 * (level - 3))));
-			kv5 = new KeyValue(mod1ring2.heightProperty(), ((35 * (level - 2))));
-			kv6 = new KeyValue(mod3ring2.heightProperty(), ((35 * (level - 2))));
-			kv7 = new KeyValue(mod5ring2.heightProperty(), ((35 * (level - 2))));
-			kv8 = new KeyValue(mod7ring2.heightProperty(), ((35 * (level - 2))));
-			kv9 = new KeyValue(mod1ring3.heightProperty(), ((35 * (level - 1))));
-			kv10 = new KeyValue(mod3ring3.heightProperty(), ((35 * (level - 1))));
-			kv11 = new KeyValue(mod5ring3.heightProperty(), ((35 * (level - 1))));
-			kv12 = new KeyValue(mod7ring3.heightProperty(), ((35 * (level - 1))));
-			kv13 = new KeyValue(mod1ring4.heightProperty(), ((35 * (level - 0))));
-			kv14 = new KeyValue(mod3ring4.heightProperty(), ((35 * (level - 0))));
-			kv15 = new KeyValue(mod5ring4.heightProperty(), ((35 * (level - 0))));
-			kv16 = new KeyValue(mod7ring4.heightProperty(), ((35 * (level - 0))));
-			kv17 = new KeyValue(mod1ring5.heightProperty(), ((35 * (level - 0))));
-			kv18 = new KeyValue(mod3ring5.heightProperty(), ((35 * (level - 0))));
-			kv19 = new KeyValue(mod5ring5.heightProperty(), ((35 * (level - 0))));
-			kv20 = new KeyValue(mod7ring5.heightProperty(), ((35 * (level - 0))));
+			kv1 = new KeyValue(mod1ring1.heightProperty(), ((35 * (level - 3))), Interpolator.EASE_BOTH);
+			kv2 = new KeyValue(mod3ring1.heightProperty(), ((35 * (level - 3))), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(mod5ring1.heightProperty(), ((35 * (level - 3))), Interpolator.EASE_BOTH);
+			kv4 = new KeyValue(mod7ring1.heightProperty(), ((35 * (level - 3))), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(mod1ring2.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv6 = new KeyValue(mod3ring2.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv7 = new KeyValue(mod5ring2.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv8 = new KeyValue(mod7ring2.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(mod1ring3.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv10 = new KeyValue(mod3ring3.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv11 = new KeyValue(mod5ring3.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv12 = new KeyValue(mod7ring3.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv13 = new KeyValue(mod1ring4.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv14 = new KeyValue(mod3ring4.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv15 = new KeyValue(mod5ring4.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv16 = new KeyValue(mod7ring4.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv17 = new KeyValue(mod1ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv18 = new KeyValue(mod3ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv19 = new KeyValue(mod5ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv20 = new KeyValue(mod7ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
 		}
 
 		if (level == 5.0) {
-			kv1 = new KeyValue(mod1ring1.heightProperty(), ((35 * (level - 4))));
-			kv2 = new KeyValue(mod3ring1.heightProperty(), ((35 * (level - 4))));
-			kv3 = new KeyValue(mod5ring1.heightProperty(), ((35 * (level - 4))));
-			kv4 = new KeyValue(mod7ring1.heightProperty(), ((35 * (level - 4))));
-			kv5 = new KeyValue(mod1ring2.heightProperty(), ((35 * (level - 3))));
-			kv6 = new KeyValue(mod3ring2.heightProperty(), ((35 * (level - 3))));
-			kv7 = new KeyValue(mod5ring2.heightProperty(), ((35 * (level - 3))));
-			kv8 = new KeyValue(mod7ring2.heightProperty(), ((35 * (level - 3))));
-			kv9 = new KeyValue(mod1ring3.heightProperty(), ((35 * (level - 2))));
-			kv10 = new KeyValue(mod3ring3.heightProperty(), ((35 * (level - 2))));
-			kv11 = new KeyValue(mod5ring3.heightProperty(), ((35 * (level - 2))));
-			kv12 = new KeyValue(mod7ring3.heightProperty(), ((35 * (level - 2))));
-			kv13 = new KeyValue(mod1ring4.heightProperty(), ((35 * (level - 1))));
-			kv14 = new KeyValue(mod3ring4.heightProperty(), ((35 * (level - 1))));
-			kv15 = new KeyValue(mod5ring4.heightProperty(), ((35 * (level - 1))));
-			kv16 = new KeyValue(mod7ring4.heightProperty(), ((35 * (level - 1))));
-			kv17 = new KeyValue(mod1ring5.heightProperty(), ((35 * (level - 0))));
-			kv18 = new KeyValue(mod3ring5.heightProperty(), ((35 * (level - 0))));
-			kv19 = new KeyValue(mod5ring5.heightProperty(), ((35 * (level - 0))));
-			kv20 = new KeyValue(mod7ring5.heightProperty(), ((35 * (level - 0))));
+			kv1 = new KeyValue(mod1ring1.heightProperty(), ((35 * (level - 4))), Interpolator.EASE_BOTH);
+			kv2 = new KeyValue(mod3ring1.heightProperty(), ((35 * (level - 4))), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(mod5ring1.heightProperty(), ((35 * (level - 4))), Interpolator.EASE_BOTH);
+			kv4 = new KeyValue(mod7ring1.heightProperty(), ((35 * (level - 4))), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(mod1ring2.heightProperty(), ((35 * (level - 3))), Interpolator.EASE_BOTH);
+			kv6 = new KeyValue(mod3ring2.heightProperty(), ((35 * (level - 3))), Interpolator.EASE_BOTH);
+			kv7 = new KeyValue(mod5ring2.heightProperty(), ((35 * (level - 3))), Interpolator.EASE_BOTH);
+			kv8 = new KeyValue(mod7ring2.heightProperty(), ((35 * (level - 3))), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(mod1ring3.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv10 = new KeyValue(mod3ring3.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv11 = new KeyValue(mod5ring3.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv12 = new KeyValue(mod7ring3.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv13 = new KeyValue(mod1ring4.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv14 = new KeyValue(mod3ring4.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv15 = new KeyValue(mod5ring4.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv16 = new KeyValue(mod7ring4.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv17 = new KeyValue(mod1ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv18 = new KeyValue(mod3ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv19 = new KeyValue(mod5ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv20 = new KeyValue(mod7ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
 		}
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11, kv12, kv13, kv14, kv15, kv16, kv17, kv18, kv19, kv20);
 		timeline.getKeyFrames().add(kf);
@@ -2930,93 +2805,93 @@ public class FountainSimController implements Initializable {
 		KeyValue kv19 = null;
 
 		if (level == 1.0 || level == 0.0) {
-			kv1 = new KeyValue(mod2ring1.heightProperty(), ((35 * level)));
-			kv2 = new KeyValue(mod4ring1.heightProperty(), ((35 * level)));
-			kv3 = new KeyValue(mod6ring1.heightProperty(), ((35 * level)));
-			kv5 = new KeyValue(mod2ring2.heightProperty(), ((35 * level)));
-			kv6 = new KeyValue(mod4ring2.heightProperty(), ((35 * level)));
-			kv7 = new KeyValue(mod6ring2.heightProperty(), ((35 * level)));
-			kv9 = new KeyValue(mod2ring3.heightProperty(), ((35 * level)));
-			kv10 = new KeyValue(mod4ring3.heightProperty(), ((35 * level)));
-			kv11 = new KeyValue(mod6ring3.heightProperty(), ((35 * level)));
-			kv13 = new KeyValue(mod2ring4.heightProperty(), ((35 * level)));
-			kv14 = new KeyValue(mod4ring4.heightProperty(), ((35 * level)));
-			kv15 = new KeyValue(mod6ring4.heightProperty(), ((35 * level)));
-			kv17 = new KeyValue(mod2ring5.heightProperty(), ((35 * level)));
-			kv18 = new KeyValue(mod4ring5.heightProperty(), ((35 * level)));
-			kv19 = new KeyValue(mod6ring5.heightProperty(), ((35 * level)));
+			kv1 = new KeyValue(mod2ring1.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv2 = new KeyValue(mod4ring1.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(mod6ring1.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(mod2ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv6 = new KeyValue(mod4ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv7 = new KeyValue(mod6ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(mod2ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv10 = new KeyValue(mod4ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv11 = new KeyValue(mod6ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv13 = new KeyValue(mod2ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv14 = new KeyValue(mod4ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv15 = new KeyValue(mod6ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv17 = new KeyValue(mod2ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv18 = new KeyValue(mod4ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv19 = new KeyValue(mod6ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 		}
 
 		if (level == 2.0) {
-			kv1 = new KeyValue(mod2ring1.heightProperty(), ((35 * (level - 1))));
-			kv2 = new KeyValue(mod4ring1.heightProperty(), ((35 * (level - 1))));
-			kv3 = new KeyValue(mod6ring1.heightProperty(), ((35 * (level - 1))));
-			kv5 = new KeyValue(mod2ring2.heightProperty(), ((35 * level)));
-			kv6 = new KeyValue(mod4ring2.heightProperty(), ((35 * level)));
-			kv7 = new KeyValue(mod6ring2.heightProperty(), ((35 * level)));
-			kv9 = new KeyValue(mod2ring3.heightProperty(), ((35 * level)));
-			kv10 = new KeyValue(mod4ring3.heightProperty(), ((35 * level)));
-			kv11 = new KeyValue(mod6ring3.heightProperty(), ((35 * level)));
-			kv13 = new KeyValue(mod2ring4.heightProperty(), ((35 * level)));
-			kv14 = new KeyValue(mod4ring4.heightProperty(), ((35 * level)));
-			kv15 = new KeyValue(mod6ring4.heightProperty(), ((35 * level)));
-			kv17 = new KeyValue(mod2ring5.heightProperty(), ((35 * level)));
-			kv18 = new KeyValue(mod4ring5.heightProperty(), ((35 * level)));
-			kv19 = new KeyValue(mod6ring5.heightProperty(), ((35 * level)));
+			kv1 = new KeyValue(mod2ring1.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv2 = new KeyValue(mod4ring1.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(mod6ring1.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(mod2ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv6 = new KeyValue(mod4ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv7 = new KeyValue(mod6ring2.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(mod2ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv10 = new KeyValue(mod4ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv11 = new KeyValue(mod6ring3.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv13 = new KeyValue(mod2ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv14 = new KeyValue(mod4ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv15 = new KeyValue(mod6ring4.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv17 = new KeyValue(mod2ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv18 = new KeyValue(mod4ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+			kv19 = new KeyValue(mod6ring5.heightProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 		}
 
 		if (level == 3.0) {
-			kv1 = new KeyValue(mod2ring1.heightProperty(), ((35 * (level - 2))));
-			kv2 = new KeyValue(mod4ring1.heightProperty(), ((35 * (level - 2))));
-			kv3 = new KeyValue(mod6ring1.heightProperty(), ((35 * (level - 2))));
-			kv5 = new KeyValue(mod2ring2.heightProperty(), ((35 * (level - 1))));
-			kv6 = new KeyValue(mod4ring2.heightProperty(), ((35 * (level - 1))));
-			kv7 = new KeyValue(mod6ring2.heightProperty(), ((35 * (level - 1))));
-			kv9 = new KeyValue(mod2ring3.heightProperty(), ((35 * (level - 0))));
-			kv10 = new KeyValue(mod4ring3.heightProperty(), ((35 * (level - 0))));
-			kv11 = new KeyValue(mod6ring3.heightProperty(), ((35 * (level - 0))));
-			kv13 = new KeyValue(mod2ring4.heightProperty(), ((35 * (level - 0))));
-			kv14 = new KeyValue(mod4ring4.heightProperty(), ((35 * (level - 0))));
-			kv15 = new KeyValue(mod6ring4.heightProperty(), ((35 * (level - 0))));
-			kv17 = new KeyValue(mod2ring5.heightProperty(), ((35 * (level - 0))));
-			kv18 = new KeyValue(mod4ring5.heightProperty(), ((35 * (level - 0))));
-			kv19 = new KeyValue(mod6ring5.heightProperty(), ((35 * (level - 0))));
+			kv1 = new KeyValue(mod2ring1.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv2 = new KeyValue(mod4ring1.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(mod6ring1.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(mod2ring2.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv6 = new KeyValue(mod4ring2.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv7 = new KeyValue(mod6ring2.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(mod2ring3.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv10 = new KeyValue(mod4ring3.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv11 = new KeyValue(mod6ring3.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv13 = new KeyValue(mod2ring4.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv14 = new KeyValue(mod4ring4.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv15 = new KeyValue(mod6ring4.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv17 = new KeyValue(mod2ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv18 = new KeyValue(mod4ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv19 = new KeyValue(mod6ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
 		}
 
 		if (level == 4.0) {
-			kv1 = new KeyValue(mod2ring1.heightProperty(), ((35 * (level - 3))));
-			kv2 = new KeyValue(mod4ring1.heightProperty(), ((35 * (level - 3))));
-			kv3 = new KeyValue(mod6ring1.heightProperty(), ((35 * (level - 3))));
-			kv5 = new KeyValue(mod2ring2.heightProperty(), ((35 * (level - 2))));
-			kv6 = new KeyValue(mod4ring2.heightProperty(), ((35 * (level - 2))));
-			kv7 = new KeyValue(mod6ring2.heightProperty(), ((35 * (level - 2))));
-			kv9 = new KeyValue(mod2ring3.heightProperty(), ((35 * (level - 1))));
-			kv10 = new KeyValue(mod4ring3.heightProperty(), ((35 * (level - 1))));
-			kv11 = new KeyValue(mod6ring3.heightProperty(), ((35 * (level - 1))));
-			kv13 = new KeyValue(mod2ring4.heightProperty(), ((35 * (level - 0))));
-			kv14 = new KeyValue(mod4ring4.heightProperty(), ((35 * (level - 0))));
-			kv15 = new KeyValue(mod6ring4.heightProperty(), ((35 * (level - 0))));
-			kv17 = new KeyValue(mod2ring5.heightProperty(), ((35 * (level - 0))));
-			kv18 = new KeyValue(mod4ring5.heightProperty(), ((35 * (level - 0))));
-			kv19 = new KeyValue(mod6ring5.heightProperty(), ((35 * (level - 0))));
+			kv1 = new KeyValue(mod2ring1.heightProperty(), ((35 * (level - 3))), Interpolator.EASE_BOTH);
+			kv2 = new KeyValue(mod4ring1.heightProperty(), ((35 * (level - 3))), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(mod6ring1.heightProperty(), ((35 * (level - 3))), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(mod2ring2.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv6 = new KeyValue(mod4ring2.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv7 = new KeyValue(mod6ring2.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(mod2ring3.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv10 = new KeyValue(mod4ring3.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv11 = new KeyValue(mod6ring3.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv13 = new KeyValue(mod2ring4.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv14 = new KeyValue(mod4ring4.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv15 = new KeyValue(mod6ring4.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv17 = new KeyValue(mod2ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv18 = new KeyValue(mod4ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv19 = new KeyValue(mod6ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
 		}
 
 		if (level == 5.0) {
-			kv1 = new KeyValue(mod2ring1.heightProperty(), ((35 * (level - 4))));
-			kv2 = new KeyValue(mod4ring1.heightProperty(), ((35 * (level - 4))));
-			kv3 = new KeyValue(mod6ring1.heightProperty(), ((35 * (level - 4))));
-			kv5 = new KeyValue(mod2ring2.heightProperty(), ((35 * (level - 3))));
-			kv6 = new KeyValue(mod4ring2.heightProperty(), ((35 * (level - 3))));
-			kv7 = new KeyValue(mod6ring2.heightProperty(), ((35 * (level - 3))));
-			kv9 = new KeyValue(mod2ring3.heightProperty(), ((35 * (level - 2))));
-			kv10 = new KeyValue(mod4ring3.heightProperty(), ((35 * (level - 2))));
-			kv11 = new KeyValue(mod6ring3.heightProperty(), ((35 * (level - 2))));
-			kv13 = new KeyValue(mod2ring4.heightProperty(), ((35 * (level - 1))));
-			kv14 = new KeyValue(mod4ring4.heightProperty(), ((35 * (level - 1))));
-			kv15 = new KeyValue(mod6ring4.heightProperty(), ((35 * (level - 1))));
-			kv17 = new KeyValue(mod2ring5.heightProperty(), ((35 * (level - 0))));
-			kv18 = new KeyValue(mod4ring5.heightProperty(), ((35 * (level - 0))));
-			kv19 = new KeyValue(mod6ring5.heightProperty(), ((35 * (level - 0))));
+			kv1 = new KeyValue(mod2ring1.heightProperty(), ((35 * (level - 4))), Interpolator.EASE_BOTH);
+			kv2 = new KeyValue(mod4ring1.heightProperty(), ((35 * (level - 4))), Interpolator.EASE_BOTH);
+			kv3 = new KeyValue(mod6ring1.heightProperty(), ((35 * (level - 4))), Interpolator.EASE_BOTH);
+			kv5 = new KeyValue(mod2ring2.heightProperty(), ((35 * (level - 3))), Interpolator.EASE_BOTH);
+			kv6 = new KeyValue(mod4ring2.heightProperty(), ((35 * (level - 3))), Interpolator.EASE_BOTH);
+			kv7 = new KeyValue(mod6ring2.heightProperty(), ((35 * (level - 3))), Interpolator.EASE_BOTH);
+			kv9 = new KeyValue(mod2ring3.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv10 = new KeyValue(mod4ring3.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv11 = new KeyValue(mod6ring3.heightProperty(), ((35 * (level - 2))), Interpolator.EASE_BOTH);
+			kv13 = new KeyValue(mod2ring4.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv14 = new KeyValue(mod4ring4.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv15 = new KeyValue(mod6ring4.heightProperty(), ((35 * (level - 1))), Interpolator.EASE_BOTH);
+			kv17 = new KeyValue(mod2ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv18 = new KeyValue(mod4ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
+			kv19 = new KeyValue(mod6ring5.heightProperty(), ((35 * (level - 0))), Interpolator.EASE_BOTH);
 		}
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv5, kv6, kv7, kv9, kv10, kv11, kv13, kv14, kv15, kv17, kv18, kv19);
 		timeline.getKeyFrames().add(kf);
@@ -3107,33 +2982,33 @@ public class FountainSimController implements Initializable {
 
 		}
 
-		final KeyValue kv1 = new KeyValue(mod1candle1.endYProperty(), ((35 * level)));
-		final KeyValue kv2 = new KeyValue(mod1candle2.endYProperty(), ((35 * level)));
-		final KeyValue kv3 = new KeyValue(mod1candle3.endYProperty(), ((35 * level)));
-		final KeyValue kv4 = new KeyValue(mod1candle4.endYProperty(), ((35 * level)));
-		final KeyValue kv5 = new KeyValue(mod1candle5.endYProperty(), ((35 * level)));
-		final KeyValue kv6 = new KeyValue(mod1candle6.endYProperty(), ((35 * level)));
+		final KeyValue kv1 = new KeyValue(mod1candle1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(mod1candle2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv3 = new KeyValue(mod1candle3.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv4 = new KeyValue(mod1candle4.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv5 = new KeyValue(mod1candle5.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv6 = new KeyValue(mod1candle6.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
-		final KeyValue kv7 = new KeyValue(mod3candle1.endYProperty(), ((35 * level)));
-		final KeyValue kv8 = new KeyValue(mod3candle2.endYProperty(), ((35 * level)));
-		final KeyValue kv9 = new KeyValue(mod3candle3.endYProperty(), ((35 * level)));
-		final KeyValue kv10 = new KeyValue(mod3candle4.endYProperty(), ((35 * level)));
-		final KeyValue kv11 = new KeyValue(mod3candle5.endYProperty(), ((35 * level)));
-		final KeyValue kv12 = new KeyValue(mod3candle6.endYProperty(), ((35 * level)));
+		final KeyValue kv7 = new KeyValue(mod3candle1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv8 = new KeyValue(mod3candle2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv9 = new KeyValue(mod3candle3.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv10 = new KeyValue(mod3candle4.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv11 = new KeyValue(mod3candle5.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv12 = new KeyValue(mod3candle6.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
-		final KeyValue kv13 = new KeyValue(mod5candle1.endYProperty(), ((35 * level)));
-		final KeyValue kv14 = new KeyValue(mod5candle2.endYProperty(), ((35 * level)));
-		final KeyValue kv15 = new KeyValue(mod5candle3.endYProperty(), ((35 * level)));
-		final KeyValue kv16 = new KeyValue(mod5candle4.endYProperty(), ((35 * level)));
-		final KeyValue kv17 = new KeyValue(mod5candle5.endYProperty(), ((35 * level)));
-		final KeyValue kv18 = new KeyValue(mod5candle6.endYProperty(), ((35 * level)));
+		final KeyValue kv13 = new KeyValue(mod5candle1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv14 = new KeyValue(mod5candle2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv15 = new KeyValue(mod5candle3.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv16 = new KeyValue(mod5candle4.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv17 = new KeyValue(mod5candle5.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv18 = new KeyValue(mod5candle6.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
-		final KeyValue kv19 = new KeyValue(mod7candle1.endYProperty(), ((35 * level)));
-		final KeyValue kv20 = new KeyValue(mod7candle2.endYProperty(), ((35 * level)));
-		final KeyValue kv21 = new KeyValue(mod7candle3.endYProperty(), ((35 * level)));
-		final KeyValue kv22 = new KeyValue(mod7candle4.endYProperty(), ((35 * level)));
-		final KeyValue kv23 = new KeyValue(mod7candle5.endYProperty(), ((35 * level)));
-		final KeyValue kv24 = new KeyValue(mod7candle6.endYProperty(), ((35 * level)));
+		final KeyValue kv19 = new KeyValue(mod7candle1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv20 = new KeyValue(mod7candle2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv21 = new KeyValue(mod7candle3.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv22 = new KeyValue(mod7candle4.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv23 = new KeyValue(mod7candle5.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv24 = new KeyValue(mod7candle6.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11, kv12, kv13, kv14, kv15, kv16, kv17, kv18, kv19, kv20, kv21, kv22, kv23, kv24, kv25, kv26, kv27, kv28, kv29, kv30, kv31, kv32, kv33, kv34, kv35, kv36, kv37, kv38, kv39, kv40,
 				kv41, kv42, kv43, kv44, kv45, kv46, kv47, kv48);
@@ -4237,26 +4112,26 @@ public class FountainSimController implements Initializable {
 
 		}
 
-		final KeyValue kv1 = new KeyValue(mod2candle1.endYProperty(), ((35 * level)));
-		final KeyValue kv2 = new KeyValue(mod2candle2.endYProperty(), ((35 * level)));
-		final KeyValue kv3 = new KeyValue(mod2candle3.endYProperty(), ((35 * level)));
-		final KeyValue kv4 = new KeyValue(mod2candle4.endYProperty(), ((35 * level)));
-		final KeyValue kv5 = new KeyValue(mod2candle5.endYProperty(), ((35 * level)));
-		final KeyValue kv6 = new KeyValue(mod2candle6.endYProperty(), ((35 * level)));
+		final KeyValue kv1 = new KeyValue(mod2candle1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv2 = new KeyValue(mod2candle2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv3 = new KeyValue(mod2candle3.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv4 = new KeyValue(mod2candle4.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv5 = new KeyValue(mod2candle5.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv6 = new KeyValue(mod2candle6.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
-		final KeyValue kv7 = new KeyValue(mod4candle1.endYProperty(), ((35 * level)));
-		final KeyValue kv8 = new KeyValue(mod4candle2.endYProperty(), ((35 * level)));
-		final KeyValue kv9 = new KeyValue(mod4candle3.endYProperty(), ((35 * level)));
-		final KeyValue kv10 = new KeyValue(mod4candle4.endYProperty(), ((35 * level)));
-		final KeyValue kv11 = new KeyValue(mod4candle5.endYProperty(), ((35 * level)));
-		final KeyValue kv12 = new KeyValue(mod4candle6.endYProperty(), ((35 * level)));
+		final KeyValue kv7 = new KeyValue(mod4candle1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv8 = new KeyValue(mod4candle2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv9 = new KeyValue(mod4candle3.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv10 = new KeyValue(mod4candle4.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv11 = new KeyValue(mod4candle5.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv12 = new KeyValue(mod4candle6.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
-		final KeyValue kv13 = new KeyValue(mod6candle1.endYProperty(), ((35 * level)));
-		final KeyValue kv14 = new KeyValue(mod6candle2.endYProperty(), ((35 * level)));
-		final KeyValue kv15 = new KeyValue(mod6candle3.endYProperty(), ((35 * level)));
-		final KeyValue kv16 = new KeyValue(mod6candle4.endYProperty(), ((35 * level)));
-		final KeyValue kv17 = new KeyValue(mod6candle5.endYProperty(), ((35 * level)));
-		final KeyValue kv18 = new KeyValue(mod6candle6.endYProperty(), ((35 * level)));
+		final KeyValue kv13 = new KeyValue(mod6candle1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv14 = new KeyValue(mod6candle2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv15 = new KeyValue(mod6candle3.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv16 = new KeyValue(mod6candle4.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv17 = new KeyValue(mod6candle5.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
+		final KeyValue kv18 = new KeyValue(mod6candle6.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 
 		final KeyFrame kf = new KeyFrame(Duration.seconds(lagTime), kv1, kv2, kv3, kv4, kv5, kv6, kv7, kv8, kv9, kv10, kv11, kv12, kv13, kv14, kv15, kv16, kv17, kv18, kv25, kv26, kv27, kv28, kv29, kv30, kv31, kv32, kv33, kv34, kv35, kv36, kv37, kv38, kv39, kv40, kv41, kv42);
 		timeline.getKeyFrames().add(kf);
@@ -4284,189 +4159,7 @@ public class FountainSimController implements Initializable {
 		// "fx:id=\"ring5Rec\" was not injected: check your FXML file 'fountainSim.fxml'.";
 		assert ring5Slider != null : "fx:id=\"ring5Slider\" was not injected: check your FXML file 'fountainSim.fxml'.";
 
-		// timeline = new Timeline();
-
 		instance = this;
-
-		// // Listen for Slider value changes
-		// ring5Slider.valueProperty().addListener(new ChangeListener<Number>()
-		// {
-		// @Override
-		// public void changed(ObservableValue<? extends Number> observable,
-		// Number oldValue, Number newValue) {
-		// final Timeline timeline = new Timeline();
-		// timeline.setCycleCount(1);
-		// //timeline.setAutoReverse(true);
-		// final KeyValue kv7 = new KeyValue(getMod7ring5().heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv6 = new KeyValue(mod6ring5.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv5 = new KeyValue(mod5ring5.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv4 = new KeyValue(mod4ring5.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv3 = new KeyValue(mod3ring5.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv2 = new KeyValue(mod2ring5.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv1 = new KeyValue(mod1ring5.heightProperty(),
-		// ((35*level)));
-		// final KeyFrame kf = new KeyFrame(Duration.millis(1000), kv1, kv2,
-		// kv3, kv4, kv4, kv5, kv6, kv7);
-		// timeline.getKeyFrames().add(kf);
-		// timeline.play();
-		//
-		// //outputTextArea.appendText("Slider Value Changed (newValue: " +
-		// newValue.intValue() + ")\n");
-		//
-		// }
-		// });
-		//
-		//
-		// ring4Slider.valueProperty().addListener(new ChangeListener<Number>()
-		// {
-		// @Override
-		// public void changed(ObservableValue<? extends Number> observable,
-		// Number oldValue, Number newValue) {
-		// final Timeline timeline = new Timeline();
-		// timeline.setCycleCount(1);
-		// //timeline.setAutoReverse(true);
-		// final KeyValue kv7 = new KeyValue(mod7ring4.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv6 = new KeyValue(mod6ring4.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv5 = new KeyValue(mod5ring4.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv4 = new KeyValue(mod4ring4.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv3 = new KeyValue(mod3ring4.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv2 = new KeyValue(mod2ring4.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv1 = new KeyValue(mod1ring4.heightProperty(),
-		// ((35*level)));
-		//
-		//
-		//
-		// final KeyFrame kf = new KeyFrame(Duration.millis(1000), kv1, kv2,
-		// kv3, kv4, kv4, kv5, kv6, kv7);
-		// timeline.getKeyFrames().add(kf);
-		// timeline.play();
-		//
-		// //outputTextArea.appendText("Slider Value Changed (newValue: " +
-		// newValue.intValue() + ")\n");
-		//
-		// }
-		// });
-		//
-		// ring3Slider.valueProperty().addListener(new ChangeListener<Number>()
-		// {
-		// @Override
-		// public void changed(ObservableValue<? extends Number> observable,
-		// Number oldValue, Number newValue) {
-		// final Timeline timeline = new Timeline();
-		// timeline.setCycleCount(1);
-		// //timeline.setAutoReverse(true);
-		// final KeyValue kv7 = new KeyValue(mod7ring3.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv6 = new KeyValue(mod6ring3.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv5 = new KeyValue(mod5ring3.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv4 = new KeyValue(mod4ring3.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv3 = new KeyValue(mod3ring3.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv2 = new KeyValue(mod2ring3.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv1 = new KeyValue(mod1ring3.heightProperty(),
-		// ((35*level)));
-		//
-		//
-		//
-		// final KeyFrame kf = new KeyFrame(Duration.millis(1000), kv1, kv2,
-		// kv3, kv4, kv4, kv5, kv6, kv7);
-		// timeline.getKeyFrames().add(kf);
-		// timeline.play();
-		//
-		// //outputTextArea.appendText("Slider Value Changed (newValue: " +
-		// newValue.intValue() + ")\n");
-		//
-		// }
-		// });
-		//
-		// ring2Slider.valueProperty().addListener(new ChangeListener<Number>()
-		// {
-		// @Override
-		// public void changed(ObservableValue<? extends Number> observable,
-		// Number oldValue, Number newValue) {
-		// final Timeline timeline = new Timeline();
-		// timeline.setCycleCount(1);
-		// //timeline.setAutoReverse(true);
-		// final KeyValue kv7 = new KeyValue(mod7ring2.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv6 = new KeyValue(mod6ring2.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv5 = new KeyValue(mod5ring2.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv4 = new KeyValue(mod4ring2.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv3 = new KeyValue(mod3ring2.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv2 = new KeyValue(mod2ring2.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv1 = new KeyValue(mod1ring2.heightProperty(),
-		// ((35*level)));
-		//
-		//
-		//
-		// final KeyFrame kf = new KeyFrame(Duration.millis(1000), kv1, kv2,
-		// kv3, kv4, kv4, kv5, kv6, kv7);
-		// timeline.getKeyFrames().add(kf);
-		// timeline.play();
-		//
-		// //outputTextArea.appendText("Slider Value Changed (newValue: " +
-		// newValue.intValue() + ")\n");
-		//
-		// }
-		// });
-		//
-		// ring1Slider.valueProperty().addListener(new ChangeListener<Number>()
-		// {
-		// @Override
-		// public void changed(ObservableValue<? extends Number> observable,
-		// Number oldValue, Number newValue) {
-		// final Timeline timeline = new Timeline();
-		// timeline.setCycleCount(1);
-		// //timeline.setAutoReverse(true);
-		// final KeyValue kv7 = new KeyValue(mod7ring1.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv6 = new KeyValue(mod6ring1.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv5 = new KeyValue(mod5ring1.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv4 = new KeyValue(mod4ring1.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv3 = new KeyValue(mod3ring1.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv2 = new KeyValue(mod2ring1.heightProperty(),
-		// ((35*level)));
-		// final KeyValue kv1 = new KeyValue(mod1ring1.heightProperty(),
-		// ((35*level)));
-		//
-		//
-		//
-		// final KeyFrame kf = new KeyFrame(Duration.millis(1000), kv1, kv2,
-		// kv3, kv4, kv4, kv5, kv6, kv7);
-		// timeline.getKeyFrames().add(kf);
-		// timeline.play();
-		//
-		// System.out.println(newValue);
-		// //outputTextArea.appendText("Slider Value Changed (newValue: " +
-		// newValue.intValue() + ")\n");
-		//
-		// }
-		// });
 
 	}
 
@@ -5627,14 +5320,6 @@ public class FountainSimController implements Initializable {
 
 	}
 
-	public void acceptFcw(FCW f) {
-		// drawFcw(f);
-	}
-
-	public void disposeBuffer() {
-
-	}
-
 	public void pauseLeftSweep() {
 		leftSweepTimeline.pause();
 	}
@@ -5659,10 +5344,6 @@ public class FountainSimController implements Initializable {
 		this.sweepType = sweepType;
 	}
 
-	// public double getSweepSpeed() {
-	// return sweepSpeed;
-	// }
-
 	public Timeline getTimeline2() {
 		return leftSweepTimeline;
 	}
@@ -5678,27 +5359,6 @@ public class FountainSimController implements Initializable {
 	public void setTimeline3(Timeline timeline3) {
 		this.rightSweepTimeline = timeline3;
 	}
-
-	// public void setSweepSpeed(double sweepSpeed) {
-	// // switch(speed){
-	// // case 1:
-	// // sweepSpeed = .2;
-	// // case 2:
-	// // sweepSpeed = .4;
-	// // case 3:
-	// // sweepSpeed = .8;
-	// // case 4:
-	// // sweepSpeed = 1;
-	// // case 5:
-	// // sweepSpeed = 1.5;
-	// // case 6:
-	// // sweepSpeed = 2.5;
-	// // case 7:
-	// // sweepSpeed = 4.0;
-	// //
-	// // }
-	// this.sweepSpeed = sweepSpeed;
-	// }
 
 	public double getLeftSweepSpeed() {
 		return leftSweepSpeed;
@@ -5716,11 +5376,8 @@ public class FountainSimController implements Initializable {
 		this.rightSweepSpeed = rightSweepSpeed;
 	}
 
+	// Stops all animation of the sweepers
 	public void clearSweeps() {
-		// leftSweepTimeline.stop();
-		// leftSweepTimeline.getKeyFrames().clear();
-		// rightSweepTimeline.stop();
-		// rightSweepTimeline.getKeyFrames().clear();
 		mod1sweep1.getTransforms().clear();
 		mod2sweep1.getTransforms().clear();
 		mod3sweep1.getTransforms().clear();
@@ -5737,21 +5394,8 @@ public class FountainSimController implements Initializable {
 		mod7sweep2.getTransforms().clear();
 	}
 
-	public void clearSim() {
-		drawBazooka(0, 0.5);
-		drawBkCurtain(0, 0.5);
-		drawCandlesA(0, 0.5);
-		drawCandlesB(0, 0.5);
-		drawFtCurtain(0, 0.5);
-		drawMultiA(0, 0.5);
-		drawMultiB(0, 0.5);
-		drawPeacock(0, 0.5);
-		drawSweepsA(0, 0.5);
-		drawSweepsB(0, 0.5);
-		drawSpout(0, 0.5);
-
-	}
-
+	// Sets the heights of all water features to zero, effectivly turning them
+	// off.
 	public void resetAll() {
 		drawBazooka(0, 0);
 		drawBkCurtain(0, 0);
@@ -5775,5 +5419,4 @@ public class FountainSimController implements Initializable {
 		drawSweepsA(0, 0);
 		drawSweepsB(0, 0);
 	}
-
 }

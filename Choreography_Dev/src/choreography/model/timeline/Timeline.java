@@ -153,8 +153,7 @@ public class Timeline {
 
 						boolean lock = true;
 						for (int g = 0; g < newFcwList.size(); g++) {
-							if ((newFcwList.get(g).getAddr() == oldFcw.getAddr())
-									&& fcwAlreadyAdded(newFcwList.get(g), oldFcw)) {
+							if ((newFcwList.get(g).getAddr() == oldFcw.getAddr()) && fcwAlreadyAdded(newFcwList.get(g), oldFcw)) {
 								lock = false;
 								break;
 
@@ -287,8 +286,7 @@ public class Timeline {
 				if (channelMap.get(channel).get(tenth) != 0) {
 					start = tenth;
 					color = channelMap.get(channel).get(tenth);
-					Iterator<Entry<Integer, Integer>> it = channelMap.get(channel).tailMap(start + 1).entrySet()
-							.iterator();
+					Iterator<Entry<Integer, Integer>> it = channelMap.get(channel).tailMap(start + 1).entrySet().iterator();
 					while (it.hasNext()) {
 						Entry<Integer, Integer> timeColor = it.next();
 						if (timeColor.getValue() == 0 && timeColor.getKey() != start) {
@@ -331,8 +329,7 @@ public class Timeline {
 			ArrayList<FCW> newFcwList = srcTimeline.get(time);
 
 			for (int g = 0; g < newFcwList.size(); g++) {
-				if ((newFcwList.get(g).getAddr() == currentFcw.getAddr())
-						&& fcwAlreadyAdded(newFcwList.get(g), currentFcw)) {
+				if ((newFcwList.get(g).getAddr() == currentFcw.getAddr()) && fcwAlreadyAdded(newFcwList.get(g), currentFcw)) {
 					System.out.println("removed");
 					newFcwList.remove(g);
 					newFcwList.add(currentFcw);
@@ -356,8 +353,7 @@ public class Timeline {
 
 								boolean lock = true;
 								for (int g = 0; g < newFcwList.size(); g++) {
-									if ((newFcwList.get(g).getAddr() == oldFcw.getAddr())
-											&& fcwAlreadyAdded(newFcwList.get(g), oldFcw)) {
+									if ((newFcwList.get(g).getAddr() == oldFcw.getAddr()) && fcwAlreadyAdded(newFcwList.get(g), oldFcw)) {
 
 										lock = false;
 										break;

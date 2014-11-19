@@ -164,7 +164,7 @@
         <Line fx:id="mod2candle2" endX="1140.0" endY="0.0" startX="1270.0" stroke="LIGHTGRAY" strokeLineCap="ROUND" strokeWidth="3.0" visible="false" />
         <Line fx:id="mod2sweep1" endX="1285.0" endY="0.0" startX="1285.0" stroke="LIGHTGRAY" strokeLineCap="ROUND" strokeWidth="5.0" visible="false" />
         <Line fx:id="mod2candle3" endX="1130.0" endY="0.0" startX="1260.0" stroke="LIGHTGRAY" strokeLineCap="ROUND" strokeWidth="3.0" visible="false" />
-        <Line fx:id="mod2candle4" endX="1285.0" endY="0.0" startX="1285.0" stroke="LIGHTGRAY" strokeLineCap="ROUND" strokeWidth="3.0" visible="false" />
+        <Line fx:id="mod2candle4" endX="1280.0" endY="0.0" startX="1150" stroke="LIGHTGRAY" strokeLineCap="ROUND" strokeWidth="3.0" visible="false" />
         <Line fx:id="mod2candle1" endX="1150.0" endY="0.0" startX="1280.0" stroke="LIGHTGRAY" strokeLineCap="ROUND" strokeWidth="3.0" visible="false" />
         <Line fx:id="mod2candle5" endX="1270.0" endY="0.0" startX="1140.0" stroke="LIGHTGRAY" strokeLineCap="ROUND" strokeWidth="3.0" visible="false" />
       </children>
