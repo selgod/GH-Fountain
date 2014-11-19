@@ -147,8 +147,6 @@ public class ChoreographyController implements Initializable {
 	private ScrollPane beatMarkScrollPane;
 	@FXML
 	private MenuItem openGhmfMenuItem;
-	// @FXML
-	// private ProgressIndicator progressIndicator;
 
 	private File saveLocation;
 	private boolean isSaved;
@@ -167,7 +165,7 @@ public class ChoreographyController implements Initializable {
 	@FXML
 	private Pane simPane;
 	private boolean lookUp = true;
-	private boolean toogleSimulation = true;
+	private boolean toggleSimulation = true;
 	private boolean shiftPressed = false;
 
 	/**
@@ -178,8 +176,6 @@ public class ChoreographyController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		// progressIndicator = new ProgressIndicator();
-
 		beatMarkScrollPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent ke) {
 
@@ -192,6 +188,9 @@ public class ChoreographyController implements Initializable {
 
 		});
 
+		/**
+		 * Detaches simulator from main view, displays it in a new window. 
+		 */
 		splitSimulationMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -220,6 +219,9 @@ public class ChoreographyController implements Initializable {
 			}
 		});
 
+		/**
+		 * Menu option to hide or display the simulator on the main view. 
+		 */
 		showSimulationMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -230,7 +232,7 @@ public class ChoreographyController implements Initializable {
 					lookUp = false;
 				}
 
-				if (toogleSimulation) {
+				if (toggleSimulation) {
 					removeSimulation();
 
 				} else {
@@ -240,8 +242,12 @@ public class ChoreographyController implements Initializable {
 
 		});
 
+		/**
+		 * Loads a music file selected from file chooser.
+		 * Initializes timeline for selected music file, and enables the
+		 * ability to open a ctl file. 
+		 */
 		openMusicMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-
 			@Override
 			public void handle(ActionEvent arg0) {
 				fcwOutput.setText("Loading music file ...");
@@ -261,7 +267,6 @@ public class ChoreographyController implements Initializable {
 		selectionButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// selectButton.isPressed();
 				if (isSelected) {
 					isSelected = false;
 					TimelineController.getInstance().clearAllAL();
@@ -302,6 +307,10 @@ public class ChoreographyController implements Initializable {
 			}
 		});
 
+		/**
+		 * Turns on advanced features. 
+		 * TODO Password for access to these features not yet implemented 
+		 */
 		advancedCheckMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -313,13 +322,15 @@ public class ChoreographyController implements Initializable {
 				TimelineController.getInstance().rePaintLightTimeline();
 			}
 		});
-
+		
+		/**
+		 * When quit is clicked, displays confirmation dialog, then prompts user to save. 
+		 */
 		quitMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent t) {
 				Action result = Dialogs.create().title("Quit?").masthead("").message("Are you sure you want to quit?").showConfirm();
 				if (result != Actions.YES) {
-					// System.out.println(result);
 				} else {
 					if (isSaved) {
 						Platform.exit();
@@ -372,6 +383,7 @@ public class ChoreographyController implements Initializable {
 			}
 		});
 
+		//TODO Is this being used?
 		// setLagTimesMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 		//
 		// @Override
@@ -380,6 +392,13 @@ public class ChoreographyController implements Initializable {
 		// }
 		// });
 
+		/**
+		 * When the New menu option is clicked, it launches a new window of the
+		 * choreographer. 
+		 * 
+		 * TODO Optionally, we can set the currently opened window to close, by calling
+		 * the File->Quit code, then calling System.exit(). 
+		 */
 		newItemMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -395,7 +414,6 @@ public class ChoreographyController implements Initializable {
 				try {
 					Runtime.getRuntime().exec(cmd.toString());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -406,6 +424,10 @@ public class ChoreographyController implements Initializable {
 
 		});
 
+		/**
+		 * Event handler for shift key. While shift key is pressed, the
+		 * boolean flag shiftPressed is set to true
+		 */
 		csGUI.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent e) {
@@ -415,6 +437,10 @@ public class ChoreographyController implements Initializable {
 			}
 		});
 
+		/**
+		 * Event handler for shift key. While shift key is not pressed, the
+		 * boolean flag shiftPressed is set to false
+		 */
 		csGUI.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent e) {
@@ -436,17 +462,25 @@ public class ChoreographyController implements Initializable {
 		vboxParent = (VBox) scene.lookup("#vboxParent");
 	}
 
+	/**
+	 * Called by split simulation menu option. Detaches the simulation display
+	 * from the main choreography window. 
+	 */
 	private void removeSimulation() {
 		vboxParent.getChildren().remove(simPane);
-		toogleSimulation = false;
+		toggleSimulation = false;
 		vboxParent.setPrefHeight(500);
 		Main.getPrimaryStage().setHeight(580);
 		showSimulationMenuItem.setText("Show Simulation");
 	}
 
+	/**
+	 * Called by menu option, re-attaches the simulation window to the main
+	 * choreography window. 
+	 */
 	private void addSimulation() {
 		vboxParent.getChildren().add(0, simPane);
-		toogleSimulation = true;
+		toggleSimulation = true;
 		vboxParent.setPrefHeight(770);
 		Main.getPrimaryStage().setHeight(840);
 		showSimulationMenuItem.setText("Hide Simulation");
@@ -528,13 +562,18 @@ public class ChoreographyController implements Initializable {
 	}
 
 	/**
-	 *
-	 * @param s
+	 * Updates fcWOutput label on view 
 	 */
 	public void setfcwOutput(String s) {
 		fcwOutput.setText(s);
 	}
 
+	/**
+	 * When Add Channels menu option clicked, displays window
+	 * to select channels to add. 
+	 * TODO The CustomChannel class
+	 * needs to be worked on for this to function properly. 
+	 */
 	public void addChannels() {
 		// if (isFirst){
 		Stage primaryStage = new Stage();
@@ -547,15 +586,15 @@ public class ChoreographyController implements Initializable {
 	}
 
 	/**
-	 *
-	 * @return
+	 * Returns the current instance of this class. Called by other
+	 * classes so they may access this class's methods. 
 	 */
 	public static ChoreographyController getInstance() {
 		return cc;
 	}
 
 	/**
-	 * Sets the
+	 * Sets the event Timeline 
 	 * 
 	 * @param parsedCTL
 	 */
@@ -575,10 +614,16 @@ public class ChoreographyController implements Initializable {
 		return events;
 	}
 
+	/**
+	 * Called to set access to advanced user settings 
+	 */
 	public void setAdvanced(boolean b) {
 		isAdvanced = b;
 	}
 
+	/**
+	 * Returns true if advanced user settings have been enabled 
+	 */
 	public boolean getAdvanced() {
 		return isAdvanced;
 	}
@@ -646,10 +691,16 @@ public class ChoreographyController implements Initializable {
 		}, 0l, 100l);
 	}
 
+	/**
+	 * Returns true if select button is pressed
+	 */
 	public boolean getIsSelected() {
 		return isSelected;
 	}
 
+	/**
+	 * Returns true if shift key is pressed
+	 */
 	public boolean getShiftPressed() {
 		return shiftPressed;
 	}
@@ -732,16 +783,16 @@ public class ChoreographyController implements Initializable {
 		}
 	}
 
-	// public void rePaintBeatMarks() {
-	// for()
-	// }
-
 	@FXML
 	public void openGhmfFile(ActionEvent event) {
 		GhmfLibrary.openGhmfFile();
 	}
 
 	@FXML
+	/**
+	 * Displays information dialog about the software 
+	 * TODO This needs to be updated before we hand it off
+	 */
 	public void aboutDialogueBox() {
 		Dialogs.create()
 				.title("About GHMF Choreography Studio")
@@ -751,24 +802,14 @@ public class ChoreographyController implements Initializable {
 	}
 
 	@FXML
+	/**
+	 * Creates the view for the user manual page in 
+	 * a browser 
+	 */
 	public void userManual() {
 		Stage stage = new Stage();
 		Scene scene;
-		// // scene = new Scene(new Browser(), 750, 500, Color.web("#666970"));
-		// // stage.setScene(scene);
-		// // stage.setTitle("Web View");
-		// //// scene.getStylesheets().add("webviewsample/BrowserToolbar.css");
-		// // stage.show();
-		// File f = new File("/resources/User_Manual_v10.htm");
-		// // ..
-		// final WebView webview = new WebView();
-		// try {
-		// webview.getEngine().load(f.toURI().toURL().toString());
-		// } catch (MalformedURLException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// }
+		
 		// Names the browser window
 		stage.setTitle("Help - User Manual");
 
@@ -776,10 +817,14 @@ public class ChoreographyController implements Initializable {
 		scene = new Scene(myBrowser, 800, 600);
 
 		stage.setScene(scene);
+		
 		// Opens the browser
 		stage.show();
 	}
 
+	/**
+	 * Displays the user manual page 
+	 */
 	class MyBrowser extends Region {
 
 		final String userManualHtml = "User_Manual_v10.htm";
@@ -804,36 +849,3 @@ public class ChoreographyController implements Initializable {
 		this.saveCTLMenuItem = saveCTLMenuItem;
 	}
 }
-
-// class Browser extends Region{
-//
-// final WebView browser = new WebView();
-// final WebEngine webEngine = browser.getEngine();
-//
-// public Browser() {
-// // URL manual =
-// getClass().getResource("/resources/User_Manual_v10.htm").toExternalForm();
-// webEngine.load("http://google.com");
-// getChildren().add(browser);
-// }
-//
-// private Node createSpacer() {
-// Region spacer = new Region();
-// HBox.setHgrow(spacer, Priority.ALWAYS);
-// return spacer;
-// }
-//
-// @Override protected void layoutChildren() {
-// double w = getWidth();
-// double h = getHeight();
-// layoutInArea(browser,0,0,w,h,0, HPos.CENTER, VPos.CENTER);
-// }
-//
-// @Override protected double computePrefWidth(double height) {
-// return 750;
-// }
-//
-// @Override protected double computePrefHeight(double width) {
-// return 500;
-// }
-// }}
