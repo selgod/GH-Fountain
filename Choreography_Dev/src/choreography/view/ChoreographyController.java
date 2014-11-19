@@ -62,6 +62,7 @@ import choreography.io.GhmfLibrary;
 import choreography.io.LagTimeLibrary;
 import choreography.io.MapLib;
 import choreography.io.MarkLib;
+import choreography.model.color.ColorPaletteModel;
 import choreography.model.fcw.FCW;
 import choreography.view.colorPalette.ColorPaletteController;
 import choreography.view.customChannel.CustomChannel;
@@ -83,9 +84,18 @@ public class ChoreographyController implements Initializable {
 
 	private static ChoreographyController cc;
 	private ConcurrentSkipListMap<Integer, ArrayList<FCW>> events;
-	GridPane gridpaneBeatMarks;
+	private File saveLocation;
+	private boolean isSaved;
+	private boolean isAdvanced;
+	private boolean isSelected = false;
+	private boolean lookUp = true;
+	private boolean toggleSimulation = true;
+	private boolean shiftPressed = false;
 	private int time;
+	GridPane gridpaneBeatMarks;
 	Rectangle[] beatMarkRecArray;
+	Timer timelineTimer = new Timer("progressTimer", true);
+	Timer sliderTimer = new Timer("progressTimer", true);
 
 	@FXML
 	private VBox csGUI;
@@ -147,15 +157,6 @@ public class ChoreographyController implements Initializable {
 	private ScrollPane beatMarkScrollPane;
 	@FXML
 	private MenuItem openGhmfMenuItem;
-
-	private File saveLocation;
-	private boolean isSaved;
-	private boolean isAdvanced;
-	private boolean isSelected = false;
-	boolean isFirst = true;
-	Timer timelineTimer = new Timer("progressTimer", true);
-	Timer sliderTimer = new Timer("progressTimer", true);
-
 	@FXML
 	private MenuItem splitSimulationMenuItem;
 	@FXML
@@ -164,10 +165,7 @@ public class ChoreographyController implements Initializable {
 	private VBox vboxParent;
 	@FXML
 	private Pane simPane;
-	private boolean lookUp = true;
-	private boolean toggleSimulation = true;
-	private boolean shiftPressed = false;
-
+	
 	/**
 	 * Initializes the controller class.
 	 * 
@@ -288,14 +286,11 @@ public class ChoreographyController implements Initializable {
 					loadDefaultMap();
 					CtlLib.getInstance().openCtl();
 					cc.setfcwOutput("CTL file has loaded!");
-					/*
-					 * TODO if
-					 * (ColorPaletteModel.getInstance().isClassicColors()) {
-					 * Dialogs .create().message("You've loaded a legacy file. "
-					 * + "Currently, they are read-only.") .showWarning();
-					 * 
-					 * // killFeaturesOnLegacy(); }
+					
+					/**TODO 
+					 * Handling for if loaded ctl file is a legacy file
 					 */
+					 
 					SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
 				} catch (IOException ex) {
 					Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
@@ -354,14 +349,23 @@ public class ChoreographyController implements Initializable {
 				fc.setInitialDirectory(new File(System.getProperty("user.dir")));
 				saveLocation = fc.showSaveDialog(null);
 				if (saveLocation != null) {
-					//saves with .ctl extension, but this does so even if it already has
-					//a .ctl extension. need to fix this somehow.
-					saveLocation = new File(saveLocation.getAbsoluteFile() + ".ctl");
+					String extension = ".ctl";
+					String filePath = saveLocation.getAbsolutePath();
+					
+					// Check if save file has .ctl extension to prevent extra .ctl from being appened to file name
+					if(filePath.contains(extension)){
+						saveLocation = new File(saveLocation.getAbsoluteFile() + "");
+					} else {
+						saveLocation = new File(saveLocation.getAbsoluteFile() + extension);
+					}
 					isSaved = true;
+				} else {
+					return; // User closed file chooser without saving. Prevent a null pointer exception being thrown on next line
 				}
 				CtlLib.getInstance().saveFile(saveLocation, TimelineController.getInstance().getTimeline().getTimeline());
 			}
 		});
+		
 		saveMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -382,13 +386,17 @@ public class ChoreographyController implements Initializable {
 
 			}
 		});
-
-		//TODO Is this being used?
+		
+		/**
+		 * TODO
+		 * 
+		 * Not yet implemented
+		 */
 		// setLagTimesMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 		//
 		// @Override
 		// public void handle(ActionEvent t) {
-		// // openLagTimeDialog();
+		//// openLagTimeDialog();
 		// }
 		// });
 
@@ -417,9 +425,8 @@ public class ChoreographyController implements Initializable {
 					e.printStackTrace();
 				}
 
-				// TODO We can optionally have the current instance close with
-				// this call: System.exit(0);
-				// For now, I'm leaving the previous open.
+				
+				// System.exit(0); If we don't want previous window to remain open, call this line. 
 			}
 
 		});
@@ -456,6 +463,9 @@ public class ChoreographyController implements Initializable {
 		cc = this;
 	}
 
+	/**
+	 * Called to display/hide simulation window
+	 */
 	private void lookUp() {
 		Scene scene = Main.getPrimaryStage().getScene();
 		simPane = (Pane) scene.lookup("#simPane");
@@ -486,6 +496,9 @@ public class ChoreographyController implements Initializable {
 		showSimulationMenuItem.setText("Hide Simulation");
 	}
 
+	/**
+	 * Opens the initial default color palate when launched
+	 */
 	public void loadDefaultMap() {
 		boolean isMap = MapLib.isMapLoaded();
 		if (!isMap) {
@@ -493,6 +506,12 @@ public class ChoreographyController implements Initializable {
 		}
 	}
 
+	/**
+	 * If a legacy ctl file is loaded, it should be read only. 
+	 * This method will disable editing. 
+	 * 
+	 * TODO Untested. 
+	 */
 	public void killFeaturesOnLegacy() {
 		SpecialoperationsController.getInstance().killSpecialOpsPane();
 		SlidersController.getInstance().killSlidersPane();
@@ -500,6 +519,11 @@ public class ChoreographyController implements Initializable {
 		ColorPaletteController.getInstance().rePaint();
 	}
 
+	/**
+	 * Save as a zipped file
+	 * 
+	 * TODO Not fully working yet.
+	 */
 	private void saveGhmfZipFile() {
 		try {
 			// if(ColorPaletteModel.getInstance().isClassicColors()) {
@@ -532,8 +556,8 @@ public class ChoreographyController implements Initializable {
 	}
 
 	/**
-	 *
-	 * @return
+	 * TODO
+	 * Not yet implemented
 	 */
 	public boolean openLagTimeDialog() {
 		try {
@@ -571,18 +595,13 @@ public class ChoreographyController implements Initializable {
 	/**
 	 * When Add Channels menu option clicked, displays window
 	 * to select channels to add. 
+	 * 
 	 * TODO The CustomChannel class
 	 * needs to be worked on for this to function properly. 
 	 */
 	public void addChannels() {
-		// if (isFirst){
 		Stage primaryStage = new Stage();
 		CustomChannel.start(primaryStage);
-		// isFirst = false;
-		// }
-		// else{
-		// CustomChannel.showStage();
-		// }
 	}
 
 	/**
@@ -607,8 +626,6 @@ public class ChoreographyController implements Initializable {
 
 	/**
 	 * Returns the event Timeline
-	 * 
-	 * @return
 	 */
 	public SortedMap<Integer, ArrayList<FCW>> getEventTimeline() {
 		return events;
@@ -647,7 +664,6 @@ public class ChoreographyController implements Initializable {
 	/**
 	 * Draws SIM and sets sliders every 10th of a second
 	 */
-
 	public void startPollingSlidersAlgorithm() {
 
 		timelineTimer.scheduleAtFixedRate(new TimerTask() {
@@ -705,14 +721,23 @@ public class ChoreographyController implements Initializable {
 		return shiftPressed;
 	}
 
+	/**
+	 * Pauses the timeline when called from other classes
+	 */
 	public void stopTimelineTimer() {
 		timelineTimer.purge();
 	}
 
+	/**
+	 * Pauses sliders when called from other classes
+	 */
 	public void stopSliderTimer() {
 		sliderTimer.purge();
 	}
 
+	/**
+	 * Helper method for opening a custom color map
+	 */
 	public void openMapFileMenuItemHandler() {
 		try {
 			MapLib.openMap();
@@ -721,12 +746,10 @@ public class ChoreographyController implements Initializable {
 			Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-
-	public void startPlayingSim() {
-		TimelineController.getInstance().fireSubmapToSim();
-		FountainSimController.getInstance().playSim();
-	}
-
+	
+	/**
+	 * Returns current instance of beat marks 
+	 */
 	public ScrollPane getBeatMarkScrollPane() {
 		return this.beatMarkScrollPane;
 	}
@@ -783,6 +806,11 @@ public class ChoreographyController implements Initializable {
 		}
 	}
 
+	/**
+	 * For loading a ghmf file
+	 * 
+	 * TODO Not yet tested
+	 */
 	@FXML
 	public void openGhmfFile(ActionEvent event) {
 		GhmfLibrary.openGhmfFile();
