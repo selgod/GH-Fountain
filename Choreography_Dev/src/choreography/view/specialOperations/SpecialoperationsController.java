@@ -446,6 +446,12 @@ public class SpecialoperationsController implements Initializable {
 		}
 	}
 
+	/**
+	 * Converts the slider positioning to readable text
+	 * 
+	 * @param slider
+	 * @param s
+	 */
 	private void sweepsTravelSwitch(RangeSlider slider, String s) {
 		switch (s) {
 		case "HOLDRIGHTLONG":
@@ -544,7 +550,6 @@ public class SpecialoperationsController implements Initializable {
 		@Override
 		public void handle(MouseEvent event) {
 			String[] actions = new String[2];
-			// String action;
 			FCW f = null;
 			int tenths = MusicPaneController.getInstance().getTenthsTime();
 			if (opposedSweeps.isSelected()) {
@@ -560,7 +565,6 @@ public class SpecialoperationsController implements Initializable {
 				FCW opposed = FCWLib.getInstance().getFCW("SWEEPTYPE", new String[] { "INDEPENDENT" });
 				TimelineController.getInstance().getTimeline().setWaterFcwAtPoint(tenths, opposed);
 			}
-			// else { f = new FCW(0, 0); }
 			ChoreographyController.getInstance().setfcwOutput(f.toString());
 			TimelineController.getInstance().getTimeline().setWaterFcwAtPoint(tenths, f);
 			TimelineController.getInstance().rePaintWaterTimeline();

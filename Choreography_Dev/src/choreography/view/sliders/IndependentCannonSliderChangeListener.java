@@ -29,6 +29,8 @@ public class IndependentCannonSliderChangeListener implements ChangeListener<Num
 	}
 
 	/**
+	 *Listens for a change in one of the sliders for the independant cannons
+	 *and calculates an FCW and outputs it onto the screen
 	 *
 	 * @param observable
 	 * @param oldValue
@@ -42,9 +44,6 @@ public class IndependentCannonSliderChangeListener implements ChangeListener<Num
 		String[] actions = new String[] { Integer.toString(level), name };
 		FCW f = FCWLib.getInstance().getFCW(name, actions);
 		ChoreographyController.getInstance().setfcwOutput(f.toString());
-		// TimelineController.getInstance().getTimeline().setWaterFcwAtPoint(
-		// MusicPaneController.getInstance().getTenthsTime(), f);
-
 	}
 
 	public int getLastNumber() {

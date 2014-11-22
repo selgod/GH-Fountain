@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package choreography.view.specialOperations;
 /**
  * Copyright (c) 2013, ControlsFX
@@ -304,9 +298,6 @@ public class RangeSliderSkin extends BehaviorSkinBase<RangeSlider, RangeSliderBe
                 // add 1 to the slider minor tick count since the axis draws one
                 // less minor ticks than the number given.
                 tickLine.setMinorTickCount(Math.max(rangeSlider.getMinorTickCount(),0) + 1);
-        //            if (slider.getLabelFormatter() != null)
-        //                tickLine.setFormatTickLabel(slider.getLabelFormatter());
-        //            tickLine.dataChanged();
                 getChildren().clear();
                 getChildren().addAll(tickLine, track, lowThumb);
             } else {
@@ -318,7 +309,6 @@ public class RangeSliderSkin extends BehaviorSkinBase<RangeSlider, RangeSliderBe
         else  {
             getChildren().clear();
             getChildren().addAll(track, lowThumb);
-//            tickLine = null;
         }
 
         getSkinnable().requestLayout();
@@ -509,7 +499,6 @@ public class RangeSliderSkin extends BehaviorSkinBase<RangeSlider, RangeSliderBe
                 return 140;
             }
         } else {
-            //return (padding.getLeft()) + Math.max(thumb.prefWidth(-1), track.prefWidth(-1)) + padding.getRight();
             return leftInset + Math.max(lowThumb.prefWidth(-1), track.prefWidth(-1)) +
             ((showTickMarks) ? (trackToTickGap+tickLine.prefWidth(-1)) : 0) + rightInset;
         }

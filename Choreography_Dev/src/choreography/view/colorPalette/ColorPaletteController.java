@@ -73,7 +73,9 @@ public class ColorPaletteController implements Initializable {
         Color[] colors = ColorPaletteModel.getInstance().getColors();
         for(int i = 0; i < customColors.getChildren().size(); i++) {
         	((Rectangle)customColors.getChildren().get(i)).setFill(colors[i + 16]);
+        	// Gets the fill color of the currently selected square
         	Color c = (Color) ((Rectangle)customColors.getChildren().get(i)).getFill();
+        	// Converts the fill color into a usable hex digit
        		String hex = String.format( "R:%d G:%d B:%d",
        		            (int)( c.getRed() * 255 ),
        		            (int)( c.getGreen() * 255 ),

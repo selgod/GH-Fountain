@@ -69,14 +69,14 @@ public class IndependentSliderMouseReleasedEvent implements EventHandler<MouseEv
 		this.icscl = icscl;
 	}
 
+	/**
+	 * Calls the slider change listener in order to figure out the fcw and then
+	 * puts the fcw into the timeline
+	 **/
 	@Override
 	public void handle(MouseEvent event) {
-		// ChoreographyController.getInstance().stopSliderTimer();
-		// ChoreographyController.getInstance().stopTimelineTimer();
 		String[] actions = new String[] { Integer.toString(icscl.getLastNumber()), cannonType.name() };
-		System.out.println(cannonType);
 		FCW f = FCWLib.getInstance().getFCW(cannonType.name(), actions);
 		TimelineController.getInstance().getTimeline().setWaterFcwAtPoint(MusicPaneController.getInstance().getTenthsTime(), f);
-		// FountainSimController.getInstance().acceptFcw(f);
 	}
 }

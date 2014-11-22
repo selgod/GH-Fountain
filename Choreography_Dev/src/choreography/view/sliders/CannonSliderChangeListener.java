@@ -30,6 +30,10 @@ class CannonSliderChangeListener<T extends Cannon> implements ChangeListener<Num
 		name = list.get(0).getName();
 	}
 
+	/*
+	 * It finds the FCW given a change in one of the sliders and then outputs
+	 * the result onto the bottom left corner of the screen in fcwOutput
+	 */
 	@Override
 	public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
 		int level = t1.intValue();

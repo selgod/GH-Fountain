@@ -76,11 +76,14 @@ public class SliderMouseReleasedEvent implements EventHandler<MouseEvent>{
         this.cscl = cscl;
         slider = s;
     }
-
+    
+	/**
+	 * Calls the slider change listener in order to figure out the fcw and then
+	 * puts the fcw into the timeline
+	 **/
     @Override
     public void handle(MouseEvent event) {
         if(event.isAltDown()) {
-//            event.copyFor(event.getSource(), slider);
             String[] actions = new String[]{module.getReverse(module).getModule(), 
                 module.getModule(), Integer.toString(cscl.getLastNumber())};
             FCW f = FCWLib.getInstance().getFCW(cannonType.name(), actions);

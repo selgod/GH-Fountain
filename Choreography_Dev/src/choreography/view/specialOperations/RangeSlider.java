@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package choreography.view.specialOperations;
 
 import java.util.ArrayList;
@@ -42,85 +36,24 @@ import com.sun.javafx.css.converters.SizeConverter;
  * draggable area inside the Slider / RangeSlider that allows for a value to be
  * set. 
  * 
- * <p>Because the RangeSlider has two thumbs, it also has a few additional rules
+ * Because the RangeSlider has two thumbs, it also has a few additional rules
  * and user interactions:
  * 
- * <ol>
- *   <li>The 'lower value' thumb can not move past the 'higher value' thumb.
- *   <li>Whereas the {@link Slider} control only has one 
+ *   The 'lower value' thumb can not move past the 'higher value' thumb.
+ *   Whereas the {@link Slider} control only has one 
  *       {@link Slider#valueProperty() value} property, the RangeSlider has a 
  *       {@link #lowValueProperty() low value} and a 
  *       {@link #highValueProperty() high value} property, not surprisingly 
  *       represented by the 'low value' and 'high value' thumbs.
- *   <li>The area between the low and high values represents the allowable range.
+ *   The area between the low and high values represents the allowable range.
  *       For example, if the low value is 2 and the high value is 8, then the
  *       allowable range is between 2 and 8. 
- *   <li>The allowable range area is rendered differently. This area is able to 
+ *   The allowable range area is rendered differently. This area is able to 
  *       be dragged with mouse / touch input to allow for the entire range to
  *       be modified. For example, following on from the previous example of the
  *       allowable range being between 2 and 8, if the user drags the range bar
  *       to the right, the low value will adjust to 3, and the high value 9, and
  *       so on until the user stops adjusting. 
- * </ol>
- * 
- * <h3>Screenshots</h3>
- * Because the RangeSlider supports both horizontal and vertical 
- * {@link #orientationProperty() orientation}, there are two screenshots below:
- * 
- * <table border="0">
- *   <tr>
- *     <td width="75" valign="center"><strong>Horizontal:</strong></td>
- *     <td><img src="rangeSlider-horizontal.png"></td>
- *   </tr>
- *   <tr>
- *     <td width="75" valign="top"><strong>Vertical:</strong></td>
- *     <td><img src="rangeSlider-vertical.png"></td>
- *   </tr>
- * </table>
- * 
- * <h3>Code Samples</h3>
- * Instantiating a RangeSlider is simple. The first decision is to decide whether
- * a horizontal or a vertical track is more appropriate. By default RangeSlider
- * instances are horizontal, but this can be changed by setting the 
- * {@link #orientationProperty() orientation} property.
- * 
- * <p>Once the orientation is determined, the next most important decision is
- * to determine what the {@link #minProperty() min} / {@link #maxProperty() max}
- * and default {@link #lowValueProperty() low} / {@link #highValueProperty() high}
- * values are. The min / max values represent the smallest and largest legal
- * values for the thumbs to be set to, whereas the low / high values represent
- * where the thumbs are currently, within the bounds of the min / max values.
- * Because all four values are required in all circumstances, they are all
- * required parameters to instantiate a RangeSlider: the constructor takes
- * four doubles, representing min, max, lowValue and highValue (in that order).
- * 
- * <p>For example, here is a simple horizontal RangeSlider that has a minimum
- * value of 0, a maximum value of 100, a low value of 10 and a high value of 90: 
- * 
- * <pre>{@code final RangeSlider hSlider = new RangeSlider(0, 100, 10, 90);}</pre>
- * 
- * <p>To configure the hSlider to look like the RangeSlider in the horizontal
- * RangeSlider screenshot above only requires a few additional properties to be 
- * set:
- * 
- * <pre>
- * {@code
- * final RangeSlider hSlider = new RangeSlider(0, 100, 10, 90);
- * hSlider.setShowTickMarks(true);
- * hSlider.setShowTickLabels(true);
- * hSlider.setBlockIncrement(10);}</pre>
- * 
- * <p>To create a vertical slider, simply do the following:
- * 
- * <pre>
- * {@code
- * final RangeSlider vSlider = new RangeSlider(0, 200, 30, 150);
- * vSlider.setOrientation(Orientation.VERTICAL);}</pre>
- * 
- * <p>This code creates a RangeSlider with a min value of 0, a max value of 200,
- * a low value of 30, and a high value of 150.
- * 
- * @see Slider
  */
 public class RangeSlider extends Control {
     
@@ -565,7 +498,7 @@ public class RangeSlider extends Control {
     /**
      * The number of minor ticks to place between any two major ticks. This
      * number should be positive or zero. Out of range values will disable
-     * disable minor ticks, as will a value of zero.
+     * minor ticks, as will a value of zero.
      */
     private IntegerProperty minorTickCount;
     public final void setMinorTickCount(int value) {

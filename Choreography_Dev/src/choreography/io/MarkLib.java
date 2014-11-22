@@ -24,6 +24,12 @@ import choreography.view.music.MusicPaneController;
 public class MarkLib {
     private static Integer[] marks;
 
+    /**
+     * Reads the marks into an array
+     * 
+     * @param input
+     * @return
+     */
     public static Integer[] readMarks(InputStream input) {
         ArrayList<Integer> marksAl = new ArrayList<>();
         try {
@@ -38,10 +44,10 @@ public class MarkLib {
         return marksAl.toArray(new Integer[1]);
     }
     
-//    static void writeMarks(Integer[] output) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-//    }
-
+    /**
+     * Prepares information to be put into a file
+     * @return
+     */
     public static FilePayload createFilePayload() {
         marks = ChoreographyController.getInstance().getBeatmarks();
         StringBuilder sb = new StringBuilder();

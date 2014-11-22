@@ -2526,6 +2526,7 @@ public class FountainSimController implements Initializable {
 		mod6sweep1.getTransforms().clear();
 		mod7sweep1.getTransforms().clear();
 
+		// The current angle of the line
 		double angle = 0;
 
 		// Creates a rotate object Rotate (X,Y,Z)

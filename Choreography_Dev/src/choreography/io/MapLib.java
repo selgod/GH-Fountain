@@ -86,6 +86,12 @@ public class MapLib {
         //TODO ColorPaletteModel.getInstance().setColors(parseMap(readMap(reader)));
     }
     
+    /**
+     * Reads a file into the computer
+     * 
+     * @param reader
+     * @return
+     */
     public static String readMap(BufferedReader reader) {
         StringBuilder sb = new StringBuilder();
         try {
@@ -105,7 +111,13 @@ public class MapLib {
         }
         return sb.toString();
     }   
-        
+    
+    /**
+     * Figures out the colors in the file and puts them in the color pallete
+     * 
+     * @param input
+     * @return
+     */
     public static Color[] parseMap(String input) {
         Scanner sc = new Scanner(input);
         ArrayList<Color> colors = new ArrayList<>(32);
@@ -123,9 +135,7 @@ public class MapLib {
                 colors.add(Color.web(colorHex));
             }
             
-        }
-        //colors.trimToSize();
-        
+        }        
         setMapLoaded(true);
         sc.close();
         return colors.toArray(new Color[1]);
@@ -135,6 +145,10 @@ public class MapLib {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Creates a file that gets zipped
+     * @return
+     */
     public static FilePayload createFilePayload() {
         StringBuilder sb = new StringBuilder(32);
         for(Color c: ColorPaletteModel.getInstance().getColors()) {

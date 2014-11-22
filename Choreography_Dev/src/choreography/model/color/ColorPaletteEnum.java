@@ -6,6 +6,12 @@ package choreography.model.color;
  * @author Danny Selgo
  */
 
+
+/**
+ * These colors are the "Legacy Colors"  They are the
+ * first 16 colors of the color Palette and are not supposed
+ * to be changed
+ */
 public enum ColorPaletteEnum {
 	
     RED ("#FF0000"), 
