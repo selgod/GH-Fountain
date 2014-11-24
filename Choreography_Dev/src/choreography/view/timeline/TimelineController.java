@@ -533,11 +533,11 @@ public class TimelineController implements Initializable {
 					if (!ChoreographyController.getInstance().getShiftPressed()) {
 						if (startRow != labelIndexConst) {
 							FCW f = new FCW(channelAddresses[startRow], ColorPaletteModel.getInstance().getSelectedIndex());
-							timeline.setLightFcw(f, start, timeIndexConst + 1);
-							System.out.println(f + " " + start + " " + timeIndexConst + 1);
+							timeline.setLightFcw(f, start, timeIndexConst);
+							System.out.println(f + " " + start + " " + timeIndexConst);
 						} else {
 							FCW f = new FCW(channelAddresses[labelIndexConst], ColorPaletteModel.getInstance().getSelectedIndex());
-							timeline.setLightFcw(f, start, timeIndexConst + 1);
+							timeline.setLightFcw(f, start, timeIndexConst);
 						}
 					} else {
 						lightCut.setDisable(false);
