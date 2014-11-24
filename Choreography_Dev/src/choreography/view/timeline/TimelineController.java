@@ -101,7 +101,7 @@ public class TimelineController implements Initializable {
 	MenuItem lightCut = new MenuItem("Cut");
 	MenuItem lightCopy = new MenuItem("Copy");
 	MenuItem lightPaste = new MenuItem("Paste");
-	MenuItem lightSelect = new MenuItem("Select");
+	MenuItem lightDelete = new MenuItem("Delete");
 	Menu fadeUp = new Menu("Fade Up");
 	Menu fadeDown = new Menu("Fade Down");
 	MenuItem fadeUpMenuItem = new MenuItem();
@@ -162,22 +162,12 @@ public class TimelineController implements Initializable {
 	 * todo Only operates if first==true, why? this should push to the timeline,
 	 * then pull from timeline when repainting
 	 */
-	public void delete(int timeIndex, int channelIndex, int length, boolean first) {
-		if (first) {
-			lightRecArray[timeIndex][channelIndex].setFill(Color.LIGHTGRAY);
-			if (timeline.getChannelColorMap().containsKey(channelIndex)) {
-				// tgetChannelColorMaptGtfoMap().get(row).remove(row,
-				// value);//TODO ask frank about this
-			}
-			FCW off = new FCW(channelAddresses[channelIndex], 0);
-			lightRecArray[timeIndex][channelIndex].setFill(Color.LIGHTGRAY);
-			timeline.setLightFcw(off, timeIndex, timeIndex + length);// not sure
-			// if
-			// length
-			// is
-			// needed?
-		}
-
+	public void delete(int channelIndex, int timeStartIndex, int timeEndIndex) {
+		/*for(int i = timeStartIndex; i <= timeEndIndex; i++){
+			lightRecArray[i][channelIndex].setFill(Color.LIGHTGRAY);
+		}*/
+		FCW off = new FCW(channelAddresses[channelIndex], 0);
+		timeline.setLightFcw(off, timeStartIndex, timeEndIndex);
 	}
 
 	public void delete(int waterCol) {
@@ -212,13 +202,14 @@ public class TimelineController implements Initializable {
 		lightCM.getItems().add(lightCut);
 		lightCM.getItems().add(lightCopy);
 		lightCM.getItems().add(lightPaste);
-		lightCM.getItems().add(lightSelect);
+		lightCM.getItems().add(lightDelete);
 		lightCM.getItems().add(fadeUp);
 		lightCM.getItems().add(fadeDown);
 
 		lightCut.setDisable(true);
 		lightCopy.setDisable(true);
 		lightPaste.setDisable(true);
+		lightDelete.setDisable(true);
 		fadeUp.setDisable(true);
 		fadeDown.setDisable(true);
 
@@ -268,6 +259,18 @@ public class TimelineController implements Initializable {
 				}
 				TimelineController.getInstance().rePaintLightTimeline();
 				lightCM.hide();
+			}
+		});
+		
+		lightDelete.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				for(int i = startLabelIndex; i <= endLabelIndex; i++){
+					delete(i,startTimeIndex,endTimeIndex);
+					for(int j = startTimeIndex; j <= endTimeIndex; j++){
+						lightRecArray[j][i].setStroke(null);
+					}
+				}
 			}
 		});
 
@@ -354,7 +357,6 @@ public class TimelineController implements Initializable {
 	 * Sets channelAddresses based on input parameter
 	 */
 	public void setChannelAddresses(Set<Integer> channelAddressesSet) {
-
 		// TODO is okChannels even used for useful things?
 		ArrayList<Integer> okChannels = new ArrayList<>();
 		for (Integer query : channelAddressesSet) {
@@ -468,6 +470,7 @@ public class TimelineController implements Initializable {
 							// disable menu items
 							lightCut.setDisable(true);
 							lightCopy.setDisable(true);
+							lightDelete.setDisable(true);
 							fadeUp.setDisable(true);
 							fadeDown.setDisable(true);
 							lightRecArray[timeIndexConst][labelIndexConst].setStroke(Color.BLACK);
@@ -485,6 +488,7 @@ public class TimelineController implements Initializable {
 							}
 							lightCut.setDisable(true);
 							lightCopy.setDisable(true);
+							lightDelete.setDisable(true);
 							fadeUp.setDisable(true);
 							fadeDown.setDisable(true);
 							startRow = labelIndexConst;
@@ -547,6 +551,7 @@ public class TimelineController implements Initializable {
 					} else {
 						lightCut.setDisable(false);
 						lightCopy.setDisable(false);
+						lightDelete.setDisable(false);
 						fadeUp.setDisable(false);
 						fadeDown.setDisable(false);
 					}

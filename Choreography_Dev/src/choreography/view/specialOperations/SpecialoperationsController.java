@@ -242,7 +242,7 @@ public class SpecialoperationsController implements Initializable {
 																			// light
 					for (int i = 0; i < colAL.size(); i++) {
 						if (i == 0) {
-							TimelineController.getInstance().delete(colAL.get(i), rowAL.get(i), colAL.size(), true);
+							//TimelineController.getInstance().delete(colAL.get(i), rowAL.get(i), colAL.size(), true);
 						} else {
 							TimelineController.getInstance().delete(colAL.get(i), rowAL.get(i));
 						}
