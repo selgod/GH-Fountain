@@ -315,6 +315,19 @@ public class MusicPaneController {
 			double currentTime = mediaPlayer.getCurrentTime().toSeconds();
 			double percentComplete = currentTime / totalTime * 100;
 
+			
+			
+			/* Javafx scroll pane do not operate in an intuitive manner.
+			 * The "node" shown(in this case the light timeline) is shown proportional
+			 * to where we are at on the scroll pane. Check out
+			 * https://docs.oracle.com/javafx/2/api/javafx/scene/control/ScrollPane.html
+			 * under hvalue for a better explanation.
+			 * 
+			 * The 1.51 represents the amount of the node(light timeline) can be seen 
+			 * at one time(1.51%). This value might change depending on resolution. 
+			 * Therefore the 1.51 is a hacky fix that alleviate and hides the problem, 
+			 * but doesn't totally fix it. 
+			 */
 			double hValue = (100 * percentComplete) / (100 - 1.51);
 
 			TimelineController.getInstance().getScrollPane().setHvalue(hValue);
