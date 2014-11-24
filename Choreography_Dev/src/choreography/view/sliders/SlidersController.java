@@ -259,21 +259,21 @@ public class SlidersController {
 	}
 
 	/**
-	 * Uses the fcw to adjust the height of the sliders
-	 * So that when the simulation is paused, the sliders show
-	 * what the value of the water is supposed to be. When the simulation
-	 * is playing the sliders default
+	 * Uses the fcw to adjust the height of the sliders So that when the
+	 * simulation is paused, the sliders show what the value of the water is
+	 * supposed to be. When the simulation is playing the sliders default
+	 * 
 	 * @param fcws
 	 */
 	public synchronized void setSlidersWithFcw(ArrayList<FCW> fcws) {
 		// Concurrency issues with for each loops -> therefore must use normal
 		// for loop
-		for (int g = 0; g < fcws.size(); g++) {
-			FCW f = fcws.get(g);
-			if (!f.getIsWater()) {
-				fcws.remove(f);
-			}
-		}
+		// for (int g = 0; g < fcws.size(); g++) {
+		// FCW f = fcws.get(g);
+		// if (!f.getIsWater()) {
+		// fcws.remove(f);
+		// }
+		// }
 		// resetAllSliders();
 		Iterator<FCW> it = fcws.iterator();
 		while (it.hasNext()) {
