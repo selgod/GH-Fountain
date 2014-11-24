@@ -163,9 +163,7 @@ public class TimelineController implements Initializable {
 	 * then pull from timeline when repainting
 	 */
 	public void delete(int channelIndex, int timeStartIndex, int timeEndIndex) {
-		/*for(int i = timeStartIndex; i <= timeEndIndex; i++){
-			lightRecArray[i][channelIndex].setFill(Color.LIGHTGRAY);
-		}*/
+
 		FCW off = new FCW(channelAddresses[channelIndex], 0);
 		timeline.setLightFcw(off, timeStartIndex, timeEndIndex);
 	}
@@ -221,11 +219,7 @@ public class TimelineController implements Initializable {
 					for (int j = 0; j < copyArray[i].length; j++) {
 						copyArray[i][j] = new Rectangle();
 						copyArray[i][j].setFill(lightRecArray[startTimeIndex + i][startLabelIndex + j].getFill());
-						lightRecArray[startTimeIndex + i][startLabelIndex + j].setFill(Color.LIGHTGRAY); // TODO
-						// use
-						// delete()
-						// here
-						// instead
+						lightRecArray[startTimeIndex + i][startLabelIndex + j].setFill(Color.LIGHTGRAY);
 						lightRecArray[startTimeIndex + i][startLabelIndex + j].setOpacity(1);
 					}
 				}
@@ -312,9 +306,6 @@ public class TimelineController implements Initializable {
 	}
 
 	public Integer[] getSpecialChannels() {
-		/*
-		 * TODO yay magic numbers :(
-		 */
 		// all of the strobe, fades, and the initial 10
 		Integer[] specialChannels = new Integer[] {
 				// 17, 18, 19, 20, 21, 22, 23, 24, 27, 200,
@@ -603,7 +594,6 @@ public class TimelineController implements Initializable {
 						waterCM.show(waterRecArray[testI], me.getScreenX(), me.getScreenY());
 					}
 
-					Duration duration = MusicPaneController.getInstance().getMediaPlayer().getTotalDuration();
 					MusicPaneController.getInstance().getMediaPlayer().seek(Duration.seconds((((double) testI + 1) / 10)));
 				}
 			});
@@ -1372,234 +1362,6 @@ public class TimelineController implements Initializable {
 		}
 		throw new IllegalArgumentException("Channel doesn't exist " + channel);
 		// return 0;
-	}
-
-	private String waterTLWords(String badName) {
-		String newName = "";
-
-		switch (badName) {
-		// From water address table
-		case "RING5":
-			newName = "Ring 5";
-			break;
-		case "RING4":
-			newName = "Ring 4";
-			break;
-		case "RING3":
-			newName = "Ring 3";
-			break;
-		case "RING2":
-			newName = "Ring 2";
-			break;
-		case "RING1":
-			newName = "Ring 1";
-			break;
-		case "SWEEP":
-			newName = "Sweeps";
-			break;
-		case "SPOUT":
-			newName = "Spout"; // TODO there are duplicate SPOUT in the FCW_DEF
-								// file one in the table A and one in
-								// WaterAddresses
-			break;
-		case "BAZOOKA":
-			newName = "Bazooka"; // TODO Same issue as SPOUT.
-			break;
-		case "CANDELABRA":
-			newName = "Candelabra";
-			break;
-		case "FTCURT":
-			newName = "Front Curtain";
-			break;
-		case "BKCURT":
-			newName = "Back Curtain";
-			break;
-		case "PEACOCK":
-			newName = "Peacock";
-			break;
-		case "SWEEPA":
-			newName = "Sweep A";
-			break;
-		case "SWEEPB":
-			newName = "Sweep B";
-			break;
-		case "SWEEPLIMITAB":
-			newName = "Sweep Limit A + B";
-			break;
-		case "SWEEPLIMITA":
-			newName = "Sweep Limit A";
-			break;
-		case "SWEEPLIMITB":
-			newName = "Sweep Limit B";
-			break;
-		case "MULTI":
-			newName = "Wedding Cake Formation";
-			break;
-		case "PULSE":
-			newName = "Repeat Jump @ 0.5sec";
-			break;
-		// From functions table
-		case "VOICE":
-			newName = "Auto Cateloged Formations (water + light)"; // TODO
-																	// needed?
-			break;
-		case "INTERCHANGEAB":
-			newName = "Interchange A+B module formations (water + light)"; // TODO
-																			// needed?
-			break;
-		case "OFF":
-			newName = "Off"; // TODO needed?
-			break;
-		case "MODULEA":
-			newName = "Module A";
-			break;
-		case "MODULEB":
-			newName = "Module B";
-			break;
-		case "CONNECTAB":
-			newName = "Connect A + B";
-			break;
-		case "OFFRESET":
-			newName = "Hold Center";
-			break;
-		case "SHORT":
-			newName = "Short";
-			break;
-		case "LONG":
-			newName = "Long";
-			break;
-		case "LARGO":
-			newName = "Largo";
-			break;
-		case "ADAGIO":
-			newName = "Slow Speed";
-			break;
-		case "ANDANTE":
-			newName = "Andante";
-			break;
-		case "MODERATO":
-			newName = "Medium Speed";
-			break;
-		case "ALLEGRETO":
-			newName = "Allegreto";
-			break;
-		case "ALLEGRO":
-			newName = "Fast Speed";
-			break;
-		case "PRESTO":
-			newName = "Presto";
-			break;
-		case "PLAYPAUSE":
-			newName = "Play/Pause Sweep";
-			break;
-		case "STOP":
-			newName = "Stop Jumping";
-			break;
-		case "ADDRSWEEP":
-			newName = "Sweep Formation";
-			break;
-		case "JUMPA":
-			newName = "Jump A";
-			break;
-		case "JUMPB":
-			newName = "Jump B";
-			break;
-		case "JUMP0OR1":
-			newName = "Jump Phase";
-			break;
-		case "HOLDRIGHTOT":
-			newName = "ROt";
-			break;
-		case "RIGHTOTRIGHTLONG":
-			newName = "ROT RL";
-			break;
-		case "RIGHTOTRIGHTSHORT":
-			newName = "ROT RS";
-			break;
-		case "RIGHTOTCENTER":
-			newName = "ROT C";
-			break;
-		case "RIGHTOTLEFTSHORT":
-			newName = "ROT LS";
-			break;
-		case "RIGHTOTLEFTLONG":
-			newName = "ROT LL";
-			break;
-		case "RIGHTOTLEFTOT":
-			newName = "ROT LOT";
-			break;
-		case "HOLDRIGHTLONG":
-			newName = "RL";
-			break;
-		case "RIGHTLONGRIGHTSHORT":
-			newName = "RS RL";
-			break;
-		case "RIGHTLONGCENTER":
-			newName = "C RL";
-			break;
-		case "RIGHTLONGLEFTSHORT":
-			newName = "LS RL";
-			break;
-		case "RIGHTLONGLEFTLONG":
-			newName = "LL RL";
-			break;
-		case "RIGHTLONGLEFTOT":
-			newName = "LOT RL";
-			break;
-		case "HOLDRIGHTSHORT":
-			newName = "RS";
-			break;
-		case "RIGHTSHORTCENTER":
-			newName = "C RS";
-			break;
-		case "RIGHTSHORTLEFTSHORT":
-			newName = "LS RS";
-			break;
-		case "RIGHTSHORTLEFTLONG":
-			newName = "LL RS";
-			break;
-		case "RIGHTSHORTLEFTOT":
-			newName = "LOT RS";
-			break;
-		case "HOLDCENTER":
-			newName = "C";
-			break;
-		case "CENTERLEFTSHORT":
-			newName = "LS C";
-			break;
-		case "CENTERLEFTLONG":
-			newName = "LL C";
-			break;
-		case "CENTERLEFTOT":
-			newName = "LOT C";
-			break;
-		case "HOLDLEFTSHORT":
-			newName = "LS";
-			break;
-		case "LEFTSHORTLEFTLONG":
-			newName = "LL LS";
-			break;
-		case "LEFTSHORTLEFTOT":
-			newName = "LOT LS";
-			break;
-		case "HOLDLEFTLONG":
-			newName = "LL";
-			break;
-		case "LEFTLONGLEFTOT":
-			newName = "LOT LL";
-			break;
-		case "HOLDLEFTOT":
-			newName = "LOT";
-			break;
-		case "SWEEPSPECIAL":
-			newName = "Special";
-			break;
-		default:
-			newName = badName;
-
-		}
-		return newName;
-
 	}
 
 	public void fireSliderChangeEvent() {

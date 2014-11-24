@@ -539,10 +539,6 @@ public class SpecialoperationsController implements Initializable {
 			this.slider = slider;
 		}
 
-		public boolean isOpposed() {
-			return opposed;
-		}
-
 		public void setOpposed(boolean opposed) {
 			this.opposed = opposed;
 		}

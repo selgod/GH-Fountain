@@ -2982,7 +2982,6 @@ public class FountainSimController implements Initializable {
 			kv48 = new KeyValue(mod7candle6.visibleProperty(), false);
 
 		}
-
 		final KeyValue kv1 = new KeyValue(mod1candle1.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 		final KeyValue kv2 = new KeyValue(mod1candle2.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
 		final KeyValue kv3 = new KeyValue(mod1candle3.endYProperty(), ((35 * level)), Interpolator.EASE_BOTH);
@@ -3018,6 +3017,10 @@ public class FountainSimController implements Initializable {
 	}
 
 	/**
+	 * Implements fading (dimming) and crossfading (color transitions) Should be
+	 * a "plug and play" method, with the only possible trouble spot being the
+	 * transition not happening to a module
+	 * 
 	 * @param mod
 	 *            The module that needs to fade
 	 * @param length
@@ -3032,14 +3035,6 @@ public class FountainSimController implements Initializable {
 	 *            The ending color of the fade
 	 * 
 	 *            Bazooka's still need a little work.
-	 */
-	/**
-	 * @param mod
-	 * @param length
-	 * @param start
-	 * @param end
-	 * @param begin
-	 * @param stop
 	 */
 	public void fadeModule(int mod, double length, double start, double end, Color begin, Color stop) {
 		// Fade transitions

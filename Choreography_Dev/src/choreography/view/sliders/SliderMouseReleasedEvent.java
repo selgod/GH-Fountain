@@ -56,47 +56,43 @@ import choreography.view.timeline.TimelineController;
  *
  * @author elementsking
  */
-public class SliderMouseReleasedEvent implements EventHandler<MouseEvent>{
-    
-    private final CannonEnum cannonType;
-    private final ModuleEnum module;
-    private final CannonSliderChangeListener cscl;
-    private final Slider slider;
-    
-    /**
-     *
-     * @param type
-     * @param module
-     * @param cscl
-     * @param s
-     */
-    public SliderMouseReleasedEvent(CannonEnum type, ModuleEnum module, CannonSliderChangeListener cscl, Slider s) {
-        this.cannonType = type;
-        this.module = module;
-        this.cscl = cscl;
-        slider = s;
-    }
-    
+public class SliderMouseReleasedEvent implements EventHandler<MouseEvent> {
+
+	private final CannonEnum cannonType;
+	private final ModuleEnum module;
+	private final CannonSliderChangeListener<?> cscl;
+	private final Slider slider;
+
+	/**
+	 *
+	 * @param type
+	 * @param module
+	 * @param cscl
+	 * @param s
+	 */
+	public SliderMouseReleasedEvent(CannonEnum type, ModuleEnum module, CannonSliderChangeListener<?> cscl, Slider s) {
+		this.cannonType = type;
+		this.module = module;
+		this.cscl = cscl;
+		slider = s;
+	}
+
 	/**
 	 * Calls the slider change listener in order to figure out the fcw and then
 	 * puts the fcw into the timeline
 	 **/
-    @Override
-    public void handle(MouseEvent event) {
-        if(event.isAltDown()) {
-            String[] actions = new String[]{module.getReverse(module).getModule(), 
-                module.getModule(), Integer.toString(cscl.getLastNumber())};
-            FCW f = FCWLib.getInstance().getFCW(cannonType.name(), actions);
-            TimelineController.getInstance().getTimeline().setWaterFcwAtPoint(
-                    MusicPaneController.getInstance().getTenthsTime(), f);
-            slider.setValue(cscl.getLastNumber());
-        }
-        else {
-            String[] actions = new String[]{module.getModule(), Integer.toString(cscl.getLastNumber())};
-            FCW f = FCWLib.getInstance().getFCW(cannonType.name(), actions);
-            TimelineController.getInstance().getTimeline().setWaterFcwAtPoint(
-                    MusicPaneController.getInstance().getTenthsTime(), f);
-        }
-    }
-    
+	@Override
+	public void handle(MouseEvent event) {
+		if (event.isAltDown()) {
+			String[] actions = new String[] { module.getReverse(module).getModule(), module.getModule(), Integer.toString(cscl.getLastNumber()) };
+			FCW f = FCWLib.getInstance().getFCW(cannonType.name(), actions);
+			TimelineController.getInstance().getTimeline().setWaterFcwAtPoint(MusicPaneController.getInstance().getTenthsTime(), f);
+			slider.setValue(cscl.getLastNumber());
+		} else {
+			String[] actions = new String[] { module.getModule(), Integer.toString(cscl.getLastNumber()) };
+			FCW f = FCWLib.getInstance().getFCW(cannonType.name(), actions);
+			TimelineController.getInstance().getTimeline().setWaterFcwAtPoint(MusicPaneController.getInstance().getTenthsTime(), f);
+		}
+	}
+
 }

@@ -1,14 +1,26 @@
 package choreography;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import choreography.io.CtlLib;
+import choreography.io.GhmfLibrary;
+import choreography.io.MapLib;
 import choreography.model.fountain.Fountain;
+import choreography.view.music.MusicPaneController;
 
 /**
  * The Main class calls of the needed methods and classes that are needed for
@@ -59,6 +71,83 @@ public class Main extends Application {
 			root = (VBox) fxml.load();
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("view/application.css").toExternalForm());
+
+			scene.setOnDragOver(new EventHandler<DragEvent>() {
+				@Override
+				public void handle(DragEvent event) {
+					Dragboard db = event.getDragboard();
+					if (db.hasFiles()) {
+						event.acceptTransferModes(TransferMode.ANY);
+					} else {
+						event.consume();
+					}
+				}
+			});
+
+			// Drag and Drop
+			scene.setOnDragDropped(new EventHandler<DragEvent>() {
+				@Override
+				public void handle(DragEvent event) {
+					String filePath = null;
+					Dragboard db = event.getDragboard();
+					boolean success = false;
+					if (db.hasFiles()) {
+						success = true;
+
+						for (File file : db.getFiles()) {
+							filePath = file.getAbsolutePath();
+
+							// Open Control File
+							if (filePath.substring(filePath.length() - 4).equalsIgnoreCase(".ctl")) {
+								try {
+									CtlLib.getInstance().openCtl(file);
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}
+
+							// Opens Wave Folder
+							if (filePath.substring(filePath.length() - 4).equalsIgnoreCase(".wav")) {
+								MusicPaneController.getInstance().openMusicFile(file);
+							}
+
+							// Opens ZipFiles
+							if (filePath.substring(filePath.length() - 4).equalsIgnoreCase("ghmf")) {
+								ZipFile ghmfFile = null;
+								try {
+									ghmfFile = new ZipFile(file);
+								} catch (ZipException e) {
+									e.printStackTrace();
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+								try {
+									GhmfLibrary.readGhmfZip(ghmfFile);
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}
+
+							// Open Color Map
+							if (filePath.substring(filePath.length() - 4).equalsIgnoreCase(".map")) {
+								try {
+									MapLib.openMap(file);
+								} catch (FileNotFoundException e) {
+									e.printStackTrace();
+								}
+							}
+
+							if (filePath.substring(filePath.length() - 4).equalsIgnoreCase("mark")) {
+								System.out.println("Mark File");
+							}
+
+						}
+					}
+					event.setDropCompleted(success);
+					event.consume();
+				}
+			});
+
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch (IOException e) {

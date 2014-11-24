@@ -62,13 +62,11 @@ import choreography.io.GhmfLibrary;
 import choreography.io.LagTimeLibrary;
 import choreography.io.MapLib;
 import choreography.io.MarkLib;
-import choreography.model.color.ColorPaletteModel;
 import choreography.model.fcw.FCW;
 import choreography.view.colorPalette.ColorPaletteController;
 import choreography.view.customChannel.CustomChannel;
 import choreography.view.lagtime.LagTimeGUIController;
 import choreography.view.music.MusicPaneController;
-import choreography.view.sim.FountainSimController;
 import choreography.view.sliders.SlidersController;
 import choreography.view.specialOperations.SpecialoperationsController;
 import choreography.view.timeline.TimelineController;
@@ -165,7 +163,7 @@ public class ChoreographyController implements Initializable {
 	private VBox vboxParent;
 	@FXML
 	private Pane simPane;
-	
+
 	/**
 	 * Initializes the controller class.
 	 * 
@@ -187,7 +185,7 @@ public class ChoreographyController implements Initializable {
 		});
 
 		/**
-		 * Detaches simulator from main view, displays it in a new window. 
+		 * Detaches simulator from main view, displays it in a new window.
 		 */
 		splitSimulationMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -218,7 +216,7 @@ public class ChoreographyController implements Initializable {
 		});
 
 		/**
-		 * Menu option to hide or display the simulator on the main view. 
+		 * Menu option to hide or display the simulator on the main view.
 		 */
 		showSimulationMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -241,9 +239,8 @@ public class ChoreographyController implements Initializable {
 		});
 
 		/**
-		 * Loads a music file selected from file chooser.
-		 * Initializes timeline for selected music file, and enables the
-		 * ability to open a ctl file. 
+		 * Loads a music file selected from file chooser. Initializes timeline
+		 * for selected music file, and enables the ability to open a ctl file.
 		 */
 		openMusicMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -286,11 +283,11 @@ public class ChoreographyController implements Initializable {
 					loadDefaultMap();
 					CtlLib.getInstance().openCtl();
 					cc.setfcwOutput("CTL file has loaded!");
-					
-					/**TODO 
-					 * Handling for if loaded ctl file is a legacy file
+
+					/**
+					 * TODO Handling for if loaded ctl file is a legacy file
 					 */
-					 
+
 					SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
 				} catch (IOException ex) {
 					Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
@@ -303,8 +300,8 @@ public class ChoreographyController implements Initializable {
 		});
 
 		/**
-		 * Turns on advanced features. 
-		 * TODO Password for access to these features not yet implemented 
+		 * Turns on advanced features. TODO Password for access to these
+		 * features not yet implemented
 		 */
 		advancedCheckMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -317,9 +314,10 @@ public class ChoreographyController implements Initializable {
 				TimelineController.getInstance().rePaintLightTimeline();
 			}
 		});
-		
+
 		/**
-		 * When quit is clicked, displays confirmation dialog, then prompts user to save. 
+		 * When quit is clicked, displays confirmation dialog, then prompts user
+		 * to save.
 		 */
 		quitMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -351,21 +349,24 @@ public class ChoreographyController implements Initializable {
 				if (saveLocation != null) {
 					String extension = ".ctl";
 					String filePath = saveLocation.getAbsolutePath();
-					
-					// Check if save file has .ctl extension to prevent extra .ctl from being appened to file name
-					if(filePath.contains(extension)){
+
+					// Check if save file has .ctl extension to prevent extra
+					// .ctl from being appened to file name
+					if (filePath.contains(extension)) {
 						saveLocation = new File(saveLocation.getAbsoluteFile() + "");
 					} else {
 						saveLocation = new File(saveLocation.getAbsoluteFile() + extension);
 					}
 					isSaved = true;
 				} else {
-					return; // User closed file chooser without saving. Prevent a null pointer exception being thrown on next line
+					return; // User closed file chooser without saving. Prevent
+							// a null pointer exception being thrown on next
+							// line
 				}
 				CtlLib.getInstance().saveFile(saveLocation, TimelineController.getInstance().getTimeline().getTimeline());
 			}
 		});
-		
+
 		saveMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -386,7 +387,7 @@ public class ChoreographyController implements Initializable {
 
 			}
 		});
-		
+
 		/**
 		 * TODO
 		 * 
@@ -396,16 +397,16 @@ public class ChoreographyController implements Initializable {
 		//
 		// @Override
 		// public void handle(ActionEvent t) {
-		//// openLagTimeDialog();
+		// // openLagTimeDialog();
 		// }
 		// });
 
 		/**
 		 * When the New menu option is clicked, it launches a new window of the
-		 * choreographer. 
+		 * choreographer.
 		 * 
-		 * TODO Optionally, we can set the currently opened window to close, by calling
-		 * the File->Quit code, then calling System.exit(). 
+		 * TODO Optionally, we can set the currently opened window to close, by
+		 * calling the File->Quit code, then calling System.exit().
 		 */
 		newItemMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -425,15 +426,15 @@ public class ChoreographyController implements Initializable {
 					e.printStackTrace();
 				}
 
-				
-				// System.exit(0); If we don't want previous window to remain open, call this line. 
+				// System.exit(0); If we don't want previous window to remain
+				// open, call this line.
 			}
 
 		});
 
 		/**
-		 * Event handler for shift key. While shift key is pressed, the
-		 * boolean flag shiftPressed is set to true
+		 * Event handler for shift key. While shift key is pressed, the boolean
+		 * flag shiftPressed is set to true
 		 */
 		csGUI.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
@@ -474,7 +475,7 @@ public class ChoreographyController implements Initializable {
 
 	/**
 	 * Called by split simulation menu option. Detaches the simulation display
-	 * from the main choreography window. 
+	 * from the main choreography window.
 	 */
 	private void removeSimulation() {
 		vboxParent.getChildren().remove(simPane);
@@ -486,7 +487,7 @@ public class ChoreographyController implements Initializable {
 
 	/**
 	 * Called by menu option, re-attaches the simulation window to the main
-	 * choreography window. 
+	 * choreography window.
 	 */
 	private void addSimulation() {
 		vboxParent.getChildren().add(0, simPane);
@@ -507,10 +508,10 @@ public class ChoreographyController implements Initializable {
 	}
 
 	/**
-	 * If a legacy ctl file is loaded, it should be read only. 
-	 * This method will disable editing. 
+	 * If a legacy ctl file is loaded, it should be read only. This method will
+	 * disable editing.
 	 * 
-	 * TODO Untested. 
+	 * TODO Untested.
 	 */
 	public void killFeaturesOnLegacy() {
 		SpecialoperationsController.getInstance().killSpecialOpsPane();
@@ -556,8 +557,7 @@ public class ChoreographyController implements Initializable {
 	}
 
 	/**
-	 * TODO
-	 * Not yet implemented
+	 * TODO Not yet implemented
 	 */
 	public boolean openLagTimeDialog() {
 		try {
@@ -586,18 +586,18 @@ public class ChoreographyController implements Initializable {
 	}
 
 	/**
-	 * Updates fcWOutput label on view 
+	 * Updates fcWOutput label on view
 	 */
 	public void setfcwOutput(String s) {
 		fcwOutput.setText(s);
 	}
 
 	/**
-	 * When Add Channels menu option clicked, displays window
-	 * to select channels to add. 
+	 * When Add Channels menu option clicked, displays window to select channels
+	 * to add.
 	 * 
-	 * TODO The CustomChannel class
-	 * needs to be worked on for this to function properly. 
+	 * TODO The CustomChannel class needs to be worked on for this to function
+	 * properly.
 	 */
 	public void addChannels() {
 		Stage primaryStage = new Stage();
@@ -605,15 +605,15 @@ public class ChoreographyController implements Initializable {
 	}
 
 	/**
-	 * Returns the current instance of this class. Called by other
-	 * classes so they may access this class's methods. 
+	 * Returns the current instance of this class. Called by other classes so
+	 * they may access this class's methods.
 	 */
 	public static ChoreographyController getInstance() {
 		return cc;
 	}
 
 	/**
-	 * Sets the event Timeline 
+	 * Sets the event Timeline
 	 * 
 	 * @param parsedCTL
 	 */
@@ -632,14 +632,14 @@ public class ChoreographyController implements Initializable {
 	}
 
 	/**
-	 * Called to set access to advanced user settings 
+	 * Called to set access to advanced user settings
 	 */
 	public void setAdvanced(boolean b) {
 		isAdvanced = b;
 	}
 
 	/**
-	 * Returns true if advanced user settings have been enabled 
+	 * Returns true if advanced user settings have been enabled
 	 */
 	public boolean getAdvanced() {
 		return isAdvanced;
@@ -746,9 +746,9 @@ public class ChoreographyController implements Initializable {
 			Logger.getLogger(ChoreographyController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-	
+
 	/**
-	 * Returns current instance of beat marks 
+	 * Returns current instance of beat marks
 	 */
 	public ScrollPane getBeatMarkScrollPane() {
 		return this.beatMarkScrollPane;
@@ -837,7 +837,7 @@ public class ChoreographyController implements Initializable {
 	public void userManual() {
 		Stage stage = new Stage();
 		Scene scene;
-		
+
 		// Names the browser window
 		stage.setTitle("Help - User Manual");
 
@@ -845,13 +845,13 @@ public class ChoreographyController implements Initializable {
 		scene = new Scene(myBrowser, 800, 600);
 
 		stage.setScene(scene);
-		
+
 		// Opens the browser
 		stage.show();
 	}
 
 	/**
-	 * Displays the user manual page 
+	 * Displays the user manual page
 	 */
 	class MyBrowser extends Region {
 
