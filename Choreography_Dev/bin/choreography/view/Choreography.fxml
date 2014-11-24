@@ -222,14 +222,6 @@
 										<Insets left="4.0" />
 									</GridPane.margin>
 								</Label>
-								<ToggleButton fx:id="selectionButton"
-									mnemonicParsing="false" prefWidth="53.0" text="Select"
-									GridPane.columnIndex="1" GridPane.halignment="LEFT"
-									GridPane.rowIndex="0">
-									<GridPane.margin>
-										<Insets />
-									</GridPane.margin>
-								</ToggleButton>
 								<fx:include source="colorPalette/ColorPalette.fxml"
 								    GridPane.columnIndex="2" GridPane.halignment="RIGHT"
 									GridPane.rowIndex="0" GridPane.vgrow="NEVER" />

@@ -16,11 +16,17 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
+
 import choreography.io.CtlLib;
 import choreography.io.GhmfLibrary;
 import choreography.io.MapLib;
 import choreography.model.fountain.Fountain;
+import choreography.view.ChoreographyController;
 import choreography.view.music.MusicPaneController;
+import choreography.view.specialOperations.SpecialoperationsController;
+import choreography.view.timeline.TimelineController;
 
 /**
  * The Main class calls of the needed methods and classes that are needed for
@@ -77,7 +83,7 @@ public class Main extends Application {
 				public void handle(DragEvent event) {
 					Dragboard db = event.getDragboard();
 					if (db.hasFiles()) {
-						event.acceptTransferModes(TransferMode.ANY);
+						event.acceptTransferModes(TransferMode.COPY);
 					} else {
 						event.consume();
 					}
@@ -97,18 +103,13 @@ public class Main extends Application {
 						for (File file : db.getFiles()) {
 							filePath = file.getAbsolutePath();
 
-							// Open Control File
-							if (filePath.substring(filePath.length() - 4).equalsIgnoreCase(".ctl")) {
-								try {
-									CtlLib.getInstance().openCtl(file);
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
-
 							// Opens Wave Folder
 							if (filePath.substring(filePath.length() - 4).equalsIgnoreCase(".wav")) {
 								MusicPaneController.getInstance().openMusicFile(file);
+								TimelineController.getInstance().initializeTimelines();
+								ChoreographyController.getInstance().getOpenCTLMenuItem().setDisable(false);
+								MusicPaneController.getInstance().getPlayButton().setDisable(false);
+								MusicPaneController.getInstance().getResetButton().setDisable(false);
 							}
 
 							// Opens ZipFiles
@@ -128,6 +129,20 @@ public class Main extends Application {
 								}
 							}
 
+							// Open Control File
+							if (filePath.substring(filePath.length() - 4).equalsIgnoreCase(".ctl")) {
+								if (MusicPaneController.getInstance().getMusicName() != "") {
+									try {
+										CtlLib.getInstance().openCtl(file);
+										SpecialoperationsController.getInstance().initializeSweepSpeedSelectors();
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+								} else {
+									Dialogs.create().title("Loading Error").message("Must load music first").showError();
+								}
+							}
+
 							// Open Color Map
 							if (filePath.substring(filePath.length() - 4).equalsIgnoreCase(".map")) {
 								try {
@@ -140,8 +155,8 @@ public class Main extends Application {
 							if (filePath.substring(filePath.length() - 4).equalsIgnoreCase("mark")) {
 								System.out.println("Mark File");
 							}
-
 						}
+
 					}
 					event.setDropCompleted(success);
 					event.consume();

@@ -259,21 +259,6 @@ public class ChoreographyController implements Initializable {
 
 		});
 
-		selectionButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				if (isSelected) {
-					isSelected = false;
-					TimelineController.getInstance().clearAllAL();
-					TimelineController.getInstance().disableCopyPaste();
-				} else {
-					isSelected = true;
-				}
-
-			}
-
-		});
-
 		openCTLMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -804,6 +789,10 @@ public class ChoreographyController implements Initializable {
 				beatMarkRecArray[i].setFill(Color.BLACK);
 			}
 		}
+	}
+
+	public MenuItem getOpenCTLMenuItem() {
+		return openCTLMenuItem;
 	}
 
 	/**
