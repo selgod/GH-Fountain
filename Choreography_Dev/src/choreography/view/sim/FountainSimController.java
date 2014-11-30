@@ -196,6 +196,9 @@ public class FountainSimController implements Initializable {
 	private Rectangle mod1ring4;
 
 	@FXML
+	private QuadCurve bazookaB;
+
+	@FXML
 	private Line bazooka1;
 
 	@FXML
@@ -4136,21 +4139,21 @@ public class FountainSimController implements Initializable {
 		assert fountainPane != null : "fx:id=\"fountainPane\" was not injected: check your FXML file 'fountainSim.fxml'.";
 		// assert ring1Rec != null :
 		// "fx:id=\"ring1Rec\" was not injected: check your FXML file 'fountainSim.fxml'.";
-		//assert ring1Slider != null : "fx:id=\"ring1Slider\" was not injected: check your FXML file 'fountainSim.fxml'.";
+		assert ring1Slider != null : "fx:id=\"ring1Slider\" was not injected: check your FXML file 'fountainSim.fxml'.";
 		// assert ring2Rec != null :
 		// "fx:id=\"ring2Rec\" was not injected: check your FXML file 'fountainSim.fxml'.";
 
-		//assert ring2Slider != null : "fx:id=\"ring2Slider\" was not injected: check your FXML file 'fountainSim.fxml'.";
+		assert ring2Slider != null : "fx:id=\"ring2Slider\" was not injected: check your FXML file 'fountainSim.fxml'.";
 		// assert ring3Rec != null :
 		// "fx:id=\"ring3Rec\" was not injected: check your FXML file 'fountainSim.fxml'.";
-		//assert ring3Slider != null : "fx:id=\"ring3Slider\" was not injected: check your FXML file 'fountainSim.fxml'.";
+		assert ring3Slider != null : "fx:id=\"ring3Slider\" was not injected: check your FXML file 'fountainSim.fxml'.";
 		// assert ring4Rec != null :
 		// "fx:id=\"ring4Rec\" was not injected: check your FXML file 'fountainSim.fxml'.";
-		//assert ring4Slider != null : "fx:id=\"ring4Slider\" was not injected: check your FXML file 'fountainSim.fxml'.";
-		//assert ring5Level != null : "fx:id=\"ring5Level\" was not injected: check your FXML file 'fountainSim.fxml'.";
+		assert ring4Slider != null : "fx:id=\"ring4Slider\" was not injected: check your FXML file 'fountainSim.fxml'.";
+		assert ring5Level != null : "fx:id=\"ring5Level\" was not injected: check your FXML file 'fountainSim.fxml'.";
 		// assert ring5Rec != null :
 		// "fx:id=\"ring5Rec\" was not injected: check your FXML file 'fountainSim.fxml'.";
-		//assert ring5Slider != null : "fx:id=\"ring5Slider\" was not injected: check your FXML file 'fountainSim.fxml'.";
+		assert ring5Slider != null : "fx:id=\"ring5Slider\" was not injected: check your FXML file 'fountainSim.fxml'.";
 
 		instance = this;
 
@@ -4492,8 +4495,20 @@ public class FountainSimController implements Initializable {
 		this.mod1ring4 = mod1ring4;
 	}
 
+	public QuadCurve getBazookaB() {
+		return bazookaB;
+	}
+
+	public void setBazookaB(QuadCurve bazookaB) {
+		this.bazookaB = bazookaB;
+	}
+
 	public Line getBazooka1() {
 		return bazooka1;
+	}
+
+	public void setBazooka1(Line bazooka1) {
+		this.bazooka1 = bazooka1;
 	}
 
 	public Line getBazooka2() {
