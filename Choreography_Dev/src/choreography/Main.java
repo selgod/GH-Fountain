@@ -164,6 +164,7 @@ public class Main extends Application {
 			});
 
 			primaryStage.setScene(scene);
+
 			primaryStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -189,4 +190,5 @@ public class Main extends Application {
 	public void setPrimaryStage(Stage primaryStage) {
 		Main.primaryStage = primaryStage;
 	}
+
 }
