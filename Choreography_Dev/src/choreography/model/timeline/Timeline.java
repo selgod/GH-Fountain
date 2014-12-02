@@ -329,6 +329,7 @@ public class Timeline {
 
 			for (int g = 0; g < newFcwList.size(); g++) {
 				if ((newFcwList.get(g).getAddr() == currentFcw.getAddr()) && fcwAlreadyAdded(newFcwList.get(g), currentFcw)) {
+					System.out.println("removed");
 					newFcwList.remove(g);
 					newFcwList.add(currentFcw);
 					break;

@@ -255,13 +255,13 @@ public class TimelineController implements Initializable {
 				lightCM.hide();
 			}
 		});
-
+		
 		lightDelete.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				for (int i = startLabelIndex; i <= endLabelIndex; i++) {
-					delete(i, startTimeIndex, endTimeIndex);
-					for (int j = startTimeIndex; j <= endTimeIndex; j++) {
+				for(int i = startLabelIndex; i <= endLabelIndex; i++){
+					delete(i,startTimeIndex,endTimeIndex);
+					for(int j = startTimeIndex; j <= endTimeIndex; j++){
 						lightRecArray[j][i].setStroke(null);
 					}
 				}

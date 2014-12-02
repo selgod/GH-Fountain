@@ -21,8 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -69,7 +67,6 @@ import choreography.view.colorPalette.ColorPaletteController;
 import choreography.view.customChannel.CustomChannel;
 import choreography.view.lagtime.LagTimeGUIController;
 import choreography.view.music.MusicPaneController;
-import choreography.view.sim.FountainSimController;
 import choreography.view.sliders.SlidersController;
 import choreography.view.specialOperations.SpecialoperationsController;
 import choreography.view.timeline.TimelineController;
@@ -208,26 +205,10 @@ public class ChoreographyController implements Initializable {
 				splitSimulationMenuItem.setDisable(true);
 				showSimulationMenuItem.setDisable(true);
 
-				simStage.widthProperty().addListener(new ChangeListener<Number>() {
-					public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-						double width = (double) newSceneWidth;
-						// System.out.println("Width: " + newSceneWidth);
-						FountainSimController.getInstance().resizeWidth(width);
-					}
-				});
-				simStage.heightProperty().addListener(new ChangeListener<Number>() {
-					public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-						// System.out.println("Height: " + newSceneHeight);
-						double height = (double) newSceneHeight;
-						FountainSimController.getInstance().resizeHeight(height);
-					}
-				});
-
 				simStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 					public void handle(WindowEvent we) {
 						splitSimulationMenuItem.setDisable(false);
 						showSimulationMenuItem.setDisable(false);
-						FountainSimController.getInstance().resizeWidth(1337);
 						addSimulation();
 					}
 				});
@@ -487,17 +468,6 @@ public class ChoreographyController implements Initializable {
 		vboxParent.setPrefHeight(500);
 		Main.getPrimaryStage().setHeight(580);
 		showSimulationMenuItem.setText("Show Simulation");
-		EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				System.out.println("X : " + mouseEvent.getX() + "Y: " + mouseEvent.getY());
-				// System.out.println(FountainSimController.getInstance().getMod1().getLayoutX());
-
-			}
-
-		};
-		simPane.setOnMouseClicked(mouseHandler);
 	}
 
 	/**
