@@ -30,6 +30,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import choreography.io.FCWLib;
 import choreography.io.LagTimeLibrary;
+import choreography.model.color.ColorPaletteModel;
 import choreography.model.fcw.FCW;
 import choreography.view.music.MusicPaneController;
 
@@ -544,6 +545,11 @@ public class FountainSimController implements Initializable {
 				final int rl = 45; // Right Long
 				final int rs = 30; // Right Short
 				final int rv = 15; // Right Very Short
+				
+				
+				double fading[][] = new double[7][3];
+				Color crossFading[][] = new Color[7][2];
+				
 				if (f.getIsWater() && f.getAddr() != 99) {
 					lagTime = LagTimeLibrary.getInstance().getLagTimeInSeconds(f);
 				}
@@ -1737,6 +1743,78 @@ public class FountainSimController implements Initializable {
 						}
 					}
 					break;
+				case 501:
+					System.out.println("Fading!!!");
+					crossFading[0][0]=ColorPaletteModel.getInstance().getColor( ColorPaletteModel.getInstance().checkColor(mod1ring4.getFill()));
+					crossFading[0][1]=ColorPaletteModel.getInstance().getColor(f.getData()%100);
+					break;
+				case 601:
+					fading[0][0]=f.getData()/10;
+					fading[0][1]=mod1.getOpacity();
+					fading[0][2]= ((int) f.getData()) / 100;
+					fadeModule(1, fading[0][0], fading[0][1], fading[0][2], crossFading[0][0], crossFading[0][1]);
+					break;
+				case 502:
+					crossFading[1][0]=ColorPaletteModel.getInstance().getColor( ColorPaletteModel.getInstance().checkColor(mod2ring4.getFill()));
+					crossFading[1][1]=ColorPaletteModel.getInstance().getColor(f.getData()%100);
+					break;
+				case 602:
+					fading[1][0]=f.getData()/10;
+					fading[1][1]=mod1.getOpacity();
+					fading[1][2]= ((int) f.getData()) / 100;
+					fadeModule(2, fading[1][0], fading[1][1], fading[1][2], crossFading[1][0], crossFading[1][1]);
+					break;
+				case 503:
+					crossFading[2][0]=ColorPaletteModel.getInstance().getColor( ColorPaletteModel.getInstance().checkColor(mod3ring4.getFill()));
+					crossFading[2][1]=ColorPaletteModel.getInstance().getColor(f.getData()%100);
+					break;
+				case 603:
+					fading[2][0]=f.getData()/10;
+					fading[2][1]=mod1.getOpacity();
+					fading[2][2]= ((int) f.getData()) / 100;
+					fadeModule(3, fading[2][0], fading[2][1], fading[2][2], crossFading[2][0], crossFading[2][1]);
+					break;
+				case 504:
+					crossFading[3][0]=ColorPaletteModel.getInstance().getColor( ColorPaletteModel.getInstance().checkColor(mod4ring4.getFill()));
+					crossFading[3][1]=ColorPaletteModel.getInstance().getColor(f.getData()%100);
+					break;
+				case 604:
+					fading[3][0]=f.getData()/10;
+					fading[3][1]=mod1.getOpacity();
+					fading[3][2]= ((int) f.getData()) / 100;
+					fadeModule(4, fading[3][0], fading[3][1], fading[3][2], crossFading[3][0], crossFading[3][1]);
+					break;
+				case 505:
+					crossFading[4][0]=ColorPaletteModel.getInstance().getColor( ColorPaletteModel.getInstance().checkColor(mod5ring4.getFill()));
+					crossFading[4][1]=ColorPaletteModel.getInstance().getColor(f.getData()%100);
+					break;
+				case 605:
+					fading[4][0]=f.getData()/10;
+					fading[4][1]=mod1.getOpacity();
+					fading[4][2]= ((int) f.getData()) / 100;
+					fadeModule(5, fading[4][0], fading[4][1], fading[4][2], crossFading[4][0], crossFading[4][1]);
+					break;
+				case 506:
+					crossFading[5][0]=ColorPaletteModel.getInstance().getColor( ColorPaletteModel.getInstance().checkColor(mod6ring4.getFill()));
+					crossFading[5][1]=ColorPaletteModel.getInstance().getColor(f.getData()%100);
+					break;
+				case 606:
+					fading[5][0]=f.getData()/10;
+					fading[5][1]=mod1.getOpacity();
+					fading[5][2]= ((int) f.getData()) / 100;
+					fadeModule(6, fading[5][0], fading[5][1], fading[5][2], crossFading[5][0], crossFading[5][1]);
+					break;
+				case 507:
+					crossFading[6][0]=ColorPaletteModel.getInstance().getColor( ColorPaletteModel.getInstance().checkColor(mod7ring4.getFill()));
+					crossFading[6][1]=ColorPaletteModel.getInstance().getColor(f.getData()%100);
+					break;
+				case 607:
+					fading[6][0]=f.getData()/10;
+					fading[6][1]=mod1.getOpacity();
+					fading[6][2]= ((int) f.getData()) / 100;
+					fadeModule(7, fading[6][0], fading[6][1], fading[6][2], crossFading[6][0], crossFading[6][1]);
+					break;
+					
 				// Clears fountain/simulation
 				// Used only for debugging and testing purposes
 				case 99:

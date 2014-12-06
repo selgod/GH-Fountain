@@ -195,6 +195,27 @@ public class Timeline {
 
 		// TimelineController.getInstance().rePaint();
 	}
+	
+	/**
+	 * Inserts FCWs int the timeline for fading commands.  These are the only special commands that require two words
+	 * @param mod
+	 * @param start
+	 * @param end
+	 * @param index
+	 * @param intensity
+	 */
+	public void setFadeFcw(int mod, int start, int end, int color, int intensity){
+		int address = mod + 600;
+		int data = end-start;
+		FCW first = new FCW(address,data);
+		
+		if (intensity==100)
+			intensity=0;
+		data = (intensity*10)+color;
+		FCW last = new FCW(address-100,data);
+		insertIntoTimeline(timeline, end, first);
+		insertIntoTimeline(timeline, end, last);
+	}
 
 	/**
 	 * Adds start and end commands to light timeline. Fills channelColorMap with
@@ -271,12 +292,6 @@ public class Timeline {
 		// waterTimeline.get(pointInTime).add(f);
 	}
 
-	/*
-	 * public void setLightFcwAtPoint(int point, FCW f) {
-	 * 
-	 * }
-	 */
-
 	public void fillTheSpaces(SortedMap<Integer, SortedMap<Integer, Integer>> channelMap) {
 		for (Integer channel : channelMap.keySet()) {
 			int start, end, color;
@@ -329,7 +344,7 @@ public class Timeline {
 
 			for (int g = 0; g < newFcwList.size(); g++) {
 				if ((newFcwList.get(g).getAddr() == currentFcw.getAddr()) && fcwAlreadyAdded(newFcwList.get(g), currentFcw)) {
-					System.out.println("removed");
+					//System.out.println("removed");
 					newFcwList.remove(g);
 					newFcwList.add(currentFcw);
 					break;

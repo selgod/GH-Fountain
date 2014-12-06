@@ -271,24 +271,34 @@ public class TimelineController implements Initializable {
 		fadeUpComboBox.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				int j = 0, i = 0;
+				Paint color = null;
 				double interval = Double.parseDouble((String) fadeUpComboBox.getValue()) / ((endTimeIndex - startTimeIndex) + 1);
-				for (int i = startTimeIndex; i <= endTimeIndex; i++) {
-					for (int j = startLabelIndex; j <= endLabelIndex; j++) {
+				for (i = startTimeIndex; i <= endTimeIndex; i++) {
+					for (j = startLabelIndex; j <= endLabelIndex; j++) {
 						lightRecArray[i][j].setOpacity(interval * ((i - startTimeIndex) + 1));
+						color = lightRecArray[i][j].getFill();
 					}
 				}
+				int opacity = (int) (100 * Double.parseDouble(fadeUpComboBox.getValue()));
+				timeline.setFadeFcw(j, startTimeIndex, endTimeIndex, ColorPaletteModel.getInstance().checkColor(color), opacity );
+				
 			}
 		});
 
 		fadeDownComboBox.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				int j = 0, i = 0;
+				Paint color = null;
 				double interval = (1 - Double.parseDouble((String) fadeDownComboBox.getValue())) / ((endTimeIndex - startTimeIndex) + 1);
-				for (int i = startTimeIndex; i <= endTimeIndex; i++) {
-					for (int j = startLabelIndex; j <= endLabelIndex; j++) {
+				for (i = startTimeIndex; i <= endTimeIndex; i++) {
+					for (j = startLabelIndex; j <= endLabelIndex; j++) {
 						lightRecArray[i][j].setOpacity(1 - (interval * (i - startTimeIndex)));
 					}
 				}
+				int opacity = (int) (100 * Double.parseDouble(fadeDownComboBox.getValue()));
+				timeline.setFadeFcw(j, startTimeIndex, endTimeIndex, ColorPaletteModel.getInstance().checkColor(color), opacity );
 			}
 		});
 	}
