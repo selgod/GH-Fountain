@@ -200,7 +200,7 @@ public class Timeline {
 	 */
 	public void setLightFcwWithRange(SortedMap<Integer, Integer> channel,
 			int start, int end, int color) {
-		for (int i = start; i <= end; i++) {
+		for (int i = start; i < end; i++) {
 			channel.put(i, color);
 		}
 	}
