@@ -146,6 +146,7 @@ public class SpecialoperationsController implements Initializable {
 		strobeFrequency.setItems(observableList);
 		strobeFrequency.getSelectionModel().select(0);
 
+		/* these functionalities are handled in the TimelineController class
 		fadeUpButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
@@ -255,6 +256,7 @@ public class SpecialoperationsController implements Initializable {
 				}
 			}
 		});
+		*/
 
 		opposedSweeps.setOnMouseClicked(new EventHandler<MouseEvent>() {
 

@@ -3,7 +3,6 @@ package choreography.view.timeline;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -46,6 +45,8 @@ import choreography.view.sliders.SlidersController;
 
 /**
  * FXML Controller class
+ * 
+ * Controls both the water and light timelines on the UI.
  */
 public class TimelineController implements Initializable {
 
@@ -61,16 +62,12 @@ public class TimelineController implements Initializable {
 	}
 
 	private Integer[] channelAddresses;
-	boolean oldRecHasValue = false;
-	Rectangle oldRec = new Rectangle();
-	Rectangle copyWaterRec = new Rectangle();
-	int copyWaterLocation = 0;
+	private int copyWaterLocation = 0;
 	private String[] labelNames;
-	Rectangle selectedRec = new Rectangle();
-	int selectedTimeIndex = 0;
-	int selectedLabelIndex = 0;
+	private int selectedTimeIndex = 0;
+	private int selectedLabelIndex = 0;
 	private int start;
-	Tooltip t;
+	private Tooltip t;
 	private Timeline timeline;
 
 	@FXML
@@ -79,89 +76,55 @@ public class TimelineController implements Initializable {
 	private ScrollPane timelineScrollPane, labelScrollPane;
 	// NonFXML
 	private int time;
-	int startRow = 0;
-	int rowNumber;
-	GridPane gridpaneLight;
-	GridPane gridpaneWater;
-	Rectangle[] waterRecArray;
-	Rectangle[][] lightRecArray;
-	Rectangle[][] copyArray;
-	int pasteTimeIndex;
-	int pasteLabelIndex;
-	final ArrayList<Rectangle> copyAL;
-	final ArrayList<Integer> colAL;
-	final ArrayList<Integer> rowAL;
-	Rectangle startRectangle;
-	int startTimeIndex;
-	int startLabelIndex;
-	Rectangle endRectangle;
-	int endTimeIndex;
-	int endLabelIndex;
+	private int startRow = 0;
+	private int rowNumber;
+	private GridPane gridpaneLight;
+	private GridPane gridpaneWater;
+	private Rectangle[] waterRecArray;
+	private Rectangle[][] lightRecArray;
+	private Rectangle[][] copyArray;
+	private int pasteTimeIndex;
+	private int pasteLabelIndex;
+	
+	private int startTimeIndex;
+	private int startLabelIndex;
+	private int endTimeIndex;
+	private int endLabelIndex;
 
-	MenuItem lightCut = new MenuItem("Cut");
-	MenuItem lightCopy = new MenuItem("Copy");
-	MenuItem lightPaste = new MenuItem("Paste");
-	MenuItem lightSelect = new MenuItem("Select");
-	MenuItem lightDelete = new MenuItem("Delete");
-	Menu fadeUp = new Menu("Fade Up");
-	Menu fadeDown = new Menu("Fade Down");
-	MenuItem fadeUpMenuItem = new MenuItem();
-	MenuItem fadeDownMenuItem = new MenuItem();
-	MenuItem waterCut = new MenuItem("Cut");
-	MenuItem waterCopy = new MenuItem("Copy");
-	MenuItem waterPaste = new MenuItem("Paste");
-	MenuItem waterSelect = new MenuItem("Select");
+	private MenuItem lightCut = new MenuItem("Cut");
+	private MenuItem lightCopy = new MenuItem("Copy");
+	private MenuItem lightPaste = new MenuItem("Paste");
+	private MenuItem lightSelect = new MenuItem("Select");
+	private MenuItem lightDelete = new MenuItem("Delete");
+	private Menu fadeUp = new Menu("Fade Up");
+	private Menu fadeDown = new Menu("Fade Down");
+	private MenuItem fadeUpMenuItem = new MenuItem();
+	private MenuItem fadeDownMenuItem = new MenuItem();
+	private MenuItem waterCut = new MenuItem("Cut");
+	private MenuItem waterCopy = new MenuItem("Copy");
+	private MenuItem waterPaste = new MenuItem("Paste");
+	private MenuItem waterSelect = new MenuItem("Select");
 
-	ObservableList<String> options1 = FXCollections.observableArrayList(".10", ".20", ".30", ".40", ".50", ".60", ".70", ".80", ".90", "1.0");
-	ObservableList<String> options2 = FXCollections.observableArrayList(".90", ".80", ".70", ".60", ".50", ".40", ".30", ".20", ".10", "0.0");
-	ComboBox<String> fadeUpComboBox = new ComboBox<String>(options1);
-	ComboBox<String> fadeDownComboBox = new ComboBox<String>(options2);
+	private ObservableList<String> options1 = FXCollections.observableArrayList(".10", ".20", ".30", ".40", ".50", ".60", ".70", ".80", ".90", "1.0");
+	private ObservableList<String> options2 = FXCollections.observableArrayList(".90", ".80", ".70", ".60", ".50", ".40", ".30", ".20", ".10", "0.0");
+	private ComboBox<String> fadeUpComboBox = new ComboBox<String>(options1);
+	private ComboBox<String> fadeDownComboBox = new ComboBox<String>(options2);
 
-	final ContextMenu lightCM = new ContextMenu();
-	final ContextMenu waterCM = new ContextMenu();
+	private final ContextMenu lightCM = new ContextMenu();
+	private final ContextMenu waterCM = new ContextMenu();
 
+	/**
+	 * Constructor class for TimelineController
+	 */
 	public TimelineController() {
 		timeline = new Timeline();
 		ColorPaletteEnum.values();
-		this.rowAL = new ArrayList<Integer>();
-		this.colAL = new ArrayList<Integer>();
-		this.copyAL = new ArrayList<Rectangle>();
 		this.channelAddresses = new Integer[1];
 	}
 
-	public ArrayList<Integer> getColAL() {
-		return this.colAL;
-	}
-
-	public ArrayList<Integer> getRowAL() {
-		return this.rowAL;
-	}
-
-	public void setLightRecArrayFade(int row, int col, double opacity) {
-		lightRecArray[col][row].setOpacity(opacity);
-	}
-
 	/**
-	 * Sets the UI color at the given time index and channel index
-	 */
-	public void setLightRecArrayStrobe(int channelIndex, int timeIndex, Paint color) {
-		lightRecArray[timeIndex][channelIndex].setFill(color);
-	}
-
-	/**
-	 * Just fills in the lightRecArray with gray, it doesn't actually delete
-	 * from the timeline. Should this ever be used?
-	 */
-	public void delete(int col, int row) {
-		lightRecArray[col][row].setFill(Color.LIGHTGRAY);
-	}
-
-	/**
-	 * Deletes all fcw at the given point and for "length" afterwards on the
-	 * given channelIndex
-	 * 
-	 * todo Only operates if first==true, why? this should push to the timeline,
-	 * then pull from timeline when repainting
+	 * Deletes all fcw at the from timeStartIndex to endTimeIndex on the
+	 * given channelIndex. Works.
 	 */
 	public void delete(int channelIndex, int timeStartIndex, int timeEndIndex) {
 
@@ -169,6 +132,11 @@ public class TimelineController implements Initializable {
 		timeline.setLightFcw(off, timeStartIndex, timeEndIndex);
 	}
 
+	/**
+	 * Deletes an action on the water timeline. Not sure if it works.
+	 * 
+	 * @param waterCol
+	 */
 	public void delete(int waterCol) {
 		if (waterCol != 0) {
 			timeline.deleteActionAtTime(waterCol - 1);
@@ -214,6 +182,9 @@ public class TimelineController implements Initializable {
 		fadeUp.setDisable(true);
 		fadeDown.setDisable(true);
 
+		/*
+		 * This works but only manages the UI. Does not make any changes to the control file.
+		 */
 		lightCut.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -235,6 +206,9 @@ public class TimelineController implements Initializable {
 			}
 		});
 
+		/*
+		 * This works but only manages the UI. Does not make any changes to the control file.
+		 */
 		lightCopy.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -249,6 +223,9 @@ public class TimelineController implements Initializable {
 			}
 		});
 
+		/*
+		 * This works but only manages the UI. Does not make any changes to the control file. Also, does not check for range but needs to.
+		 */
 		lightPaste.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -263,6 +240,9 @@ public class TimelineController implements Initializable {
 			}
 		});
 		
+		/*
+		 * This works and does change the UI.
+		 */
 		lightDelete.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -275,6 +255,9 @@ public class TimelineController implements Initializable {
 			}
 		});
 
+		/*
+		 * This works but only manages the UI. Does not make any changes to the control file.
+		 */
 		fadeUpComboBox.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -293,6 +276,9 @@ public class TimelineController implements Initializable {
 			}
 		});
 
+		/*
+		 * This works but only manages the UI. Does not make any changes to the control file.
+		 */
 		fadeDownComboBox.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -315,11 +301,6 @@ public class TimelineController implements Initializable {
 		setLabelGridPane(getLabelNames());
 		setTimelineGridPane();
 		// ChoreographyController.getInstance().setBeatMarkGridPane();
-	}
-
-	public void disableCopyPaste() {
-		lightCopy.setDisable(true);
-		lightPaste.setDisable(true);
 	}
 
 	public Integer[] getSpecialChannels() {
@@ -460,7 +441,6 @@ public class TimelineController implements Initializable {
 				lightRecArray[timeIndex][labelIndex].setOnMousePressed(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent e) {
-						selectedRec = lightRecArray[timeIndexConst][labelIndexConst];
 						selectedTimeIndex = timeIndexConst;
 						selectedLabelIndex = labelIndexConst;
 
@@ -520,7 +500,7 @@ public class TimelineController implements Initializable {
 					lightRecArray[timeIndexConst][labelIndexConst].startFullDrag();
 				});
 
-				// continues and ends the drag event
+				// continues the drag event
 				lightRecArray[timeIndex][labelIndex].setOnMouseDragOver((MouseEvent e) -> {
 					if (ChoreographyController.getInstance().getShiftPressed()) {
 						if (timeIndexConst >= startTimeIndex && labelIndexConst >= startLabelIndex) {
@@ -550,6 +530,7 @@ public class TimelineController implements Initializable {
 					}
 				});
 
+				//ends the drag event
 				lightRecArray[timeIndex][labelIndex].setOnMouseDragReleased((MouseEvent e) -> {
 					if (!ChoreographyController.getInstance().getShiftPressed()) {
 						if (startRow != labelIndexConst) {
@@ -572,16 +553,6 @@ public class TimelineController implements Initializable {
 		}
 
 		timelineScrollPane.setContent(gridpaneLight);
-	}
-
-	public void clearAllAL() {
-		for (Iterator<Rectangle> it = copyAL.iterator(); it.hasNext();) {
-			Rectangle rec = it.next();
-			rec.setOpacity(1);
-		}
-		copyAL.clear();
-		colAL.clear();
-		rowAL.clear();
 	}
 
 	public void setWaterGridPane() {
