@@ -820,14 +820,12 @@ public class ChoreographyController implements Initializable {
 	@FXML
 	/**
 	 * Displays information dialog about the software 
-	 * TODO This needs to be updated before we hand it off
 	 */
 	public void aboutDialogueBox() {
 		Dialogs.create()
 				.title("About GHMF Choreography Studio")
-				.message(
-						"The Grand Valley State University senior project team, Excalibur Solutions, created the GHMF Choreography Studio on April 15, 2014. " + System.lineSeparator() + System.lineSeparator() + "This software is used to create light shows for the Grand Haven "
-								+ "Musical Fountain located in Grand Haven Michigan.  ").masthead("About").showInformation();
+				.message("Grand Valley State University Senior Project" + System.lineSeparator() + "Information Systems, Winter 2014" + System.lineSeparator() + "Computer Science, Fall 2014" + System.lineSeparator() + System.lineSeparator() + "This software is used to create light shows for the Grand Haven "
+								+ "Musical Fountain located in Grand Haven, Michigan.  ").masthead("About").showInformation();
 	}
 
 	@FXML
