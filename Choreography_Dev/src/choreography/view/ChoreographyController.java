@@ -26,6 +26,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -201,7 +202,7 @@ public class ChoreographyController implements Initializable {
 				removeSimulation();
 
 				Stage simStage = new Stage();
-				simStage.setTitle("Simulaiton");
+				simStage.setTitle("Simulation");
 				simStage.setScene(new Scene(simPane, 1320, 250));
 				simStage.show();
 				splitSimulationMenuItem.setDisable(true);
@@ -875,5 +876,9 @@ public class ChoreographyController implements Initializable {
 
 	public void setSaveCTLMenuItem(MenuItem saveCTLMenuItem) {
 		this.saveCTLMenuItem = saveCTLMenuItem;
+	}
+
+	public MenuItem getOpenCTLMenuItem() {
+		return openCTLMenuItem;
 	}
 }

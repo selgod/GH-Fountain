@@ -34,6 +34,7 @@ import javafx.scene.media.MediaPlayer.Status;
 import javafx.util.Duration;
 import SimpleJavaFXPlayer.AudioWaveformCreator;
 import SimpleJavaFXPlayer.Music;
+import choreography.Main;
 import choreography.io.FilePayload;
 import choreography.view.ChoreographyController;
 import choreography.view.sim.FountainSimController;
@@ -298,6 +299,9 @@ public class MusicPaneController {
 		Media media = new Media(source);
 		mediaPlayer = new MediaPlayer(media);
 		songName.setText(music2.getName());
+		String delims = "[.]+";
+		String[] tokens = music2.getName().split(delims);
+		Main.getPrimaryStage().setTitle("GHMF Choreography Studio  -  " + tokens[0] + ".wav");
 		mediaPlayer.play();
 		mediaPlayer.pause();
 	}
@@ -314,7 +318,19 @@ public class MusicPaneController {
 			double totalTime = mediaPlayer.getTotalDuration().toSeconds();
 			double currentTime = mediaPlayer.getCurrentTime().toSeconds();
 			double percentComplete = currentTime / totalTime * 100;
-
+			
+			/*
+			 * javafx scroll panes do not operate in an intuitive manner.
+			 * The "node" shown (in this case the light timeline) is shown proportional
+			 * to where we are at on the scroll pane. Check out
+			 * https://docs.oracle.com/javafx/2/api/javafx/scene/control/ScrollPane.html
+			 * under hvalue for a better explanation.
+			 * 
+			 * The 1.51 represents the amount of the node(light timeline) that can be seen
+			 * at one time(1.51%). This value might change depending on resolution.
+			 * Therefore the 1.51 is a hacky fix that alleviates and hides the problem,
+			 * but doesn't totally fix it.
+			 */
 			double hValue = (100 * percentComplete) / (100 - 1.51);
 
 			TimelineController.getInstance().getScrollPane().setHvalue(hValue);

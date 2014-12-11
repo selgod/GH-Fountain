@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Scanner;
-import java.util.logging.Logger;
-
 import choreography.model.fcw.FCW;
 import choreography.view.timeline.TimelineController;
 

@@ -222,7 +222,7 @@
 										<Insets left="4.0" />
 									</GridPane.margin>
 								</Label>
-								<ToggleButton fx:id="selectionButton"
+								<ToggleButton fx:id="selectionButton" visible="false"
 									mnemonicParsing="false" prefWidth="53.0" text="Select"
 									GridPane.columnIndex="1" GridPane.halignment="LEFT"
 									GridPane.rowIndex="0">

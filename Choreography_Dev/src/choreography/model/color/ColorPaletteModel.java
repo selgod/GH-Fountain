@@ -145,4 +145,34 @@ public class ColorPaletteModel{
         instance = new ColorPaletteModel();
         ColorPaletteController.getInstance().rePaint();
     }
+
+    /**
+     * Compares a color from the light timeline and return the index number that it 
+     * is from the color palette
+     * @param grid
+     * @return
+     */
+    public int checkColor(Paint grid) {
+    	int index = 0;
+    	
+    	// Creates a hex representation of the color
+    	Color c = (Color) grid;
+    	String hexGrid = String.format( "#%02X%02X%02X",
+    	            (int)( c.getRed() * 255 ),
+    	            (int)( c.getGreen() * 255 ),
+    	            (int)( c.getBlue() * 255 ) );
+    	
+    	// Compares to hex representation of all colors in the palette
+    	for(index=0;index < 32; index++) {
+    		String hexIndex = String.format( "#%02X%02X%02X",
+    	            (int)( colors[index].getRed() * 255 ),
+    	            (int)( colors[index].getGreen() * 255 ),
+    	            (int)( colors[index].getBlue() * 255 ) );
+    		if (hexGrid.compareTo(hexIndex)==0)
+    			return index;
+    	}
+    	System.out.println("Color Not Found");
+    	return 89;
+    }
 }
+
