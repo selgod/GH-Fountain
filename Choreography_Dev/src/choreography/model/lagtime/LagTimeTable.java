@@ -52,6 +52,11 @@ public class LagTimeTable {
 	 * @param f
 	 * @return
 	 */
+	//Currently does not work as intended as the reverseLookUpData call
+	//does not always return what it should. The method may also need
+	//to be modified to return a default value of 0 if it does not
+	//get a valid lag time match. Be sure to check to see if
+	//the delaynames match the names returned by the look up.
 	public static synchronized double getLagTime(FCW f) {
 		double lagTime = 1;
 		String[] actions = FCWLib.getInstance().reverseLookupData(f);
